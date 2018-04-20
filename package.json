@@ -1,0 +1,21 @@
+{
+  "name": "gm-webicons",
+  "version": "1.0.0",
+  "description": "Make a set of webicons with graphicsmagick.",
+  "main": "index.js",
+  "repository": "git@github.com:nothingismagick/gm-webicons.git",
+  "author": "nothingismagick <nothing@magick>",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "dependencies": {
+    "gm": "^1.23.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-files": "^1.4.0",
+    "mocha": "^5.1.1"
+  }
+}
