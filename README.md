@@ -17,13 +17,19 @@ $ brew install graphicsmagick
 Then to install this lib use yarn:
 
 ```
-$ yarn install gm-webicons
+$ yarn install git+ssh://github.com/nothingismagick/gm-webicons.git
 ```
 ## Usage
 ```
 let webicons = require('gm-webicons')
+
+webicons(path_to_src_image,path_to_deposit_icons)
+
 webicons('src-1024x1024.png','./src/statics/icons/')
 ```
+
+## Testing
+clone, `yarn install`, `yarn test`
 
 ## Future Work
 - [X] Tests
