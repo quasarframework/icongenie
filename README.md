@@ -15,7 +15,7 @@ First download and install [GraphicsMagick](http://www.graphicsmagick.org/). In 
 $ brew install graphicsmagick
 ```
 
-You'll probably also want to have 
+You'll probably also want to have X-Code installed (which is normally the case when you are publishing to the iOS or MacOS store)...
 
 Then to install this lib use yarn:
 
