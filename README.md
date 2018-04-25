@@ -1,11 +1,12 @@
 # gm-webicons
-Make a set of webicons with graphicsmagick.
+A simplMake a set of webicons with graphicsmagick.
 
-This simple node module takes an original image and resizes it to common web icon sizes that are deposited in a target directory. It will retain transparency. You should use at least a 512x512 square image as the initial resource.
+This simple node module takes an original image and resizes it to common web icon sizes that are deposited in a target directory. It will retain transparency. You should use a 1024x1024 square image as the initial resource.
 
 ## Requires
 - graphicsmagick
 - node / yarn
+- At the moment only tested on mac - the creation of .icns will definitely not work at the moment if you aren't running MacOS 10.11 or later.
 
 ## Install
 First download and install [GraphicsMagick](http://www.graphicsmagick.org/). In Mac OS X, you can simply use [Homebrew](http://mxcl.github.io/homebrew/) and do:
@@ -13,6 +14,8 @@ First download and install [GraphicsMagick](http://www.graphicsmagick.org/). In 
 ```
 $ brew install graphicsmagick
 ```
+
+You'll probably also want to have 
 
 Then to install this lib use yarn:
 
@@ -29,11 +32,16 @@ webicons('src-1024x1024.png','./src/statics/icons/')
 ```
 
 ## Testing
-clone, `yarn install`, `yarn test`
+clone, `yarn install`, `yarn test
 
 ## Future Work
-- [X] Tests
+- [-] Tests
 - [ ] File streams
+- [ ] Switch for Cordova / Electron / Webapps
+- [ ] Get all the sizes!!!
+- [ ] Find cross-platform alternative for MacOS .icns
+- [ ] Be smarter about chaining
+- [ ] pngquant the results
 
 
 ## License

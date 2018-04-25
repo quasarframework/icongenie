@@ -7,17 +7,34 @@
 
 'use strict'
 
-let fs = require('fs')
+const fs = require('fs')
   , gm = require('gm')
+  , imagemin = require('imagemin')
+  , imageminPngquant = require('imagemin-pngquant')
+  , png2icns = require('png2icns')
+  , png2ico = require('png-to-ico')
 
 /**
  * Creates a set of images
  * @param {string} src - image location
  * @param {string} target - where to drop the images
  */
-function webicons (src, target) {
+function cordovaIcns (src, target) {
+
+}
+
+    function webicons (src, target) {
+
+    // ELECTRON ICONS
+    png2icns({ in: src,out: target + 'icon.icns'})
+    png2ico(src)
+        .then(buf=> {
+        fs.writeFileSync(target + 'icon.ico', buf);
+        })
+        .catch(console.error);
 
     new Promise((resolve, reject) => {
+
         gm(src)
             .resizeExact(16, 16)
             .write(target + 'favicon-16x16.png', function (err) {
@@ -76,6 +93,17 @@ function webicons (src, target) {
             gm(src)
                 .resizeExact(256, 256)
                 .write(target + 'icon-256x256.png', function (err) {
+                    if (!err) {
+                        console.log('256x256 done')
+                    } else {
+                        console.log(err)
+                    }
+                })
+        )
+        .then(
+            gm(src)
+                .resizeExact(256, 256)
+                .write(target + 'linux-256x256.png', function (err) {
                     if (!err) {
                         console.log('256x256 done')
                     } else {
