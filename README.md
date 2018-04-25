@@ -1,5 +1,5 @@
 # gm-webicons
-A simplMake a set of webicons with graphicsmagick.
+Make a set of webicons / electron icons with graphicsmagick, png2icns and png-to-ico.
 
 This simple node module takes an original image and resizes it to common web icon sizes that are deposited in a target directory. It will retain transparency. You should use a 1024x1024 square image as the initial resource.
 
@@ -35,11 +35,12 @@ webicons('src-1024x1024.png','./src/statics/icons/')
 clone, `yarn install`, `yarn test
 
 ## Future Work
-- [-] Tests
+- [ ] Complete set of tests
 - [ ] File streams
 - [ ] Switch for Cordova / Electron / Webapps
 - [ ] Get all the sizes!!!
 - [ ] Find cross-platform alternative for MacOS .icns
+- [ ] Find a smaller (and safe!) alternative to graphicsmagick
 - [ ] Be smarter about chaining
 - [ ] pngquant the results
 
