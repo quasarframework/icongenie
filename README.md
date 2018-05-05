@@ -20,7 +20,7 @@ You'll probably also want to have X-Code installed (which is normally the case w
 Then to install this lib use yarn:
 
 ```
-$ yarn add git+ssh://github.com/nothingismagick/icon-factory.git
+$ yarn add git+ssh://git@github.com/nothingismagick/icon-factory.git
 ```
 ## Usage
 ```
