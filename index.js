@@ -23,7 +23,7 @@ function cordovaIcns (src, target) {
 
 }
 
-    function webicons (src, target) {
+function webicons (src, target) {
 
     // ELECTRON ICONS
     png2icns({ in: src,out: target + 'icon.icns'})

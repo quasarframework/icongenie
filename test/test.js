@@ -1,22 +1,31 @@
 'use strict';
 
-let webicons = require('../index')
+let iconfactory = require('../bin/iconfactory')
 
-const chai = require('chai')
-const chaiAsPromised = require('chai-as-promised')
-const chaiFiles = require('chai-files')
-chai.use(chaiAsPromised)
-chai.use(chaiFiles)
 
-const expect = chai.expect
-const file = chaiFiles.file
-const dir = chaiFiles.dir
 
+iconfactory.build('./test/example-1024x1024.png', './test/output/', false)
+
+iconfactory.minify('./test/output/', 'crush')
+
+iconfactory.icns('./test/example-1024x1024.png', './test/output/')
+
+setTimeout(function() {
+
+    const chai = require('chai')
+    const chaiAsPromised = require('chai-as-promised')
+    const chaiFiles = require('chai-files')
+    chai.use(chaiAsPromised)
+    chai.use(chaiFiles)
+
+    const expect = chai.expect
+    const file = chaiFiles.file
+    const dir = chaiFiles.dir
 
     describe('Web Icons', () => {
-        webicons('./test/example-1024x1024.png', './test/output/')
-        it('original', () => {
+        it('original', (done) => {
             expect(file('./test/example-1024x1024.png')).to.exist
+            return done()
         })
         it('16x16', () => {
             setTimeout(function(){
@@ -60,3 +69,6 @@ const dir = chaiFiles.dir
             //   return expect(Promise.resolve(file('./test/output/icon-512x512.png'))).to.eventually.exist
         })
     })
+}, 10000)
+
+

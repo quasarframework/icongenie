@@ -1,7 +1,7 @@
 {
-  "name": "gm-webicons",
+  "name": "icon-factory",
   "version": "1.0.0",
-  "description": "Make a set of webicons with graphicsmagick.",
+  "description": "Make a set of webicons with a set of tools.",
   "main": "index.js",
   "repository": "git@github.com:nothingismagick/gm-webicons.git",
   "author": "nothingismagick <nothing@magick>",
@@ -9,14 +9,19 @@
   "scripts": {
     "test": "mocha --reporter spec"
   },
+  "bin": {
+    "iconfactory": "./bin/iconfactory"
+  },
   "dependencies": {
     "fs-extra": "^5.0.0",
-    "gm": "^1.23.1",
     "imagemin": "^5.3.1",
+    "imagemin-pngcrush": "^5.1.0",
     "imagemin-pngquant": "^5.1.0",
     "node-icns": "^1.0.0",
     "png-to-ico": "^1.0.7",
-    "png2icns": "^0.0.1"
+    "png2icns": "^0.0.1",
+    "png2icons": "^1.0.1",
+    "sharp": "^0.20.2"
   },
   "devDependencies": {
     "chai": "^4.1.2",
