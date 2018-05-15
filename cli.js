@@ -46,7 +46,7 @@ Flags:
   
 Usage:
     
-$ iconfactory -p=kitchensink -s="icon-1280x1280.png" -t="./outputFolder/"    
+$ iconfactory -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder/ -m=pngquant    
     `)
     process.exit(0)
 }

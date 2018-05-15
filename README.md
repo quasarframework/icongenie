@@ -112,6 +112,10 @@ This is why I would recommend using pngquant during development (to have a proxy
     <img src="/test/sources/quant_opti_orig.png?raw=true" width="701" height="195" >
 </div>
 
+## .icns & .ico
+These are notoriously difficult to acquire and make. For icns you usually need a mac and ico is really just a sequence of images with a special header - but there are very few tools that will let you do both cross-platform. 
+
+This module uses the amazing [`png2icons`](https://github.com/idesis-gmbh/png2icons) module, which actually does all of the decoding and encoding on a byte-level with javascript. That is some real ninja sh*t - so go over there and give those devs a :star:. This is actually the slowest part of the `kitchensink` and the files are huge. By feeding it from the `sharp` buffer it has been sped up a little bit (and the final icns file is actually about 20% smaller!)
 
 ## CLI Usage
 `icon-factory` can be used as a command line tool, and you can simply add it by installing it "globally" with your node package manager:
@@ -124,11 +128,34 @@ $ npm install --global icon-factory
 To find out about the settings, just use
 ``` 
 $ iconfactory --help
+
+Icon Factory: v.1.0.0
+     License: MIT
+
+Icon Factory is a node utility to create a batch of icons for your app. 
+Designed to work seamlessly with the Quasar Framework, but probably
+useful for other build pipelines.
+    
+Flags:    
+  -p, --preset      Choose a preset output or make your own
+                    [spa|pwa|cordova|electron|kitchensink|custom]
+  -s, --source      Your source image as a large square png
+  -t, --target      The destination directory for the files created
+  -o, --options     path to file that overrides defaults (if custom)
+  -m, --minify      Minify strategy to use. 
+                    [pngcrush|pngquant|optipng|pngout|zopfli]
+  -v, --version     display version information
+  -h, --help        display this information
+  
+Usage:
+    
+$ iconfactory -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder/ -m=pngquant  
+
 ```
 
 
 ### Resources for more information about App Icons
-- [SPA Icons]()
+- [Favicon Cheat Sheet](https://github.com/audreyr/favicon-cheat-sheet)
 - [PWA Icons](https://developer.mozilla.org/en-US/docs/Web/Manifest)
 - [PWA for Chrome](https://developer.chrome.com/multidevice/android/installtohomescreen)
 - [MacOS App Icon](https://developer.apple.com/macos/human-interface-guidelines/icons-and-images/app-icon/)

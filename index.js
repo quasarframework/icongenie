@@ -9,7 +9,16 @@
 */
 
 const fs = require('fs')
-  , path = require('path')
+	, sharp = require('sharp')
+	, path = require('path')
+	, imagemin = require('imagemin')
+	, pngquant = require('imagemin-pngquant')
+	, optipng = require('imagemin-optipng')
+	, pngout = require('imagemin-pngout')
+	, zopfli = require('imagemin-zopfli')
+	, pngcrush = require('imagemin-pngcrush')
+	, png2icons = require('png2icons')
+	, toIco = require('to-ico')
 
 let settings = require('./settings')
 	, options
@@ -95,16 +104,18 @@ iconfactory = exports.iconfactory = {
 	},
 	pwa: function (src, target, strategy) {
 		options = settings.options.pwa
-		this.build(src, target, options)
+		this.build(src, target, 'pwa')
 		.catch(e => console.info('Succesfully caught error: ', e))
 		.then(() => strategy ? this.minify(target, settings.options.pwa, 'pngquant') : console.log('no strategy'))
-		// .then(() => strategy ? this.minify(target, settings.options.pwa, 'optipng') : console.log('no strategy'))
 	},
 	spa: function (src, target, strategy) {
 		options = settings.options.spa
 		this.build(src, target, options)
 		.catch(e => console.info('Succesfully caught error: ', e))
-		.then(() => strategy ? this.minify(target, settings.options.spa, strategy) : console.log('no strategy'))
+		.then(() => {
+			strategy ? this.minify(target, settings.options.spa, strategy) : console.log('no strategy')
+			this.favicon(src, target, 'spa')
+		})
 	},
 	kitchensink: function (src, target, strategy ) {
 		this.cordova(src, target, strategy)
@@ -121,7 +132,6 @@ iconfactory = exports.iconfactory = {
 	build: function (src, target, options) {
 		checkSrc(src)
 		checkTgt(target)
-		const sharp = require('sharp')
 		const image = sharp(src)
 		const buildify = (pvar) => new Promise((resolve, reject) => {
 			// console.log("P", pvar[0], pvar[1])
@@ -162,31 +172,25 @@ iconfactory = exports.iconfactory = {
 	},
 
 	minify: function (target, options, strategy, singlefile) {
-		const imagemin = require('imagemin')
-		let cmd, pvar
+		let cmd
 		let minify = settings.options.minify
 		if ( !minify.available.find(x => x === strategy,)) {
 			strategy = minify.type
 		}
 		switch(strategy) {
 			case 'pngcrush':
-				const pngcrush = require('imagemin-pngcrush')
 				cmd = pngcrush(minify.pngcrushOptions)
 				break
 			case 'pngquant':
-				const pngquant = require('imagemin-pngquant')
 				cmd = pngquant(minify.pngquantOptions)
 				break
 			case 'optipng':
-				const optipng = require('imagemin-optipng')
 				cmd = optipng(minify.optipngOptions)
 				break
 			case 'pngout':
-				const pngout = require('imagemin-pngout')
 				cmd = pngout(minify.pngoutOptions)
 				break
 			case 'zopfli':
-				const zopfli = require('imagemin-zopfli')
 				cmd = zopfli(minify.zopfliOptions)
 				break
 		}
@@ -211,9 +215,6 @@ iconfactory = exports.iconfactory = {
 		let chain = Promise.resolve()
 
 		if (!singlefile) {
-			// for the batch operation
-			let input, output
-			// put unique folder names in an array
 			let folders = uniqueFolders(options)
 			for (let n in folders) {
 				chain = chain.then(() => minifier([`${target}/${folders[n]}/*.png`,`${target}/${folders[n]}`]))
@@ -224,21 +225,35 @@ iconfactory = exports.iconfactory = {
 		return chain
 	},
 	icns: function (src, target, options) {
-
-		// to make these smaller, we need to pngcrush it
-
-		const png2icons = require('png2icons')
-
 		mkdirpAsync(`${target}/electron`)
-		.then(() => {
-			let input = fs.readFileSync(src)
-			let out = png2icons.createICNS(input, png2icons.BICUBIC, 0)
-			fs.writeFileSync(`${target}/electron/icon.icns`, out)
+			.then(() => {
+				sharp(src)
+				.resize(256, 256)
+				.crop(sharp.strategy.centre)
+				.png()
+				.toBuffer()
+				.then(data => {
+					png2icons.setLogger(console.log)
+					let out = png2icons.createICNS(data, png2icons.BICUBIC, 0)
+					fs.writeFileSync(`${target}/electron/icon.icns`, out)
+					out = png2icons.createICO(data, png2icons.BICUBIC, 0, false)
+					fs.writeFileSync(`${target}/electron/icon.ico`, out)
+				})
+				.catch(err => console.log(err))
+				})
 
-			out = png2icons.createICO(input, png2icons.BICUBIC, 0, false)
-			fs.writeFileSync(`${target}/electron/icon.ico`, out)
+	},
+	favicon: function(src, target, dest) {
+		mkdirpAsync(`${target}`)
+			.then(() => {
+					const files = [
+						fs.readFileSync(`${target}/${dest}/icon-16x16.png`),
+						fs.readFileSync(`${target}/${dest}/icon-32x32.png`)
+					]
+					toIco(files).then(buf => {
+						fs.writeFileSync(`${target}/${dest}/favicon.ico`, buf)
+					})
 			})
-
 	}
 }
 
