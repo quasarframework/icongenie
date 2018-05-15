@@ -54,13 +54,19 @@ iconfactory._icns
 iconfactory._minify(path_to_src_image, path_to_deposit_icons, )
 ```
 
-If you want to pass an options object, this is the structure you will need: 
+If you want to pass an options object (perhaps for the fastest available minify at lowest quality), this is the structure you will need: 
 
 ```js 
 let options = {
     minify: {
+        available: ['pngquant']
         type: 'pngquant'
-        options: {quality: '65-80', }
+        options: {
+            quality: '1-10',
+            floyd: 0.1,
+            speed: 10
+        }
+    },
     dimensions: {
         spa: {
             all: {
