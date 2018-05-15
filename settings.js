@@ -8,14 +8,14 @@ exports.options = {
         batch: false,
         overwrite: true,
         available: ['pngcrush','pngquant','optipng','pngout','zopfli'],
-        type: 'pngquant',
+        type: 'pngout',
         pngcrushOptions: {
             reduce: true
         },
         pngquantOptions: {
-            quality: '80-90',
-            floyd: 0.95,
-            speed: 1
+            quality: '85-95',
+            floyd: 1, // 0.1 - 1
+            speed: 1 // 1 - 10
         },
         optipngOptions: {
 	        optimizationLevel: 4,
@@ -24,12 +24,11 @@ exports.options = {
 	        paletteReduction: true
         },
         pngoutOptions: {
-            strategy: 2 // 0. Extreme 1. Intense 2. Longest match 3. Huffman only 4. Uncompressed
+            strategy: 0 // 0. Extreme 1. Intense 2. Longest match 3. Huffman only 4. Uncompressed
         },
         zopfliOptions: {
-            iterations: 10,
-            iterationsLarge: 4,
-            transparent: true
+            transparent: true,
+	          more: true
         }
     },
     icns: {

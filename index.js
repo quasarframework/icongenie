@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+'use strict'
 
 /**
 * Simple module that takes an original image and resizes
@@ -75,13 +75,13 @@ iconfactory = exports.iconfactory = {
 	custom: function (src, target, options, strategy) {
 		this.build(src, target, options)
 		.catch(e => console.info('Succesfully caught error: ', e))
-		.then(() => strategy ? this.minify(target, options, strategy) : undefined)
+		.then(() => strategy ? this.minify(target, options, strategy) : console.log('no strategy'))
 	},
 	cordova: function (src, target, strategy) {
 		options = settings.options.cordova
 		this.build(src, target, options)
 		.catch(e => console.info('Succesfully caught error: ', e))
-		.then(() => strategy ? this.minify(target, options, strategy) : undefined)
+		.then(() => strategy ? this.minify(target, settings.options.cordova, strategy) : console.log('no strategy'))
 
 	},
 	electron: function (src, target, strategy) {
@@ -89,21 +89,22 @@ iconfactory = exports.iconfactory = {
 		this.build(src, target, options)
 		.catch(e => console.info('Succesfully caught error: ', e))
 		.then(() => {
-			strategy ? this.minify(target, options, strategy) : undefined
-			this.icns(src, target, options, strategy)
+			strategy ? this.minify(target, settings.options.electron, strategy) : console.log('no strategy')
+			this.icns(src, target, settings.options.electron, strategy)
 		})
 	},
 	pwa: function (src, target, strategy) {
 		options = settings.options.pwa
 		this.build(src, target, options)
 		.catch(e => console.info('Succesfully caught error: ', e))
-		.then(() => strategy ? this.minify(target, options, strategy) : undefined)
+		.then(() => strategy ? this.minify(target, settings.options.pwa, 'pngquant') : console.log('no strategy'))
+		// .then(() => strategy ? this.minify(target, settings.options.pwa, 'optipng') : console.log('no strategy'))
 	},
 	spa: function (src, target, strategy) {
 		options = settings.options.spa
 		this.build(src, target, options)
 		.catch(e => console.info('Succesfully caught error: ', e))
-		.then(() => strategy ? this.minify(target, options, strategy) : console.log('no strategy'))
+		.then(() => strategy ? this.minify(target, settings.options.spa, strategy) : console.log('no strategy'))
 	},
 	kitchensink: function (src, target, strategy ) {
 		this.cordova(src, target, strategy)
@@ -162,43 +163,47 @@ iconfactory = exports.iconfactory = {
 
 	minify: function (target, options, strategy, singlefile) {
 		const imagemin = require('imagemin')
+		let cmd, pvar
+		let minify = settings.options.minify
+		if ( !minify.available.find(x => x === strategy,)) {
+			strategy = minify.type
+		}
+		switch(strategy) {
+			case 'pngcrush':
+				const pngcrush = require('imagemin-pngcrush')
+				cmd = pngcrush(minify.pngcrushOptions)
+				break
+			case 'pngquant':
+				const pngquant = require('imagemin-pngquant')
+				cmd = pngquant(minify.pngquantOptions)
+				break
+			case 'optipng':
+				const optipng = require('imagemin-optipng')
+				cmd = optipng(minify.optipngOptions)
+				break
+			case 'pngout':
+				const pngout = require('imagemin-pngout')
+				cmd = pngout(minify.pngoutOptions)
+				break
+			case 'zopfli':
+				const zopfli = require('imagemin-zopfli')
+				cmd = zopfli(minify.zopfliOptions)
+				break
+		}
 
 		const minifier = (pvar) => new Promise((resolve, reject) => {
-			let cmd
-			let minify = settings.options.minify
-			if ( !minify.available.find(x => x === strategy,)) {
-				strategy = minify.type
-			}
-			switch(strategy) {
-				case 'pngcrush':
-					const pngcrush = require('imagemin-pngcrush')
-					cmd = pngcrush(minify.pngcrushOptions)
-					break
-				case 'pngquant':
-					const pngquant = require('imagemin-pngquant')
-					cmd = pngquant(minify.pngquantOptions)
-					break
-				case 'optipng':
-					const optipng = require('imagemin-optipng')
-					cmd = optipng(minify.optipngOptions)
-					break
-				case 'pngout':
-					const pngout = require('imagemin-pngout')
-					cmd = pngout(minify.pngoutOptions)
-					break
-				case 'zopfli':
-					const zopfli = require('imagemin-zopfli')
-					cmd = zopfli(minify.pngoutOptions)
-					break
-			}
+			console.log(pvar[0],pvar[1])
+			imagemin([pvar[0]], pvar[1], {
+				plugins: [
+					cmd
+				]
+			})
+			.catch(err => console.log(err))
+			.then(() => resolve())
 
-				imagemin([pvar[0]], pvar[1], {
-					plugins: [
-						cmd
-					]
-				})
-
-		}).catch(err => {
+		})
+		.then(() => Promise.resolve())
+		.catch(err => {
 			console.log(err)
 			Promise.resolve()
 		})
@@ -211,19 +216,17 @@ iconfactory = exports.iconfactory = {
 			// put unique folder names in an array
 			let folders = uniqueFolders(options)
 			for (let n in folders) {
-				input = `${target}/${folders[n]}/*.png`
-				output = `${target}/${folders[n]}`
-				console.log(output)
-				let pvar = [input, output]
-				chain = chain.then(() => minifier(pvar))
+				chain = chain.then(() => minifier([`${target}/${folders[n]}/*.png`,`${target}/${folders[n]}`]))
 			}
 		} else {
-			let pvar = [target, path.dirname(target)]
-			chain = chain.then(() => minifier(pvar))
+			chain = chain.then(() => minifier([target, path.dirname(target)]))
 		}
 		return chain
 	},
 	icns: function (src, target, options) {
+
+		// to make these smaller, we need to pngcrush it
+
 		const png2icons = require('png2icons')
 
 		mkdirpAsync(`${target}/electron`)
@@ -235,6 +238,7 @@ iconfactory = exports.iconfactory = {
 			out = png2icons.createICO(input, png2icons.BICUBIC, 0, false)
 			fs.writeFileSync(`${target}/electron/icon.ico`, out)
 			})
+
 	}
 }
 

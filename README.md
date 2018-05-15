@@ -83,26 +83,29 @@ let options = {
 ```
 ### Minify
 
-There are four different minification methods available:
-- pngquant (fastest, lossy, 15-20% of original size)
-- pngcrush (slowest, same visual quality)
-- optipng ()
-- pngout (Remove IDAT)
-- zopfli (Slow)
+There are five different minification methods available (because it is possible that one or the other just won't build on your system). Using totally non-scientific tests, these are the results of this command that ran on a 3,2 GHz Quad-Core Intel Xeon: 
 
-```bash
-$ du -sh test/output
-3.9M    test/output
+`$ time node cli.js -p=spa -s=test/example-1240x1240.png -t=test/output -m="$minify" && du -sh test/output/spa`
 
-$ time iconfactory 
-$ du -sh test/output
-3.9M    test/output
+It takes a source image, scales it down according to the settings and then minifies it according to the library listed and the default settings tuned to give the best results.
 
-$ du -sh test/output/spa
-344K    test/output/spa
+| Library       | Time        | Quality    | Size   |
+|:-------------:|:-----------:|:----------:|:------:| 
+| *no minify*   | 00.7s       | original   | 664K   |
+| pngquant-bad  | 00.9s       | very lossy | 100K   |
+| pngquant-good | 01.4s       | lossy      | 144K   |
+| pngout        | 10.7s       | lossless   | 624K   |
+| optipng       | 13.9s       | lossless   | 404K   |
+| pngcrush      | 28.1s       | lossless   | 404K   |
+| zopfli        | 33.2s       | lossless   | 380K   |
+| zopfli.more   | 81.3s       | lossless   | 336K   |
 
+This is why I would recommend using pngquant during development (to have a proxy image, but to use optipng when building for production.)
 
-```
+<div style="text-align:center">
+    <img src="/test/sources/quant_opti_orig.png?raw=true" width="701" height="195" >
+</div>
+
 
 ## CLI Usage
 `icon-factory` can be used as a command line tool, and you can simply add it by installing it "globally" with your node package manager:
@@ -132,10 +135,12 @@ $ iconfactory --help
 - [Windows MRT Cordova Image Spec](https://github.com/apache/cordova-windows/blob/master/spec/unit/MRTImage.spec.js)
 
 ### Other nice resources
+- [favicon.ico vs favicon.png](https://stackoverflow.com/questions/1344122/favicon-png-vs-favicon-ico-why-should-i-use-png-instead-of-ico)
 - [Material Icons](https://material.io/tools/icons/)
 - [Favicon Checker](https://realfavicongenerator.net/favicon_checker)
 - [Wikipedia PNG Optimizing](https://en.wikipedia.org/wiki/Portable_Network_Graphics#Optimizing_tools)
 - [PNG Minification Comparison](https://css-ig.net/png-tools-overview#overview)
+- [.ico file-header Information](https://en.wikipedia.org/wiki/ICO_(file_format)#Outline)
 
 ## Testing
 clone, `yarn install`, `yarn test`
