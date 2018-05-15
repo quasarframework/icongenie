@@ -1,14 +1,12 @@
 'use strict';
 
-let iconfactory = require('../bin/iconfactory')
+let iconfactory = require('../')
 
+iconfactory.spa('./test/example-1024x1024.png', './test/output/')
 
+// iconfactory.minify('./test/output/', 'crush')
 
-iconfactory.build('./test/example-1024x1024.png', './test/output/', false)
-
-iconfactory.minify('./test/output/', 'crush')
-
-iconfactory.icns('./test/example-1024x1024.png', './test/output/')
+// iconfactory.icns('./test/example-1024x1024.png', './test/output/')
 
 setTimeout(function() {
 

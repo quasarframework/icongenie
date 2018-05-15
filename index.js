@@ -1,140 +1,246 @@
-/**
- * Simple module that takes an original image and resizes
- * it to common web icon sizes. It will retain transparency.
- * @module gm-webicons
- * @exports webicons
- */
+#!/usr/bin/env node
 
-'use strict'
+/**
+* Simple module that takes an original image and resizes
+* it to common icon sizes and will put them in a folder.
+* It will retain transparency.
+* @module icon-factory
+* @exports iconfactory
+*/
 
 const fs = require('fs')
-  , gm = require('gm')
-  , imagemin = require('imagemin')
-  , imageminPngquant = require('imagemin-pngquant')
-  , png2icns = require('png2icns')
-  , png2ico = require('png-to-ico')
+  , path = require('path')
 
-/**
- * Creates a set of images
- * @param {string} src - image location
- * @param {string} target - where to drop the images
- */
-function cordovaIcns (src, target) {
+let settings = require('./settings')
+	, options
 
+
+// helper to make them folders
+// https://gist.github.com/christophemarois/e30650691cf74b9da2e51e13a01c7f70
+
+const mkdirpAsync = function (dirPath) {
+  const mkdirAsync = currentPath => new Promise((resolve, reject) => {
+    fs.mkdir(currentPath, err => err ? reject(err) : resolve())
+  }).catch(err => {
+    if (err.code === 'EEXIST') return Promise.resolve()
+    throw err
+  })
+
+  let parts = dirPath.split(path.sep)
+
+  // Support absolute urls
+  if (parts[0] === '') {
+    parts.shift()
+    parts[0] = path.sep + parts[0]
+  }
+
+  let chain = Promise.resolve()
+
+  parts.forEach((part, i) => {
+    const currentPath = parts.slice(0, i + 1).join(path.sep)
+    chain = chain.then(() => mkdirAsync(currentPath))
+  })
+
+  return chain
 }
 
-function webicons (src, target) {
-
-    // ELECTRON ICONS
-    png2icns({ in: src,out: target + 'icon.icns'})
-    png2ico(src)
-        .then(buf=> {
-        fs.writeFileSync(target + 'icon.ico', buf);
-        })
-        .catch(console.error);
-
-    new Promise((resolve, reject) => {
-
-        gm(src)
-            .resizeExact(16, 16)
-            .write(target + 'favicon-16x16.png', function (err) {
-                if (!err) {
-                    console.log('16x16 done')
-                } else {
-                    console.log(err)
-                }
-            })
-        })
-        .then(
-            gm(src)
-                .resizeExact(32, 32)
-                .write(target + 'favicon-32x32.png', function (err) {
-                    if (!err) {
-                        console.log('32x32 done')
-                    } else {
-                        console.log(err)
-                    }
-                })
-        )
-        .then(
-            gm(src)
-                .resizeExact(128, 128)
-                .write(target + 'icon-128x128.png', function (err) {
-                    if (!err) {
-                        console.log('128x128 done')
-                    } else {
-                        console.log(err)
-                    }
-                })
-        )
-        .then(
-            gm(src)
-                .resizeExact(144, 144)
-                .write(target + 'ms-icon-144x144.png', function (err) {
-                    if (!err) {
-                        console.log('144x144 done')
-                    } else {
-                        console.log(err)
-                    }
-                })
-        )
-        .then(
-            gm(src)
-                .resizeExact(152, 152)
-                .write(target + 'apple-icon-152x152.png', function (err) {
-                    if (!err) {
-                        console.log('152x152 done')
-                    } else {
-                        console.log(err)
-                    }
-                })
-        )
-        .then(
-            gm(src)
-                .resizeExact(256, 256)
-                .write(target + 'icon-256x256.png', function (err) {
-                    if (!err) {
-                        console.log('256x256 done')
-                    } else {
-                        console.log(err)
-                    }
-                })
-        )
-        .then(
-            gm(src)
-                .resizeExact(256, 256)
-                .write(target + 'linux-256x256.png', function (err) {
-                    if (!err) {
-                        console.log('256x256 done')
-                    } else {
-                        console.log(err)
-                    }
-                })
-        )
-        .then(
-            gm(src)
-                .resizeExact(384, 384)
-                .write(target + 'icon-384x384.png', function (err) {
-                    if (!err) {
-                        console.log('384x384 done')
-                    } else {
-                        console.log(err)
-                    }
-                })
-        )
-        .then(
-            gm(src)
-                .resizeExact(512, 512)
-                .write(target + 'icon-512x512.png', function (err) {
-                    if (!err) {
-                        console.log('512x512 done')
-                    } else {
-                        console.log(err)
-                    }
-                })
-        )
-        .catch((err) => {
-            return err
-        })
+const checkSrc = function(s) {
+  if (!fs.existsSync(s)) {
+    console.log('source image not found')
+    process.exit(0);
+  }
 }
-module.exports = webicons
+
+const checkTgt = function(t) {
+  mkdirpAsync(t)
+	  .catch((err) => {console.error(err)})
+    .then(()  => {return true})
+}
+
+const uniqueFolders = function(options) {
+	// turn async to sync
+	let folders = []
+	for (let type in options) {
+		folders.push(options[type].folder)
+	}
+	folders = folders.sort().filter((x, i, a) => !i || x != a[i - 1])
+	return folders
+}
+
+module.exports = {}
+let iconfactory
+iconfactory = exports.iconfactory = {
+
+	// these are wrappers
+	custom: function (src, target, options, strategy) {
+		this.build(src, target, options)
+		.catch(e => console.info('Succesfully caught error: ', e))
+		.then(() => strategy ? this.minify(target, options, strategy) : undefined)
+	},
+	cordova: function (src, target, strategy) {
+		options = settings.options.cordova
+		this.build(src, target, options)
+		.catch(e => console.info('Succesfully caught error: ', e))
+		.then(() => strategy ? this.minify(target, options, strategy) : undefined)
+
+	},
+	electron: function (src, target, strategy) {
+		options = settings.options.electron
+		this.build(src, target, options)
+		.catch(e => console.info('Succesfully caught error: ', e))
+		.then(() => {
+			strategy ? this.minify(target, options, strategy) : undefined
+			this.icns(src, target, options, strategy)
+		})
+	},
+	pwa: function (src, target, strategy) {
+		options = settings.options.pwa
+		this.build(src, target, options)
+		.catch(e => console.info('Succesfully caught error: ', e))
+		.then(() => strategy ? this.minify(target, options, strategy) : undefined)
+	},
+	spa: function (src, target, strategy) {
+		options = settings.options.spa
+		this.build(src, target, options)
+		.catch(e => console.info('Succesfully caught error: ', e))
+		.then(() => strategy ? this.minify(target, options, strategy) : console.log('no strategy'))
+	},
+	kitchensink: function (src, target, strategy ) {
+		this.cordova(src, target, strategy)
+		this.electron(src, target, strategy)
+		this.pwa(src, target, strategy)
+		this.spa(src, target, strategy)
+	},
+	/**
+	 * Creates a set of images
+	 * @param {string} src - image location
+	 * @param {string} target - where to drop the images
+	 * @param {string} options - js object that defines path and sizes
+	 */
+	build: function (src, target, options) {
+		checkSrc(src)
+		checkTgt(target)
+		const sharp = require('sharp')
+		const image = sharp(src)
+		const buildify = (pvar) => new Promise((resolve, reject) => {
+			// console.log("P", pvar[0], pvar[1])
+			image
+				.resize(pvar[1], pvar[1])
+				.crop(sharp.strategy.centre) // you know, just in case
+				.png()
+				.toFile(pvar[0])
+				.then(() => resolve())
+		}).catch(err => {
+			console.log(err)
+			Promise.resolve()
+		})
+
+		let output
+		let chain = Promise.resolve()
+		let folders = uniqueFolders(options)
+		for (let n in folders) {
+			// make the folders first
+			console.log(folders[n])
+			chain = chain.then(() => mkdirpAsync(`${target}/${folders[n]}`))
+		}
+		for (let type in options) {
+			// chain up the transforms
+			options[type].sizes.forEach((size) => {
+				const dest = `${target}/${options[type].folder}`
+				if (options[type].infix === true) {
+					output = `${dest}/${options[type].prefix}${size}x${size}${options[type].suffix}`
+				} else {
+					output = `${dest}/${options[type].prefix}${options[type].suffix}`
+				}
+				// console.log('p1', output, size)
+				let pvar = [output, size]
+				chain = chain.then(() => buildify(pvar))
+			})
+		}
+		return chain
+	},
+
+	minify: function (target, options, strategy, singlefile) {
+		const imagemin = require('imagemin')
+
+		const minifier = (pvar) => new Promise((resolve, reject) => {
+			let cmd
+			let minify = settings.options.minify
+			if ( !minify.available.find(x => x === strategy,)) {
+				strategy = minify.type
+			}
+			switch(strategy) {
+				case 'pngcrush':
+					const pngcrush = require('imagemin-pngcrush')
+					cmd = pngcrush(minify.pngcrushOptions)
+					break
+				case 'pngquant':
+					const pngquant = require('imagemin-pngquant')
+					cmd = pngquant(minify.pngquantOptions)
+					break
+				case 'optipng':
+					const optipng = require('imagemin-optipng')
+					cmd = optipng(minify.optipngOptions)
+					break
+				case 'pngout':
+					const pngout = require('imagemin-pngout')
+					cmd = pngout(minify.pngoutOptions)
+					break
+				case 'zopfli':
+					const zopfli = require('imagemin-zopfli')
+					cmd = zopfli(minify.pngoutOptions)
+					break
+			}
+
+				imagemin([pvar[0]], pvar[1], {
+					plugins: [
+						cmd
+					]
+				})
+
+		}).catch(err => {
+			console.log(err)
+			Promise.resolve()
+		})
+
+		let chain = Promise.resolve()
+
+		if (!singlefile) {
+			// for the batch operation
+			let input, output
+			// put unique folder names in an array
+			let folders = uniqueFolders(options)
+			for (let n in folders) {
+				input = `${target}/${folders[n]}/*.png`
+				output = `${target}/${folders[n]}`
+				console.log(output)
+				let pvar = [input, output]
+				chain = chain.then(() => minifier(pvar))
+			}
+		} else {
+			let pvar = [target, path.dirname(target)]
+			chain = chain.then(() => minifier(pvar))
+		}
+		return chain
+	},
+	icns: function (src, target, options) {
+		const png2icons = require('png2icons')
+
+		mkdirpAsync(`${target}/electron`)
+		.then(() => {
+			let input = fs.readFileSync(src)
+			let out = png2icons.createICNS(input, png2icons.BICUBIC, 0)
+			fs.writeFileSync(`${target}/electron/icon.icns`, out)
+
+			out = png2icons.createICO(input, png2icons.BICUBIC, 0, false)
+			fs.writeFileSync(`${target}/electron/icon.ico`, out)
+			})
+	}
+}
+
+if (typeof exports !== 'undefined') {
+  if (typeof module !== 'undefined' && module.exports) {
+    exports = module.exports = iconfactory
+  }
+  exports.iconfactory = iconfactory
+}
