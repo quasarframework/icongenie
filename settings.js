@@ -4,10 +4,11 @@ exports.options = {
     // infix adds e.g. "44x44" based on the size in sizes to the generated file's name
     // suffix adds a file-ending to the generated file's name
     // sizes determines the pixel width and height to use
-    minify: {
+		sharp: 'kernel: sharp.kernel.lanczos3', // one of [nearest|cubic|lanczos2|lanczos3]
+		minify: {
         batch: false,
         overwrite: true,
-        available: ['pngcrush','pngquant','optipng','pngout','zopfli'],
+        available: ['pngcrush','pngquant','optipng','pngout','zopfli','advpng'],
         type: 'pngout',
         pngcrushOptions: {
             reduce: true
@@ -29,11 +30,12 @@ exports.options = {
         zopfliOptions: {
             transparent: true,
 	          more: true
-        }
+        },
+	      advpngOptions: {
+		      optimizationLevel: 3 // 0-4 (4 uses zopfli)
+	      }
     },
-    icns: {
-
-    },
+		background: '#c0ff33',
     // below this line are all of the icon settings
     electron: {
         defaults: {
@@ -630,6 +632,166 @@ exports.options = {
                 176
             ]
         },
+        android_ldpi_screen_portrait: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'ldpi-screen-portrait',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [200, 320]
+            ]
+        },
+        android_ldpi_screen_landscape: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'ldpi-screen-landscape',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [320, 200]
+            ]
+        },
+        android_mdpi_screen_portrait: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'mdpi-screen-portrait',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [320, 480]
+            ]
+        },
+        android_mdpi_screen_landscape: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'mdpi-screen-landscape',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [480, 320]
+            ]
+        },
+        android_hdpi_screen_portrait: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'hdpi-screen-portrait',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [480, 800]
+            ]
+        },
+        android_hdpi_screen_landscape: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'hdpi-screen-landscape',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [800, 480]
+            ]
+        },
+        android_xdpi_screen_portrait: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'xdpi-screen-portrait',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+              [720, 1280]
+            ]
+        },
+        android_xdpi_screen_landscape: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'xdpi-screen-landscape',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+              [1280, 720]
+            ]
+        },
+        android_xxdpi_screen_portrait: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'xxdpi-screen-portrait',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+              [960, 1600]
+            ]
+        },
+        android_xxdpi_screen_landscape: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'xxdpi-screen-landscape',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+              [1600, 960]
+            ]
+        },
+        android_xxxdpi_screen_portrait: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'xxxdpi-screen-portrait',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [1280, 1920]
+            ]
+        },
+        android_xxxdpi_screen_landscape: {
+            splash: true,
+            folder: 'cordova/android',
+            prefix: 'xxxdpi-screen-landscape',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [1920, 1280]
+            ]
+        },
+        win_splashscreen_620x300: {
+            splash: true,
+            folder: 'cordova/windows',
+            prefix: 'Splashscreen-620x300',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [620, 300]
+            ]
+        },
+        win_splashscreen_868x420: {
+            splash: true,
+            folder: 'cordova/windows',
+            prefix: 'Splashscreen-868x420',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [868, 420]
+            ]
+        },
+        win_splashscreen_1116x540: {
+            splash: true,
+            folder: 'cordova/windows',
+            prefix: 'Splashscreen-1116x540',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [1116, 540]
+            ]
+        },
+        universal: {
+            splash: true,
+            folder: 'cordova/ios',
+            prefix: 'Default@2x~universal',
+            infix: false,
+            suffix: '.png',
+            sizes: [
+                [2732, 2732]
+            ]
+        }
     },
     spa: {
         all: {

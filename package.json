@@ -13,8 +13,8 @@
     "iconfactory": "./cli.js"
   },
   "dependencies": {
-    "fs-extra": "^5.0.0",
     "imagemin": "^5.3.1",
+    "imagemin-advpng": "^4.0.0",
     "imagemin-optipng": "^5.2.1",
     "imagemin-pngcrush": "^5.1.0",
     "imagemin-pngout": "^3.0.0",
@@ -22,7 +22,10 @@
     "imagemin-zopfli": "^5.1.0",
     "minimist": "^1.2.0",
     "png2icons": "^1.0.1",
+    "potrace": "^2.1.1",
+    "read-chunk": "^2.1.0",
     "sharp": "^0.20.2",
+    "svgo": "^1.0.5",
     "to-ico": "^1.1.5"
   },
   "devDependencies": {

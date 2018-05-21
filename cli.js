@@ -11,6 +11,7 @@ const args = require('minimist')(process.argv.slice(2), {
         s: 'source',
         t: 'target',
         m: 'minify',
+        d: 'mode',
         o: 'options',
         v: 'version'
     },
@@ -20,33 +21,36 @@ const args = require('minimist')(process.argv.slice(2), {
 })
 
 if (args.version) {
-    console.log('Icon Factory: v.' + info.version)
+    console.log('Quasar Icon Factory: v.' + info.version)
     console.log('     License: MIT')
     process.exit(0)
 }
 
 if (args.help) {
-    console.log('Icon Factory: v.' + info.version)
+    console.log('Quasar Icon Factory: v.' + info.version)
     console.log('     License: MIT')
     console.log(`
-Icon Factory is a node utility to create a batch of icons for your app. 
+The Icon Factory is a node utility to create a batch of icons for your app. 
 Designed to work seamlessly with the Quasar Framework, but probably
 useful for other build pipelines.
     
 Flags:    
   -p, --preset      Choose a preset output or make your own
+                    [minify|splash|svg|favicon]
                     [spa|pwa|cordova|electron|kitchensink|custom]
   -s, --source      Your source image as a large square png
   -t, --target      The destination directory for the files created
   -o, --options     path to file that overrides defaults (if custom)
   -m, --minify      Minify strategy to use. 
-                    [pngcrush|pngquant|optipng|pngout|zopfli]
+                    [pngcrush|pngquant|optipng|pngout|zopfli|advpng]
+  -d, --mode        Minify mode if minify preset [folder|singlefile]
   -v, --version     display version information
   -h, --help        display this information
   
 Usage:
     
-$ iconfactory -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder/ -m=pngquant    
+$ iconfactory -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder -m=pngquant  
+$ iconfactory -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlefile  
     `)
     process.exit(0)
 }
@@ -90,7 +94,16 @@ const iconfactory = require('.')
 
 switch(args.preset) {
     case 'minify':
-        iconfactory.minify(args.source, args.target)
+        iconfactory.minify(args.source,  false, args.minify, args.mode)
+        break
+	  case 'splash':
+		    iconfactory.splash(args.source,  false, args.minify, args.mode)
+		    break
+    case 'svg':
+        iconfactory.svg(args.source,  args.target)
+        break
+	  case 'favicon':
+        iconfactory.favicon(args.source, args.target)
         break
     case 'kitchensink':
         iconfactory.kitchensink(args.source, args.target, args.minify)
