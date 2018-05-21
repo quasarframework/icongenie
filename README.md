@@ -8,9 +8,7 @@ It has three main interfaces (CLI, API and Webpack 4) and although it is built f
 > If you use an original that is smaller than 1240x1240 some icons will be naively upscaled. If you do not use a square original, it will be cropped square from the center using the smaller dimension as width and height. You have been warned.
 
 ## How it Works
-There are four things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will sort these icons into folders.
-
-There are four general functions that are used internally to compose icon sets and if you just want to use them, feel free:
+There are four things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will sort these icons into folders. Here is the description of these general functions that are used internally to compose icon sets and if you just want to use them, feel free:
 - **build** - This function creates all assets requested from the sizes object or presets object.
 - **minify** - The default usage minifies all assets in the target folder in-place with `pngquant`. Compared to using `pngcrush --brute`, it is a relatively fast process. If you are not in a hurry and want the best results, consider using pngcrush instead. 
 - **icns** - This will create the special MacOS (icns) and Windows icon (ico) files.
@@ -33,16 +31,15 @@ You may notice that very small icons (like 16x16 and 32x32) look a little strang
 - Linux, MacOS or Windows
 
 ## Install
-Very soon, Quasar-cli will use this project internally as a webpack plugin. 
+Very soon, Quasar-cli will use this project internally as a webpack plugin, so you won't ever even need to know how it works. But if you want it for any reason whatsoever, you can have it.
+
 To include this lib in your project use npm or yarn:
 
 ```
 $ yarn add quasar-icon-factory
 ```
 
-## Webpack plugin
-
-
+## Webpack plugin [WIP]
 
 ## Api Usage
 `quasar-icon-factory` was built for use in the [Quasar-Framework](https://quasar-framework.org) and as such is intended to follow some of the conventions of that project. If you prefer to output different files / settings, it is possible for you to pass these in an override object to `quasar-icon-factory` that contains all of the settings that you prefer. If you want to pass an options object (perhaps for the fastest available minify at lowest quality), this is the kind of structure you will need: 
@@ -81,7 +78,7 @@ You can do this as an API client by passing the object directly into the command
 
 ### Minify
 
-There are six different minification methods available (because it is possible that one or the other just won't build on your system). Using totally non-scientific tests, these are the results of this command that ran on a 3,2 GHz Quad-Core Intel Xeon: 
+There are six different minification algorithms available (because it is possible that one or the other just won't build on your system). Using totally non-scientific tests, these are the results of this command that ran on a 3,2 GHz Quad-Core Intel Xeon with 16 GB of ram: 
 
 `$ time node cli.js -p=spa -s=test/example-1240x1240.png -t=test/output -m="$minify" && du -sh test/output/spa`
 
@@ -99,7 +96,7 @@ It takes a source image, scales it down according to the settings and then minif
 | zopfli        | 33.2s       | lossless   | 380K   |
 | zopfli.more   | 81.3s       | lossless   | 336K   |
 
-This is why I would recommend using pngquant during development (to have a proxy image, but to use optipng when building for production.)
+This is why it is recommended to use pngquant during development (to have a proxy image, but to use optipng when building for production.)
 
 <div style="text-align:center">
     <img src="/test/sources/quant_opti_orig.png?raw=true" width="701" height="195" >
@@ -150,11 +147,16 @@ $ iconfactory -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder -m=pngquant
 $ iconfactory -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlefile  
 ```
 
+## Performance
+Solving compression problems takes time, and the more complex the approach the more linear time is needed. Some compression algorithms are fast, some are great. None are both. This package tries to write from the buffer only when a file is created and avoids creating intermediary files. 
+
 
 ### Resources for more information about App Icons
 - [Favicon Cheat Sheet](https://github.com/audreyr/favicon-cheat-sheet)
 - [PWA Icons](https://developer.mozilla.org/en-US/docs/Web/Manifest)
 - [PWA for Chrome](https://developer.chrome.com/multidevice/android/installtohomescreen)
+- [PWA on iOS](https://www.netguru.co/codestories/few-tips-that-will-make-your-pwa-on-ios-feel-like-native)
+- [Lighthouse Web App Audit ](https://developers.google.com/web/tools/lighthouse/)
 - [MacOS App Icon](https://developer.apple.com/macos/human-interface-guidelines/icons-and-images/app-icon/)
 - [iOS App Icons](https://developer.apple.com/library/content/qa/qa1686/_index.html)
 - [iOS Ad Hoc Mode](https://stackoverflow.com/questions/14858266/what-is-the-difference-between-in-house-versus-ad-hoc-distribution-for-enterpris)
@@ -183,13 +185,15 @@ clone, `yarn install`, `yarn test`
 - [X] Find a smaller (and safe!) alternative to graphicsmagick
 - [X] Be smarter about chaining
 - [X] pngquant the results
-- [ ] get some svg's in there yo
+- [X] get some svg's in there yo
+- [ ] multithreading of sharp via .clone()
 
 ## Thanks to
 - [image-trace-loader](https://github.com/EmilTholin/image-trace-loader)
-- https://github.com/trendchaser4u
+- the [image-min](https://github.com/imagemin) team
+- @maxMatteo, @Robin, @Rob, @trendchaser4u
+
 
 ## License
-© 2016 - Present D.C. Thompson & Razvan Stoenescu
-
+© 2018 - Present D.C. Thompson & Razvan Stoenescu
 MIT

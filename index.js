@@ -457,7 +457,7 @@ iconfactory = exports.iconfactory = {
 					console.log(error);
 				} else {
 					// console.log(trace.getSVG())
-					fs.writeFileSync(`${target}/test.svg`, trace.getSVG());
+					fs.writeFileSync(`${target}/safari-pinned-tab.svg`, trace.getSVG());
 					/*
 					 // needs a lot of work
 					 svgo.optimize(trace.getSVG(), function (result) {
