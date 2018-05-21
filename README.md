@@ -1,27 +1,29 @@
-# PRE ALPHA ! THERE BE DRAGONS!
+# quasar-icon-factory - Work in Progress
+creates a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also minifies the assets. It will also create splash screens and svgs.
 
-# quasar-icon-factory
-is a cross-platform tool to create a set of favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also minifies the assets.
+It works cross-platform to even generate those pesky `.icns` and `.ico` files for some reason still used by Electron apps and in the case of the latter prefered by some browsers and webscrapers (favicon.ico) - even though modern development guidelines for Apple and Windows recommend using `.png`. 
 
-It works cross-platform to even generate those pesky `.icns` and `.ico` files for some reason still needed by Electron apps and in the case of the latter prefered by some browsers, even though modern development guidelines for Apple and Windows recommend using `.png`. 
+It has three main interfaces (CLI, API and Webpack 4) and although it is built for the Quasar-Framework, it should work anywhere you can run node.
 
-> If you use an original that is smaller than 1240x1240 some icons will be naively upscaled. You have been warned.
+> If you use an original that is smaller than 1240x1240 some icons will be naively upscaled. If you do not use a square original, it will be cropped square from the center using the smaller dimension as width and height. You have been warned.
 
 ## How it Works
 There are four things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will sort these icons into folders.
 
-There are three general functions that are used internally to compose icon sets and if you just want to use them, feel free:
+There are four general functions that are used internally to compose icon sets and if you just want to use them, feel free:
 - **build** - This function creates all assets requested from the sizes object or presets object.
 - **minify** - The default usage minifies all assets in the target folder in-place with `pngquant`. Compared to using `pngcrush --brute`, it is a relatively fast process. If you are not in a hurry and want the best results, consider using pngcrush instead. 
 - **icns** - This will create the special MacOS (icns) and Windows icon (ico) files.
+- **favicon** - This will create the classical and never going out of style favicon.ico
 
-There are five composed methods that will create icons for you according to your needs:
+There are five composed "recipes" that will create icons for you according to your needs as assembled by our research:
 
-- **kitchensink** (all icons, all platforms)
-- **cordova** (all platforms)
+- **cordova** (all icons, splashscreens, all platforms)
 - **electron** (all platforms)
-- **pwa** (incl. chrome special icon name)
-- **spa** (common icon sizes)
+- **pwa** (incl. chrome special icon name, favicon)
+- **spa** (common icon sizes, favicon)
+- **kitchensink** (all icons, all platforms)
+
 
 ### Head's Up!
 You may notice that very small icons (like 16x16 and 32x32) look a little strange. Achieving good results by simply downscaling to a very small size depends a great deal on your original, and it is highly recommended that you at least look at all of the icons before you publish your project to a store. While integration testing can make sure that you have an asset, judging the ability of your small icon to express the same content as a large one is highly subjective and something better left to humans. Not even hamming distance will get this right!
@@ -31,37 +33,26 @@ You may notice that very small icons (like 16x16 and 32x32) look a little strang
 - Linux, MacOS or Windows
 
 ## Install
+Very soon, Quasar-cli will use this project internally as a webpack plugin. 
 To include this lib in your project use npm or yarn:
 
 ```
-$ yarn add icon-factory
+$ yarn add quasar-icon-factory
 ```
 
-## Module Usage
-`icon-factory` was built for use in the [Quasar-Framework](https://quasar-framework.org) and as such is intended to follow some of the conventions of that project. If you prefer to output different files / settings, it is possible for you to pass these in an override object to `icon-factory` that contains all of the settings that you prefer. (See sizes.js for the structural design you will have to follow.)
+## Webpack plugin
 
-iconfactory.build('./test/example-1024x1024.png', './test/output/', false)
 
-```
-let iconfactory = require('iconfactory')
 
-These are exposed, but are actually used internally to make the icons depending on what you need them to be built for.
-
-iconfactory._build
-
-iconfactory._icns
-
-iconfactory._minify(path_to_src_image, path_to_deposit_icons, )
-```
-
-If you want to pass an options object (perhaps for the fastest available minify at lowest quality), this is the structure you will need: 
+## Api Usage
+`quasar-icon-factory` was built for use in the [Quasar-Framework](https://quasar-framework.org) and as such is intended to follow some of the conventions of that project. If you prefer to output different files / settings, it is possible for you to pass these in an override object to `quasar-icon-factory` that contains all of the settings that you prefer. If you want to pass an options object (perhaps for the fastest available minify at lowest quality), this is the kind of structure you will need: 
 
 ```js 
 let options = {
     minify: {
         available: ['pngquant']
         type: 'pngquant'
-        options: {
+        pngquantOptions: {
             quality: '1-10',
             floyd: 0.1,
             speed: 10
@@ -84,12 +75,13 @@ let options = {
         }
     }
 }
-
-
 ```
+
+You can do this as an API client by passing the object directly into the command, or as webpack client using 
+
 ### Minify
 
-There are five different minification methods available (because it is possible that one or the other just won't build on your system). Using totally non-scientific tests, these are the results of this command that ran on a 3,2 GHz Quad-Core Intel Xeon: 
+There are six different minification methods available (because it is possible that one or the other just won't build on your system). Using totally non-scientific tests, these are the results of this command that ran on a 3,2 GHz Quad-Core Intel Xeon: 
 
 `$ time node cli.js -p=spa -s=test/example-1240x1240.png -t=test/output -m="$minify" && du -sh test/output/spa`
 
@@ -101,6 +93,7 @@ It takes a source image, scales it down according to the settings and then minif
 | pngquant-bad  | 00.9s       | very lossy | 100K   |
 | pngquant-good | 01.4s       | lossy      | 144K   |
 | pngout        | 10.7s       | lossless   | 624K   |
+| advpng.3      | 10.9s       | lossless   | 632K   |
 | optipng       | 13.9s       | lossless   | 404K   |
 | pngcrush      | 28.1s       | lossless   | 404K   |
 | zopfli        | 33.2s       | lossless   | 380K   |
@@ -115,21 +108,23 @@ This is why I would recommend using pngquant during development (to have a proxy
 ## .icns & .ico
 These are notoriously difficult to acquire and make. For icns you usually need a mac and ico is really just a sequence of images with a special header - but there are very few tools that will let you do both cross-platform. 
 
-This module uses the amazing [`png2icons`](https://github.com/idesis-gmbh/png2icons) module, which actually does all of the decoding and encoding on a byte-level with javascript. That is some real ninja sh*t - so go over there and give those devs a :star:. This is actually the slowest part of the `kitchensink` and the files are huge. By feeding it from the `sharp` buffer it has been sped up a little bit (and the final icns file is actually about 20% smaller!)
+This module uses the amazing [`png2icons`](https://github.com/idesis-gmbh/png2icons) module, which actually does all of the decoding and encoding on a byte-level with javascript. This of course takes a bit of time, but it also works cross-platform, so please think about going over there and giving those devs a :star:. This is actually one of the slowest parts of the `kitchensink` and the files are huge. By feeding it from the `sharp` buffer it has been sped up a little bit (and the final icns file is actually about 20% smaller!)
+
+To make the favicon.ico, it uses [to-ico](https://github.com/kevva/to-ico) and concats a 16x16 and a 32x32 png.
 
 ## CLI Usage
-`icon-factory` can be used as a command line tool, and you can simply add it by installing it "globally" with your node package manager:
+`quasar-icon-factory` can be used as a command line tool, and you can simply add it by installing it "globally" with your node package manager:
 ```bash
-$ yarn global add icon-factory 
+$ yarn global add quasar-icon-factory 
 - or -
-$ npm install --global icon-factory 
+$ npm install --global quasar-icon-factory 
 ```
 
 To find out about the settings, just use
 ``` 
 $ iconfactory --help
 
-Icon Factory: v.1.0.0
+Quasar Icon Factory: v.1.0.0
      License: MIT
 
 Icon Factory is a node utility to create a batch of icons for your app. 
@@ -138,19 +133,21 @@ useful for other build pipelines.
     
 Flags:    
   -p, --preset      Choose a preset output or make your own
+                    [minify|splash|svg|favicon]
                     [spa|pwa|cordova|electron|kitchensink|custom]
   -s, --source      Your source image as a large square png
   -t, --target      The destination directory for the files created
   -o, --options     path to file that overrides defaults (if custom)
   -m, --minify      Minify strategy to use. 
-                    [pngcrush|pngquant|optipng|pngout|zopfli]
+                    [pngcrush|pngquant|optipng|pngout|zopfli|advpng]
+  -d, --mode        Minify mode if minify preset [folder|singlefile]
   -v, --version     display version information
   -h, --help        display this information
   
 Usage:
     
-$ iconfactory -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder/ -m=pngquant  
-
+$ iconfactory -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder -m=pngquant  
+$ iconfactory -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlefile  
 ```
 
 
@@ -188,7 +185,11 @@ clone, `yarn install`, `yarn test`
 - [X] pngquant the results
 - [ ] get some svg's in there yo
 
+## Thanks to
+- [image-trace-loader](https://github.com/EmilTholin/image-trace-loader)
+- https://github.com/trendchaser4u
 
 ## License
-©2018 D.C. Thompson (nothingismagick)
+© 2016 - Present D.C. Thompson & Razvan Stoenescu
+
 MIT
