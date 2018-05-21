@@ -1,4 +1,6 @@
-# icon-factory
+# PRE ALPHA ! THERE BE DRAGONS!
+
+# quasar-icon-factory
 is a cross-platform tool to create a set of favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also minifies the assets.
 
 It works cross-platform to even generate those pesky `.icns` and `.ico` files for some reason still needed by Electron apps and in the case of the latter prefered by some browsers, even though modern development guidelines for Apple and Windows recommend using `.png`. 
@@ -20,8 +22,6 @@ There are five composed methods that will create icons for you according to your
 - **electron** (all platforms)
 - **pwa** (incl. chrome special icon name)
 - **spa** (common icon sizes)
-
-If you merely call `iconfactory.kitchensink('test.png', 'target-dir/')` in your code,
 
 ### Head's Up!
 You may notice that very small icons (like 16x16 and 32x32) look a little strange. Achieving good results by simply downscaling to a very small size depends a great deal on your original, and it is highly recommended that you at least look at all of the icons before you publish your project to a store. While integration testing can make sure that you have an asset, judging the ability of your small icon to express the same content as a large one is highly subjective and something better left to humans. Not even hamming distance will get this right!
