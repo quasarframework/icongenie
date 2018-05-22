@@ -1,18 +1,23 @@
 # quasar-icon-factory - Work in Progress
-creates a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also minifies the assets. It will also create splash screens and svgs.
+This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens and two different types of svgs.
 
 It works cross-platform to even generate those pesky `.icns` and `.ico` files for some reason still used by Electron apps and in the case of the latter prefered by some browsers and webscrapers (favicon.ico) - even though modern development guidelines for Apple and Windows recommend using `.png`. 
 
-It has three main interfaces (CLI, API and Webpack 4) and although it is built for the Quasar-Framework, it should work anywhere you can run node.
+It has three main interfaces (CLI, API and Webpack 4) and although it is built for the Quasar-Framework, it should work anywhere you can run node. It is designed to be a very useful tool that you will be glad to have lying around.
 
 > If you use an original that is smaller than 1240x1240 some icons will be naively upscaled. If you do not use a square original, it will be cropped square from the center using the smaller dimension as width and height. You have been warned.
 
 ## How it Works
-There are four things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will sort these icons into folders. Here is the description of these general functions that are used internally to compose icon sets and if you just want to use them, feel free:
+There are 5 1/2 things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will create SVG assets. Finally it will sort these icons into folders. 
+
+Here is the description of these general functions that are used internally to compose icon sets and if you just want to use them, feel free:
+
 - **build** - This function creates all assets requested from the sizes object or presets object.
 - **minify** - The default usage minifies all assets in the target folder in-place with `pngquant`. Compared to using `pngcrush --brute`, it is a relatively fast process. If you are not in a hurry and want the best results, consider using pngcrush instead. 
 - **icns** - This will create the special MacOS (icns) and Windows icon (ico) files.
 - **favicon** - This will create the classical and never going out of style favicon.ico
+- **svg** - With this command you can trace the outlines of your PNG to create an SVG and style it with some options.
+- **svgduochrome** - This tool will help you make a posterized SVG from your PNG. Choose your colors and setting wisely.
 
 There are five composed "recipes" that will create icons for you according to your needs as assembled by our research:
 
@@ -22,9 +27,13 @@ There are five composed "recipes" that will create icons for you according to yo
 - **spa** (common icon sizes, favicon)
 - **kitchensink** (all icons, all platforms)
 
-
 ### Head's Up!
 You may notice that very small icons (like 16x16 and 32x32) look a little strange. Achieving good results by simply downscaling to a very small size depends a great deal on your original, and it is highly recommended that you at least look at all of the icons before you publish your project to a store. While integration testing can make sure that you have an asset, judging the ability of your small icon to express the same content as a large one is highly subjective and something better left to humans. Not even hamming distance will get this right!
+
+## But why did you make this?
+There are literally dozens of other projects out there that more or less do the same thing, why did you bother to make a new one? The answer is quite simple: Because none of them fulfill all the needs of the quasar project, and although lots of really smart people built them, we want to be able to maintain this library and grow it as quasar grows. Especially since many such image-library projects quickly grow outdated and maintainers drift away into a sea of micro-modules (yes imagemin, we mean you), we felt that it is a good property to keep "in-house".
+
+# Installation and Usage
 
 ## Requires
 - node / yarn
@@ -74,11 +83,10 @@ let options = {
 }
 ```
 
-You can do this as an API client by passing the object directly into the command, or as webpack client using 
 
 ### Minify
 
-There are six different minification algorithms available (because it is possible that one or the other just won't build on your system). Using totally non-scientific tests, these are the results of this command that ran on a 3,2 GHz Quad-Core Intel Xeon with 16 GB of ram: 
+There are six different minification algorithms available (because it is possible that one or the other just won't build on your system or worse becomes compromised via some kind of exploit). Using totally non-scientific tests, these are the results of this command that ran one time on a 3,2 GHz Quad-Core Intel Xeon with 16 GB of ram: 
 
 `$ time node cli.js -p=spa -s=test/example-1240x1240.png -t=test/output -m="$minify" && du -sh test/output/spa`
 
@@ -96,21 +104,27 @@ It takes a source image, scales it down according to the settings and then minif
 | zopfli        | 33.2s       | lossless   | 380K   |
 | zopfli.more   | 81.3s       | lossless   | 336K   |
 
-This is why it is recommended to use pngquant during development (to have a proxy image, but to use optipng when building for production.)
+This is why it is recommended to use pngquant during development (to have a proxy image), but to use optipng when building for production.
 
 <div style="text-align:center">
     <img src="/test/sources/quant_opti_orig.png?raw=true" width="701" height="195" >
 </div>
 
 ## .icns & .ico
-These are notoriously difficult to acquire and make. For icns you usually need a mac and ico is really just a sequence of images with a special header - but there are very few tools that will let you do both cross-platform. 
+These are notoriously difficult to acquire and make. For icns you usually need a mac and ico is really just a sequence of images with a special header - but there are very few tools that will let you do both cross-platform - and this is one case where we needed several tools. 
 
 This module uses the amazing [`png2icons`](https://github.com/idesis-gmbh/png2icons) module, which actually does all of the decoding and encoding on a byte-level with javascript. This of course takes a bit of time, but it also works cross-platform, so please think about going over there and giving those devs a :star:. This is actually one of the slowest parts of the `kitchensink` and the files are huge. By feeding it from the `sharp` buffer it has been sped up a little bit (and the final icns file is actually about 20% smaller!)
 
 To make the favicon.ico, it uses [to-ico](https://github.com/kevva/to-ico) and concats a 16x16 and a 32x32 png.
 
+## Splash Screens for Cordova
+These are constructed for your app and use your project's background color for the background. If you undefine this value, the process will automatically create a black background. You can also change the option with a hex triplet like `#c0ffee`. 
+
+## SVG
+The safari-pinned-tab.svg mask is created by adding contrast (via threshold) to the original and then applying even more threshold to the SVG tracing. If you set a background color, the mask will be solid, which is probably not what you want. If you are indeed of a discerning nature (and hav used gradients in your icon design), there is another option available to you:svg-duochrome. It too will be created in the spa folder within the spa task. As usual, you can also override our sensible defaults and get some wild SVG action going on.
+
 ## CLI Usage
-`quasar-icon-factory` can be used as a command line tool, and you can simply add it by installing it "globally" with your node package manager:
+`quasar-icon-factory` can be used as a command line tool for batch invocation, and you can simply add it by installing it "globally" with your node package manager:
 ```bash
 $ yarn global add quasar-icon-factory 
 - or -
@@ -130,7 +144,7 @@ useful for other build pipelines.
     
 Flags:    
   -p, --preset      Choose a preset output or make your own
-                    [minify|splash|svg|favicon]
+                    [minify|splash|svg|svgduochrome|favicon]
                     [spa|pwa|cordova|electron|kitchensink|custom]
   -s, --source      Your source image as a large square png
   -t, --target      The destination directory for the files created
@@ -148,7 +162,13 @@ $ iconfactory -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlef
 ```
 
 ## Performance
-Solving compression problems takes time, and the more complex the approach the more linear time is needed. Some compression algorithms are fast, some are great. None are both. This package tries to write from the buffer only when a file is created and avoids creating intermediary files. 
+Solving compression problems takes time, and the more complex the approach the more linear time is needed. Some compression algorithms are fast, some are great. None are both. This package tries to write from the buffer only when a file is created and (mostly) avoids creating intermediary files. We will look to increasing the performance through multithreading and reducing memory consumption when we begin the refactoring stage.
+
+## Testing
+`git clone`, `yarn install`, `yarn test`
+
+## Contributing
+You are totally welcome to join this project. Please file issues and make PRs! Let us know how it goes and join us at our [discord server](https://discord.gg/5TDhbDg) to talk shop. There are a number of tasks that will be marked as "help wanted" on the Issue board, so please make sure to have a look there.
 
 
 ### Resources for more information about App Icons
@@ -174,11 +194,11 @@ Solving compression problems takes time, and the more complex the approach the m
 - [PNG Minification Comparison](https://css-ig.net/png-tools-overview#overview)
 - [.ico file-header Information](https://en.wikipedia.org/wiki/ICO_(file_format)#Outline)
 
-## Testing
-clone, `yarn install`, `yarn test`
+
 
 ## Future Work
-- [ ] Complete set of tests
+Stage 0 - Collection
+- [X] CLI interface
 - [X] Switch for Cordova / Electron / Webapps
 - [X] Get all the sizes!!!
 - [X] Find cross-platform alternative for MacOS .icns
@@ -186,12 +206,29 @@ clone, `yarn install`, `yarn test`
 - [X] Be smarter about chaining
 - [X] pngquant the results
 - [X] get some svg's in there yo
-- [ ] multithreading of sharp via .clone()
+
+Stage 1 - Connection
+- [X] Node API interface
+- [ ] Interactive CLI from @bloo_df
+- [ ] Complete set of unit tests with 95% coverage target
+- [ ] Webpack plugin extension
+- [ ] - rebuild the options and config
+- [ ] - map to quasar outputs
+
+Stage 2 - Refactoring
+- [ ] Audit and possibly reqbuild entire imagemin lib and deps
+- [ ] Build JSDocs on git precommit 
+- [ ] Add logging (verbose, minimal, file, none)
+- [ ] Real benchmarks
+- [ ] Refactor internal methods and patterns to streamline process
+- [ ]  - multithreading of sharp via .clone()
+- [ ]  - be even smarter about only REALLY making the icons that are needed and then writing targets from that specific buffer
+
 
 ## Thanks to
 - [image-trace-loader](https://github.com/EmilTholin/image-trace-loader)
 - the [image-min](https://github.com/imagemin) team
-- @maxMatteo, @Robin, @Rob, @trendchaser4u
+- @maxMatteo, @Robin, @Rob, @trendchaser4u, @bloo_df
 
 
 ## License

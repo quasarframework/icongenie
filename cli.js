@@ -2,7 +2,6 @@
 'use strict'
 
 const fs = require('fs')
-const path = require('path')
 const info = require('./package.json')
 const args = require('minimist')(process.argv.slice(2), {
     alias: {
@@ -36,7 +35,7 @@ useful for other build pipelines.
     
 Flags:    
   -p, --preset      Choose a preset output or make your own
-                    [minify|splash|svg|favicon]
+                    [minify|splash|svg|svgduochrome|favicon]
                     [spa|pwa|cordova|electron|kitchensink|custom]
   -s, --source      Your source image as a large square png
   -t, --target      The destination directory for the files created
@@ -58,7 +57,8 @@ $ iconfactory -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlef
 if (!args.preset) {
     console.log('Icon Factory: v.' + require('./package.json').version)
     console.log('You must choose a preset or declare custom.')
-    console.log('  -p, --preset      [kitchensink|spa|pwa|cordova|electron|custom]\n')
+    console.log('  -p, --preset      [minify|splash|svg|svgduochrome|favicon]\n' +
+	              '                    [kitchensink|spa|pwa|cordova|electron|custom]\n')
     process.exit(0)
 }
 
@@ -83,9 +83,9 @@ if (!args.target) {
     process.exit(0)
 }
 
-if (args.preset=='custom' && !args.options) {
+if (args.preset === 'custom' && !args.options) {
     console.log('Icon Factory: v.' + require('./package.json').version)
-    console.log('You must add a file that has the options if you use custom')
+    console.log('You must add a file that has the options if you use custom preset')
     console.log('  -o, --options     path to file that overrides defaults (if custom)\n')
     process.exit(0)
 }
@@ -100,9 +100,12 @@ switch(args.preset) {
 		    iconfactory.splash(args.source,  false, args.minify, args.mode)
 		    break
     case 'svg':
-        iconfactory.svg(args.source,  args.target)
+        iconfactory.svg(args.source, args.target)
         break
-	  case 'favicon':
+		case 'svgduochrome':
+				iconfactory.svgDuochrome(args.source, args.target)
+				break
+		case 'favicon':
         iconfactory.favicon(args.source, args.target)
         break
     case 'kitchensink':
@@ -125,4 +128,5 @@ switch(args.preset) {
         break
     default:
         console.log('You must supply a preset')
+				break
 }

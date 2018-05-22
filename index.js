@@ -1,12 +1,14 @@
 'use strict'
 
 /**
-* Simple module that takes an original image and resizes
-* it to common icon sizes and will put them in a folder.
-* It will retain transparency.
-* @module icon-factory
-* @exports iconfactory
-*/
+ * Simple module that takes an original image and resizes
+ * it to common icon sizes and will put them in a folder.
+ * It will retain transparency and can make special file
+ * types. You can control the settings.
+ *
+ * @module icon-factory
+ * @exports iconfactory
+ */
 
 const fs = require('fs')
 	, sharp = require('sharp')
@@ -22,7 +24,6 @@ const fs = require('fs')
 	, toIco = require('to-ico')
 	, potrace = require('potrace')
 	, SVGO = require('svgo')
-	, Potrace = potrace.Potrace
 	, readChunk = require('read-chunk')
 	, isPng = require('is-png')
 
@@ -48,14 +49,14 @@ const checkSrc = function(src) {
 		}
 		else {
 			const buffer = readChunk.sync(src, 0, 8)
-			if (isPng(buffer)) {
-				console.log('created image buffer')
-				return image = sharp(src)
+				if (isPng(buffer) === true) {
+					console.log('created image buffer')
+					return image = sharp(src)
 			}
 			else {
 				image = false
-				console.error('Source image for icon-factory is not a png')
-				process.exit(0)
+				// console.error('Source image for icon-factory is not a png')
+				// process.exit(0)
 				throw(new Error('Source image for icon-factory is not a png'))
 			}
 		}
@@ -99,6 +100,7 @@ const mkdirpAsync = function (dirPath) {
 
 /**
  * Optional sync version for checking if the target folder exists
+ * Alias if we need it NOW!!!
  *
  * @param {string} target - a folder to target
  */
@@ -189,6 +191,8 @@ iconfactory = exports.iconfactory = {
 		.then(() => {
 			strategy ? this.minify(target, settings.options.spa, strategy, 'batch') : console.log('no strategy')
 			this.favicon(src, target, 'spa')
+			this.svg(src, target, 'spa')
+			this.svgDuochrome(src, target, 'spa')
 		})
 	},
 
@@ -256,7 +260,7 @@ iconfactory = exports.iconfactory = {
 	 */
 	splash: function (src, target, options) {
 		checkTgt(target)
-		let rgb = hexToRgb(settings.options.background)
+		let rgb = hexToRgb(settings.options.background_color)
 		console.log('RGB', rgb.r,rgb.g, rgb.b)
 		sharp(src)
 		.background({r: rgb.r, g: rgb.g, b: rgb.b, alpha: 1})
@@ -368,7 +372,6 @@ iconfactory = exports.iconfactory = {
 			default:
 				throw(new Error('Minify mode must be one of [singlefile|directory|batch]'))
 		}
-
 		return chain
 	},
 
@@ -404,71 +407,87 @@ iconfactory = exports.iconfactory = {
 	 * @param {string} dest - js object that defines path and sizes
 	 */
 	favicon: function(src, target, dest) {
+		if(!dest) dest='extras'
 		mkdirpAsync(`${target}/${dest}`)
 			.then(() => {
-				let files = [
-					fs.readFileSync(`${target}/${dest}/icon-16x16.png`),
-					fs.readFileSync(`${target}/${dest}/icon-32x32.png`)
-				]
-				if (files.length <= 0) {
-					sharp(src)
+					let image = sharp(src)
+					image
 					.resize(32, 32)
 					.crop(sharp.strategy.centre)
 					.png()
-					.toColourspace('srgb')
 					.toFile(`${target}/${dest}/icon-32x32.png`)
-					.resize(16,16)
-					.png()
-					.toFile(`${target}/${dest}/icon-16x16.png`)
 					.then(() => {
-						let files = [
-							fs.readFileSync(`${target}/${dest}/icon-16x16.png`),
-							fs.readFileSync(`${target}/${dest}/icon-32x32.png`)
-						]
-						toIco(files).then(buf => {
-							fs.writeFileSync(`${target}/${dest}/favicon.ico`, buf)
+						image
+						.resize(16,16)
+						.crop(sharp.strategy.centre)
+						.png()
+						.toFile(`${target}/${dest}/icon-16x16.png`)
+						.then(() => {
+							let files = [
+								fs.readFileSync(`${target}/${dest}/icon-16x16.png`),
+								fs.readFileSync(`${target}/${dest}/icon-32x32.png`)
+							]
+							toIco(files).then(buf => {
+								fs.writeFileSync(`${target}/${dest}/favicon.ico`, buf)
+							})
 						})
-					})
-				} else {
-					toIco(files).then(buf => {
-						fs.writeFileSync(`${target}/${dest}/favicon.ico`, buf)
-					})
-				}
+						}
+					)
 			})
 	},
 	/**
 	 * Create a monochrome svg from the icon
 	 * @param {string} src - image location
 	 * @param {string} target - where to drop the images
-	 * @param {string} dest - js object that defines path and sizes
-	 */
-	svg: function(src, target) {
-		// blatantly taken from image-trace-loader
+	 * @param {string} dest - specific project to put the svg
+ */
+	svg: function(src, target, dest) {
+		if(!dest) dest='extras'
 		const traceParams = {
-		};
-
-		mkdirpAsync(`${target}`)
+			threshold: settings.options.svg.svg_threshold,
+			background: settings.options.background_color,
+			color: settings.options.theme_color,
+			turdSize: settings.options.svg.turdSize,
+			optTolerance: settings.options.svg.optTolerance
+		}
+		mkdirpAsync(`${target}/${dest}`)
 		.then(() => {
-
-			var trace = new Potrace();
-			const svgo = new SVGO({multipass: true, floatPrecision: 0});
-			trace.loadImage(src, function (error) {
-				if (error) {
-					console.log(error);
-				} else {
-					// console.log(trace.getSVG())
-					fs.writeFileSync(`${target}/safari-pinned-tab.svg`, trace.getSVG());
-					/*
-					 // needs a lot of work
-					 svgo.optimize(trace.getSVG(), function (result) {
-						console.log(result.data)
-						fs.writeFileSync(`${target}/test.svg`, result.data);
-					});
-					*/
-				}
+			sharp(src)
+			.threshold(settings.options.svg.png_threshold)
+			.toBuffer()
+			.then((data) => {
+				potrace.trace(data, traceParams, function(err, svg) {
+					if (err) console.log(err)
+					fs.writeFileSync(`${target}/${dest}/safari-pinned-tab.svg`, svg)
+				})
 			})
 		})
-	}
+	},
+	/**
+	 * Create a duochrome posterized svg from the icon (good for gradients)
+	 * @param {string} src - image location
+	 * @param {string} target - where to drop the svg
+	 * @param {string} dest - project folder to drop the svg
+	 */
+	svgDuochrome: function(src, target, dest) {
+		if(!dest) dest='extras'
+		const traceParams = {
+			steps: settings.options.svg.steps,
+			color: settings.options.color,
+			background:settings.options.background_color
+		}
+		mkdirpAsync(`${target}/${dest}`)
+		.then(() => {
+			sharp(src)
+			.toBuffer()
+			.then((data) => {
+				potrace.posterize(data, traceParams, function(err, svg) {
+					if (err) console.log(err)
+					fs.writeFileSync(`${target}/${dest}/duochrome.svg`, svg);
+				})
+			})
+		})
+	},
 }
 
 if (typeof exports !== 'undefined') {

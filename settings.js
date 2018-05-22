@@ -4,6 +4,8 @@ exports.options = {
     // infix adds e.g. "44x44" based on the size in sizes to the generated file's name
     // suffix adds a file-ending to the generated file's name
     // sizes determines the pixel width and height to use
+		background_color: '#331322',
+		theme_color: '#027be3',
 		sharp: 'kernel: sharp.kernel.lanczos3', // one of [nearest|cubic|lanczos2|lanczos3]
 		minify: {
         batch: false,
@@ -35,7 +37,13 @@ exports.options = {
 		      optimizationLevel: 3 // 0-4 (4 uses zopfli)
 	      }
     },
-		background: '#c0ff33',
+		svg: {
+			png_threshold: 200,
+			svg_threshold: 128,
+			turdSize: 3,
+			optTolerance: 0.3,
+			steps: [40, 85, 135, 180]
+		},
     // below this line are all of the icon settings
     electron: {
         defaults: {
