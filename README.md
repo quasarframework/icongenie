@@ -115,13 +115,13 @@ These are notoriously difficult to acquire and make. For icns you usually need a
 
 This module uses the amazing [`png2icons`](https://github.com/idesis-gmbh/png2icons) module, which actually does all of the decoding and encoding on a byte-level with javascript. This of course takes a bit of time, but it also works cross-platform, so please think about going over there and giving those devs a :star:. This is actually one of the slowest parts of the `kitchensink` and the files are huge. By feeding it from the `sharp` buffer it has been sped up a little bit (and the final icns file is actually about 20% smaller!)
 
-To make the favicon.ico, it uses [to-ico](https://github.com/kevva/to-ico) and concats a 16x16 and a 32x32 png.
+To make the favicon.ico, it uses [`to-ico`](https://github.com/kevva/to-ico) and concats a 16x16 and a 32x32 png.
 
 ## Splash Screens for Cordova
 These are constructed for your app and use your project's background color for the background. If you undefine this value, the process will automatically create a black background. You can also change the option with a hex triplet like `#c0ffee`. 
 
 ## SVG
-The safari-pinned-tab.svg mask is created by adding contrast (via threshold) to the original and then applying even more threshold to the SVG tracing. If you set a background color, the mask will be solid, which is probably not what you want. If you are indeed of a discerning nature (and hav used gradients in your icon design), there is another option available to you:svg-duochrome. It too will be created in the spa folder within the spa task. As usual, you can also override our sensible defaults and get some wild SVG action going on.
+The `safari-pinned-tab.svg` mask is created by adding contrast (via threshold) to the original and then applying even more threshold to the SVG tracing. If you set a background color, the mask will be solid, which is probably not what you want. If you are indeed of a discerning nature (and have used gradients in your icon design), there is another option available to you:svg-duochrome. It too will be created in the spa folder within the spa task. As usual, you can also override our sensible defaults and get some wild SVG action going on.
 
 ## CLI Usage
 `quasar-icon-factory` can be used as a command line tool for batch invocation, and you can simply add it by installing it "globally" with your node package manager:
@@ -193,6 +193,19 @@ You are totally welcome to join this project. Please file issues and make PRs! L
 - [Wikipedia PNG Optimizing](https://en.wikipedia.org/wiki/Portable_Network_Graphics#Optimizing_tools)
 - [PNG Minification Comparison](https://css-ig.net/png-tools-overview#overview)
 - [.ico file-header Information](https://en.wikipedia.org/wiki/ICO_(file_format)#Outline)
+
+
+#### NPM Advisory: Tunnel Agent
+- If you are concerned about tunnel-agent being out of date, you can try my experimental node module wrangler **[`superdep`](https://www.npmjs.com/package/superdep)**.
+
+```bash
+$ npm install --global superdep
+$ cd {your project folder}
+$ superdep -s='caw/tunnel-agent/0.6.0'
+```
+
+It will replace the version of tunnel-agent in your dependencies with v0.6.0 - however these changes are likely to be overridden when you do any kind of yarn or npm update / install / upgrade.
+
 
 
 
