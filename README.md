@@ -1,4 +1,9 @@
+<div style="text-align:center">
+  <img src="iconfactory.png" />
+</div>
+
 # quasar-icon-factory - Work in Progress
+
 This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens and two different types of svgs.
 
 It works cross-platform to even generate those pesky `.icns` and `.ico` files for some reason still used by Electron apps and in the case of the latter prefered by some browsers and webscrapers (favicon.ico) - even though modern development guidelines for Apple and Windows recommend using `.png`. 
@@ -107,7 +112,7 @@ It takes a source image, scales it down according to the settings and then minif
 This is why it is recommended to use pngquant during development (to have a proxy image), but to use optipng when building for production.
 
 <div style="text-align:center">
-    <img src="/test/sources/quant_opti_orig.png?raw=true" width="701" height="195" >
+    <img src="./test/sources/quant_opti_orig.png?raw=true" width="701" height="195" >
 </div>
 
 ## .icns & .ico
@@ -244,6 +249,8 @@ Stage 2 - Refactoring
 - @maxMatteo, @Robin, @Rob, @trendchaser4u, @bloo_df
 
 
-## License
-© 2018 - Present D.C. Thompson & Razvan Stoenescu
-MIT
+## Licenses
+- Code: MIT
+- © 2018: Present D.C. Thompson & Razvan Stoenescu
+- Original Image for iconfactory: [Public Domain](https://www.publicdomainpictures.net/pictures/180000/nahled/coffee-grinder-14658946414E8.jpg)
+- Modifications: D.C.Thompson. CC-BY 

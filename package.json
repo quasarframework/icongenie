@@ -2,15 +2,16 @@
   "name": "icon-factory",
   "version": "1.0.0",
   "description": "Makes all the icons you will ever need.",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "repository": "git@github.com:quasarframework/quasar-icon-factory.git",
   "author": "nothingismagick <nothing@magick>",
   "license": "MIT",
   "scripts": {
     "test": "mocha --reporter spec"
   },
+  "access": "public",
   "bin": {
-    "iconfactory": "./cli.js"
+    "iconfactory": "./bin/cli.js"
   },
   "dependencies": {
     "imagemin": "^5.3.1",
@@ -26,12 +27,16 @@
     "read-chunk": "^2.1.0",
     "sharp": "^0.20.2",
     "svgo": "^1.0.5",
-    "to-ico": "^1.1.5"
+    "to-ico": "^1.1.5",
+    "tunnel-agent": "^0.6.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-files": "^1.4.0",
     "mocha": "^5.1.1"
+  },
+  "engines": {
+    "node": ">=4.2.4"
   }
 }
