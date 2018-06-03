@@ -45,7 +45,7 @@ There are literally dozens of other projects out there that more or less do the 
 - Linux, MacOS or Windows
 
 ## Install
-Very soon, Quasar-cli will use this project internally as a webpack plugin, so you won't ever even need to know how it works. But if you want it for any reason whatsoever, you can have it.
+If you install it, quasar-cli will use this project internally as a webpack plugin.
 
 To include this lib in your project use npm or yarn:
 
@@ -54,37 +54,55 @@ $ yarn add quasar-icon-factory
 ```
 
 ## Webpack plugin [WIP]
+The following example uses the webpack chain approach and will create all of the icons seperated to their respective folders.
+
+```js 
+chainWebpack (chain) {
+  chain.plugin('icon-factory')
+  .use(IconFactory, [
+    [{
+      preset: 'kitchensink',
+      source: './icon-prototype.png',
+      target: './src/statics/icons',
+      options: false,
+      minify: false,
+      mode: false,
+      debug: true
+    }]
+  ])
+}
+```
 
 ## Api Usage
 `quasar-icon-factory` was built for use in the [Quasar-Framework](https://quasar-framework.org) and as such is intended to follow some of the conventions of that project. If you prefer to output different files / settings, it is possible for you to pass these in an override object to `quasar-icon-factory` that contains all of the settings that you prefer. If you want to pass an options object (perhaps for the fastest available minify at lowest quality), this is the kind of structure you will need: 
 
 ```js 
 let options = {
-    minify: {
-        available: ['pngquant']
-        type: 'pngquant'
-        pngquantOptions: {
-            quality: '1-10',
-            floyd: 0.1,
-            speed: 10
-        }
-    },
-    dimensions: {
-        spa: {
-            all: {
-                folder: 'spa',
-                prefix: 'icon-',
-                infix: true,
-                suffix: '.png',
-                sizes: [
-                    64,
-                    48,
-                    32,
-                    16
-                ]
-            }
-        }
+  minify: {
+    available: ['pngquant']
+    type: 'pngquant'
+    pngquantOptions: {
+      quality: '1-10',
+      floyd: 0.1,
+      speed: 10
     }
+  },
+  dimensions: {
+    spa: {
+      all: {
+        folder: 'spa',
+        prefix: 'icon-',
+        infix: true,
+        suffix: '.png',
+        sizes: [
+          64,
+          48,
+          32,
+          16
+        ]
+      }
+    }
+  }
 }
 ```
 
@@ -127,6 +145,22 @@ These are constructed for your app and use your project's background color for t
 
 ## SVG
 The `safari-pinned-tab.svg` mask is created by adding contrast (via threshold) to the original and then applying even more threshold to the SVG tracing. If you set a background color, the mask will be solid, which is probably not what you want. If you are indeed of a discerning nature (and have used gradients in your icon design), there is another option available to you:svg-duochrome. It too will be created in the spa folder within the spa task. As usual, you can also override our sensible defaults and get some wild SVG action going on.
+
+Here are the options you will want to set:
+
+```js 
+options: {
+  background_color: '#000074',
+  theme_color: '#02aa9b',
+  svg: {
+    png_threshold: 200,
+    svg_threshold: 128,
+    turdSize: 3,
+    optTolerance: 0.3,
+    steps: [40, 85, 135, 180]
+  },
+}
+```
 
 ## CLI Usage
 `quasar-icon-factory` can be used as a command line tool for batch invocation, and you can simply add it by installing it "globally" with your node package manager:
@@ -227,16 +261,16 @@ Stage 0 - Collection
 
 Stage 1 - Connection
 - [X] Node API interface
-- [ ] Interactive CLI from @bloo_df
-- [ ] Complete set of unit tests with 95% coverage target
-- [ ] Webpack plugin extension
-- [ ] - rebuild the options and config
-- [ ] - map to quasar outputs
+- [X] Webpack plugin extension
+- [X] - rebuild the options and config
+- [X] - map to quasar outputs
+- [ ] Add debug logging (verbose, minimal, file, none)
 
 Stage 2 - Refactoring
-- [ ] Audit and possibly reqbuild entire imagemin lib and deps
+- [ ] Complete set of unit tests with 95% coverage target
+- [ ] Interactive CLI from @bloo_df
+- [ ] Audit imagemin lib and deps
 - [ ] Build JSDocs on git precommit 
-- [ ] Add logging (verbose, minimal, file, none)
 - [ ] Real benchmarks
 - [ ] Refactor internal methods and patterns to streamline process
 - [ ]  - multithreading of sharp via .clone()
