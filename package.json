@@ -14,19 +14,19 @@
     "iconfactory": "./bin/cli.js"
   },
   "dependencies": {
-    "imagemin": "^5.3.1",
-    "imagemin-advpng": "^4.0.0",
-    "imagemin-optipng": "^5.2.1",
-    "imagemin-pngcrush": "^5.1.0",
-    "imagemin-pngout": "^3.0.0",
-    "imagemin-pngquant": "^5.1.0",
-    "imagemin-zopfli": "^5.1.0",
+    "imagemin": "^6.1.0",
+    "imagemin-advpng": "^5.0.0",
+    "imagemin-optipng": "^6.0.0",
+    "imagemin-pngcrush": "^6.0.0",
+    "imagemin-pngout": "^4.0.0",
+    "imagemin-pngquant": "^7.0.0",
+    "imagemin-zopfli": "^6.0.0",
     "minimist": "^1.2.0",
     "png2icons": "^1.0.1",
     "potrace": "^2.1.1",
-    "read-chunk": "^2.1.0",
-    "sharp": "^0.20.2",
-    "svgo": "^1.0.5",
+    "read-chunk": "^3.0.0",
+    "sharp": "^0.21.3",
+    "svgo": "^1.2.0",
     "to-ico": "^1.1.5",
     "tunnel-agent": "^0.6.0"
   },
@@ -34,7 +34,7 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-files": "^1.4.0",
-    "mocha": "^5.1.1"
+    "mocha": "^6.0.2"
   },
   "engines": {
     "node": ">=4.2.4"
