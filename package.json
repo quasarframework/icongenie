@@ -7,6 +7,7 @@
   "author": "nothingismagick <nothing@magick>",
   "license": "MIT",
   "scripts": {
+    "format": "prettier --write bin/*.js lib/*.js test/*.js",
     "test": "mocha --reporter spec"
   },
   "access": "public",
@@ -34,9 +35,15 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-files": "^1.4.0",
-    "mocha": "^6.0.2"
+    "mocha": "^6.0.2",
+    "prettier": "^1.16.4"
   },
   "engines": {
     "node": ">=4.2.4"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": true
   }
 }
