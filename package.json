@@ -7,6 +7,7 @@
   "author": "nothingismagick <nothing@magick>",
   "license": "MIT",
   "scripts": {
+    "format": "prettier --write bin/*.js lib/*.js test/*.js",
     "test": "mocha --reporter spec"
   },
   "access": "public",
@@ -39,5 +40,9 @@
   },
   "engines": {
     "node": ">=4.2.4"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "trailingComma": "es5"
   }
 }
