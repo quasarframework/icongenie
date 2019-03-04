@@ -1,3 +1,8 @@
+<hr/>
+# **ATTENTION ACHTUNG** 
+This library is currently being rebuilt.
+<hr/>
+
 <div style="text-align:center">
   <img src="iconfactory.png" />
 </div>
