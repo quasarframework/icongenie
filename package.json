@@ -1,22 +1,21 @@
 {
-  "name": "icon-factory",
-  "version": "1.1.0",
-  "description": "Makes all the icons you will ever need.",
-  "main": "./lib/index.js",
-  "repository": "git@github.com:quasarframework/quasar-icon-factory.git",
-  "author": "nothingismagick <nothing@magick>",
+  "name": "@quasar/quasar-app-extension-icon-factory",
+  "version": "1.0.0-alpha.1",
+  "description": "A Quasar CLI Extension",
   "license": "MIT",
+  "author": "Daniel Thompson-Yvetot <35242872+nothingismagick@users.noreply.github.com>",
+  "repository": "git@github.com:quasarframework/app-extension-icon-factory.git",
+  "main": "src/index.js",
+  "bin": {
+    "iconfactory": "./bin/cli.js"
+  },
   "scripts": {
     "format": "prettier --write bin/*.js lib/*.js test/*.js",
     "test": "mocha --reporter spec"
   },
   "access": "public",
-  "bin": {
-    "iconfactory": "./bin/cli.js"
-  },
   "dependencies": {
     "imagemin": "^6.1.0",
-    "imagemin-advpng": "^5.0.0",
     "imagemin-optipng": "^6.0.0",
     "imagemin-pngcrush": "^6.0.0",
     "imagemin-pngout": "^4.0.0",
@@ -28,22 +27,24 @@
     "read-chunk": "^3.0.0",
     "sharp": "^0.21.3",
     "svgo": "^1.2.0",
-    "to-ico": "^1.1.5",
-    "tunnel-agent": "^0.6.0"
+    "to-ico": "^1.1.5"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-files": "^1.4.0",
     "mocha": "^6.0.2",
-    "prettier": "^1.16.4"
-  },
-  "engines": {
-    "node": ">=4.2.4"
+    "prettier": "^1.16.4",
+    "snyk": "^1.135.1"
   },
   "prettier": {
     "printWidth": 100,
     "semi": false,
     "singleQuote": true
+  },
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
   }
 }
