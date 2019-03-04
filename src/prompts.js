@@ -1,21 +1,5 @@
-const fs = require('fs')
-const isPng = require('is-png')
 const defaultImg = './logo-source.png'
-const validatePng = function (value) {
-  return new Promise((resolve, reject) => {
-    if (!fs.existsSync(value)) {
-      return reject("file don't found")
-    }
-  
-    fs.readFile(value, (err, data) => {
-      if (err)
-        return reject(err.message);
-      if (!isPng(data))
-        return reject("the selected file isn't a valid png")
-      return resolve(true)
-    })
-  })
-}
+const { validatePng } = require('./utils')
 
 module.exports = function () {
   return [
