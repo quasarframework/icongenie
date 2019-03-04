@@ -1,40 +1,105 @@
-/**
- * Quasar App Extension prompts script
- *
- * Inquirer prompts
- * (answers are available as "api.prompts" in the other scripts)
- * https://www.npmjs.com/package/inquirer#question
- *
- * Example:
-
-  return [
-    name: {
-      type: 'string',
-      required: true,
-      message: 'Quasar CLI Extension name (without prefix)',
-    },
-    preset: {
-      type: 'checkbox',
-      message: 'Check the features needed for your project:',
-      choices: [
-        {
-          name: 'Install script',
-          value: 'install'
-        },
-        {
-          name: 'Prompts script',
-          value: 'prompts'
-        },
-        {
-          name: 'Uninstall script',
-          value: 'uninstall'
-        }
-      ]
+const fs = require('fs')
+const isPng = require('is-png')
+const defaultImg = './logo-source.png'
+const validatePng = function (value) {
+  return new Promise((resolve, reject) => {
+    if (!fs.existsSync(value)) {
+      return reject("file don't found")
     }
-  ]
-
- */
+  
+    fs.readFile(value, (err, data) => {
+      if (err)
+        return reject(err.message);
+      if (!isPng(data))
+        return reject("the selected file isn't a valid png")
+      return resolve(true)
+    })
+  })
+}
 
 module.exports = function () {
-  return []
+  return [
+    {
+      name: 'source_dev',
+      type: 'input',
+      required: true,
+      message: 'Your source image as a large square png to be used during development:',
+      default: defaultImg,
+      validate: validatePng
+    },
+    {
+      name: 'minify_dev',
+      type: 'list',
+      message: 'Minify strategy to be used during development:',
+      choices: [
+        {
+          name: 'pngquant (rate: 0.225 | quality: lossy | time: 01.4s)',
+          value: 'pngquant'
+        },
+        {
+          name: 'pngout (rate: 0.94 | quality: lossless | time: 10.7s)',
+          value: 'pngout'
+        },
+        {
+          name: 'advpng (rate: 0.95 | quality: lossless | time: 10.9s)',
+          value: 'advpng'
+        },
+        {
+          name: 'optipng (rate: 0.61 | quality: lossless | time: 13.9s)',
+          value: 'optipng'
+        },
+        {
+          name: 'pngcrush (rate: 0.61 | quality: lossless | time: 28.1s)',
+          value: 'pngcrush'
+        },
+        {
+          name: 'zopfli (rate: 0.57 | quality: lossless | time: 33.2s)',
+          value: 'zopfli'
+        }
+      ],
+      default: 'pngquant'
+    },
+    {
+      name: 'source_build',
+      type: 'input',
+      required: true,
+      message: 'Your source image as a large square png to be used during building for production:',
+      validate: validatePng,
+      default: function (answers) {
+        return answers.source_dev || defaultImg
+      }
+    },
+    {
+      name: 'minify_build',
+      type: 'list',
+      message: 'Minify strategy to be used during building for production:',
+      choices: [
+        {
+          name: 'pngquant (rate: 0.225 | quality: lossy | time: 01.4s)',
+          value: 'pngquant'
+        },
+        {
+          name: 'pngout (rate: 0.94 | quality: lossless | time: 10.7s)',
+          value: 'pngout'
+        },
+        {
+          name: 'advpng (rate: 0.95 | quality: lossless | time: 10.9s)',
+          value: 'advpng'
+        },
+        {
+          name: 'optipng (rate: 0.61 | quality: lossless | time: 13.9s)',
+          value: 'optipng'
+        },
+        {
+          name: 'pngcrush (rate: 0.61 | quality: lossless | time: 28.1s)',
+          value: 'pngcrush'
+        },
+        {
+          name: 'zopfli (rate: 0.57 | quality: lossless | time: 33.2s)',
+          value: 'zopfli'
+        }
+      ],
+      default: 'optipng'
+    }
+  ]
 }

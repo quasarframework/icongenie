@@ -21,6 +21,7 @@
     "imagemin-pngout": "^4.0.0",
     "imagemin-pngquant": "^7.0.0",
     "imagemin-zopfli": "^6.0.0",
+    "is-png": "^1.1.0",
     "minimist": "^1.2.0",
     "png2icons": "^1.0.1",
     "potrace": "^2.1.1",
