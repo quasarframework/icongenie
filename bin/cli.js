@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const fs = require('fs')
+const fs = require('fs-extra')
 const info = require('../package.json')
 const args = require('minimist')(process.argv.slice(2), {
   alias: {
@@ -41,7 +41,7 @@ Flags:
   -t, --target      The destination directory for the files created
   -o, --options     path to file that overrides defaults (if custom)
   -m, --minify      Minify strategy to use. 
-                    [pngcrush|pngquant|optipng|pngout|zopfli|advpng]
+                    [pngcrush|pngquant|optipng|pngout|zopfli]
   -d, --mode        Minify mode if minify preset [folder|singlefile]
   -v, --version     display version information
   -h, --help        display this information

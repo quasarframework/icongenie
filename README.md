@@ -49,12 +49,9 @@ There are literally dozens of other projects out there that more or less do the 
 - Linux, MacOS or Windows
 
 ## Install
-If you install it, quasar-cli will use this project internally as a webpack plugin.
-
-To include this lib in your project use npm or yarn:
 
 ```
-$ yarn add quasar-icon-factory
+$ quasar ext add @quasar/icon-factory
 ```
 
 ## Webpack plugin [WIP]
@@ -125,7 +122,6 @@ It takes a source image, scales it down according to the settings and then minif
 | pngquant-bad  | 00.9s       | very lossy | 100K   |
 | pngquant-good | 01.4s       | lossy      | 144K   |
 | pngout        | 10.7s       | lossless   | 624K   |
-| advpng.3      | 10.9s       | lossless   | 632K   |
 | optipng       | 13.9s       | lossless   | 404K   |
 | pngcrush      | 28.1s       | lossless   | 404K   |
 | zopfli        | 33.2s       | lossless   | 380K   |
@@ -193,7 +189,7 @@ Flags:
   -t, --target      The destination directory for the files created
   -o, --options     path to file that overrides defaults (if custom)
   -m, --minify      Minify strategy to use. 
-                    [pngcrush|pngquant|optipng|pngout|zopfli|advpng]
+                    [pngcrush|pngquant|optipng|pngout|zopfli]
   -d, --mode        Minify mode if minify preset [folder|singlefile]
   -v, --version     display version information
   -h, --help        display this information
