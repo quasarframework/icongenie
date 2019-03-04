@@ -1,4 +1,3 @@
-<hr/>
 # **ATTENTION ACHTUNG** 
 This library is currently being rebuilt.
 <hr/>
