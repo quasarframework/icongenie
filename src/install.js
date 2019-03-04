@@ -18,8 +18,8 @@ const computeHash = function (file, algorithm, secret) {
 const initialize = async function (prompts) {
   let json = {
     source: {
-      dev: await computeHash(prompts.source_dev, 'sha512', prompts.minify_dev),
-      build: await computeHash(prompts.source_build, 'sha512', prompts.minify_build)
+      dev: await computeHash(prompts.source_dev, 'md5', prompts.minify_dev),
+      build: await computeHash(prompts.source_build, 'md5', prompts.minify_build)
     },
     target: {
       spa: {},
@@ -28,7 +28,6 @@ const initialize = async function (prompts) {
       electron: {}
     }
   }
-  console.log(JSON.stringify(json, null, 2))
   fs.writeFile('./quasar.icon-factory.json', JSON.stringify(json, null, 2), (err) => {
     if (err) throw err
   })
