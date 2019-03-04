@@ -11,10 +11,11 @@
   },
   "scripts": {
     "format": "prettier --write bin/*.js lib/*.js test/*.js",
-    "test": "mocha --reporter spec"
+    "test": "mocha --reporter spec test/__tests__/test.js"
   },
   "access": "public",
   "dependencies": {
+    "fs-extra": "^7.0.1",
     "imagemin": "^6.1.0",
     "imagemin-optipng": "^6.0.0",
     "imagemin-pngcrush": "^6.0.0",
