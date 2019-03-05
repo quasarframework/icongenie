@@ -8,7 +8,7 @@ This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and e
 
 It works cross-platform to even generate those pesky `.icns` and `.ico` files for some reason still used by Electron apps and in the case of the latter prefered by some browsers and webscrapers (favicon.ico) - even though modern development guidelines for Apple and Windows recommend using `.png`. 
 
-It has three main interfaces (CLI, API and Webpack 4) and although it is built for the Quasar-Framework, it should work anywhere you can run node. It is designed to be a very useful tool that you will be glad to have lying around.
+It has two primary interfaces (with Quasar CTX and as a standalone CLI) and although it is built for the Quasar Framework, it should work anywhere you can run node. You can even import it and use it in your own pipelines if that's your thing. It is designed to be a very useful tool that you will be glad to have lying around.
 
 > If you use an original that is smaller than 1240x1240 some icons will be naively upscaled. If you do not use a square original, it will be cropped square from the center using the smaller dimension as width and height. You have been warned.
 
@@ -80,7 +80,7 @@ It takes a source image, scales it down according to the settings and then minif
 This is why it is recommended to use pngquant during development (to have a proxy image), but to use optipng when building for production.
 
 <div style="text-align:center">
-    <img src="test/__tests__/sources/quant_opti_orig.png?raw=true" width="701" height="195" >
+    <img src="./test/__tests__/sources/quant_opti_orig.pngraw=true" width="701" height="195" >
 </div>
 
 ## .icns & .ico
