@@ -1,12 +1,8 @@
-# **ATTENTION ACHTUNG** 
-This library is currently being rebuilt.
-<hr/>
-
 <div style="text-align:center">
   <img src="iconfactory.png" />
 </div>
 
-# quasar-icon-factory - Work in Progress
+# @quasar/icon-factory
 
 This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens and two different types of svgs.
 
@@ -47,69 +43,23 @@ There are literally dozens of other projects out there that more or less do the 
 ## Requires
 - node / yarn
 - Linux, MacOS or Windows
+- A square image in png format that is at least 1240px x 1240px (much bigger will merely slow down the conversions)
 
 ## Install
-
-```
+```bash
 $ quasar ext add @quasar/icon-factory
 ```
 
-## Webpack plugin [WIP]
-The following example uses the webpack chain approach and will create all of the icons seperated to their respective folders.
-
-```js 
-chainWebpack (chain) {
-  chain.plugin('icon-factory')
-  .use(IconFactory, [
-    [{
-      preset: 'kitchensink',
-      source: './icon-prototype.png',
-      target: './src/statics/icons',
-      options: false,
-      minify: false,
-      mode: false,
-      debug: true
-    }]
-  ])
-}
+## Usage within Quasar
+```bash
+$ quasar dev
+# or
+$ quasar build
 ```
 
-## Api Usage
-`quasar-icon-factory` was built for use in the [Quasar-Framework](https://quasar-framework.org) and as such is intended to follow some of the conventions of that project. If you prefer to output different files / settings, it is possible for you to pass these in an override object to `quasar-icon-factory` that contains all of the settings that you prefer. If you want to pass an options object (perhaps for the fastest available minify at lowest quality), this is the kind of structure you will need: 
-
-```js 
-let options = {
-  minify: {
-    available: ['pngquant']
-    type: 'pngquant'
-    pngquantOptions: {
-      quality: '1-10',
-      floyd: 0.1,
-      speed: 10
-    }
-  },
-  dimensions: {
-    spa: {
-      all: {
-        folder: 'spa',
-        prefix: 'icon-',
-        infix: true,
-        suffix: '.png',
-        sizes: [
-          64,
-          48,
-          32,
-          16
-        ]
-      }
-    }
-  }
-}
-```
-
+If you change the image, the settings in `quasar.icon-factory.json` or the dev/build mode, this extension will be triggered and build your assets in the appropriate place. Don't forget to check the results and commit them.
 
 ### Minify
-
 There are six different minification algorithms available (because it is possible that one or the other just won't build on your system or worse becomes compromised via some kind of exploit). Using totally non-scientific tests, these are the results of this command that ran one time on a 3,2 GHz Quad-Core Intel Xeon with 16 GB of ram: 
 
 `$ time node cli.js -p=spa -s=test/example-1240x1240.png -t=test/output -m="$minify" && du -sh test/output/spa`
@@ -201,10 +151,13 @@ $ iconfactory -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlef
 ```
 
 ## Performance
-Solving compression problems takes time, and the more complex the approach the more linear time is needed. Some compression algorithms are fast, some are great. None are both. This package tries to write from the buffer only when a file is created and (mostly) avoids creating intermediary files. We will look to increasing the performance through multithreading and reducing memory consumption when we begin the refactoring stage.
+Solving compression problems takes time, and the more complex the approach the more linear time is needed. Some compression algorithms are fast, some are great. None are both. This package tries to write from the buffer only when a file is created and (mostly) avoids creating intermediary files.
 
 ## Testing
 `git clone`, `yarn install`, `yarn test`
+
+## Security
+We only permit you to use .png files as the source, and there is a `magic-number` check to ensure that the file being processed is indeed a valid and proper `image/png`. Furthermore, there are neither imagemagick nor graphicsmagick dependencies and this project should build and run on all platforms supported by @quasar/cli.
 
 ## Contributing
 You are totally welcome to join this project. Please file issues and make PRs! Let us know how it goes and join us at our [discord server](https://discord.gg/5TDhbDg) to talk shop. There are a number of tasks that will be marked as "help wanted" on the Issue board, so please make sure to have a look there.
@@ -233,21 +186,6 @@ You are totally welcome to join this project. Please file issues and make PRs! L
 - [PNG Minification Comparison](https://css-ig.net/png-tools-overview#overview)
 - [.ico file-header Information](https://en.wikipedia.org/wiki/ICO_(file_format)#Outline)
 
-
-#### NPM Advisory: Tunnel Agent
-- If you are concerned about tunnel-agent being out of date, you can try my experimental node module wrangler **[`superdep`](https://www.npmjs.com/package/superdep)**.
-
-```bash
-$ npm install --global superdep
-$ cd {your project folder}
-$ superdep -s='caw/tunnel-agent/0.6.0'
-```
-
-It will replace the version of tunnel-agent in your dependencies with v0.6.0 - however these changes are likely to be overridden when you do any kind of yarn or npm update / install / upgrade.
-
-
-
-
 ## Future Work
 Stage 0 - Collection
 - [X] CLI interface
@@ -268,7 +206,6 @@ Stage 1 - Connection
 
 Stage 2 - Refactoring
 - [ ] Complete set of unit tests with 95% coverage target
-- [ ] Interactive CLI from @bloo_df
 - [ ] Audit imagemin lib and deps
 - [ ] Build JSDocs on git precommit 
 - [ ] Real benchmarks
@@ -280,11 +217,11 @@ Stage 2 - Refactoring
 ## Thanks to
 - [image-trace-loader](https://github.com/EmilTholin/image-trace-loader)
 - the [image-min](https://github.com/imagemin) team
-- @maxMatteo, @Robin, @Rob, @trendchaser4u, @bloo_df
+- @TobyMosque, @maxMatteo, @Robin, @Rob, @trendchaser4u, @bloo_df
 
 
 ## Licenses
 - Code: MIT
-- © 2018: Present D.C. Thompson & Razvan Stoenescu
+- © 2018: Present Daniel Thompson-Yvetot & Razvan Stoenescu
 - Original Image for iconfactory: [Public Domain](https://www.publicdomainpictures.net/pictures/180000/nahled/coffee-grinder-14658946414E8.jpg)
-- Modifications: D.C.Thompson. CC-BY 
+- Modifications: Daniel Thompson-Yvetot. CC-BY 
