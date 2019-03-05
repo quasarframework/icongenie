@@ -25,10 +25,6 @@ module.exports = function () {
           value: 'pngout'
         },
         {
-          name: 'advpng (rate: 0.95 | quality: lossless | time: 10.9s)',
-          value: 'advpng'
-        },
-        {
           name: 'optipng (rate: 0.61 | quality: lossless | time: 13.9s)',
           value: 'optipng'
         },
@@ -65,10 +61,6 @@ module.exports = function () {
         {
           name: 'pngout (rate: 0.94 | quality: lossless | time: 10.7s)',
           value: 'pngout'
-        },
-        {
-          name: 'advpng (rate: 0.95 | quality: lossless | time: 10.9s)',
-          value: 'advpng'
         },
         {
           name: 'optipng (rate: 0.61 | quality: lossless | time: 13.9s)',
