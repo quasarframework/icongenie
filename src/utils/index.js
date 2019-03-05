@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const isPng = require('is-png')
 const crypto = require('crypto')
 

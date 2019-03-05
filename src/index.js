@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const iconfactory = require('../lib/index.js')
 const { validatePng, computeHash, createConfig } = require('./utils')
 
