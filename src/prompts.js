@@ -7,7 +7,7 @@ module.exports = function () {
       name: 'source_dev',
       type: 'input',
       required: true,
-      message: 'Your source image as a large square png to be used during development:',
+      message: 'Your source image as a 1240x1240 png (with transparency) to be used during development:',
       default: defaultImg,
       validate: validatePng
     },
@@ -43,7 +43,7 @@ module.exports = function () {
       name: 'source_build',
       type: 'input',
       required: true,
-      message: 'Your source image as a large square png to be used during building for production:',
+      message: 'Your source image as a 1240x1240 png (with transparency) to be used during building for production:',
       validate: validatePng,
       default: function (answers) {
         return answers.source_dev || defaultImg
