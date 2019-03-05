@@ -58,3 +58,4 @@ typings/
 .env
 
 test/__tests__/output/*
+/.vs
