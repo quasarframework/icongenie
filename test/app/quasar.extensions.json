@@ -16,5 +16,11 @@
       "unit-jest",
       "security"
     ]
+  },
+  "@quasar/icon-factory": {
+    "source_dev": "./logo-source.png",
+    "minify_dev": "pngquant",
+    "source_build": "./logo-source.png",
+    "minify_build": "optipng"
   }
 }
