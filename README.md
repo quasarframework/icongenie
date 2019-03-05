@@ -80,7 +80,7 @@ It takes a source image, scales it down according to the settings and then minif
 This is why it is recommended to use pngquant during development (to have a proxy image), but to use optipng when building for production.
 
 <div style="text-align:center">
-    <img src="./test/sources/quant_opti_orig.png?raw=true" width="701" height="195" >
+    <img src="test/__tests__/sources/quant_opti_orig.png?raw=true" width="701" height="195" >
 </div>
 
 ## .icns & .ico
