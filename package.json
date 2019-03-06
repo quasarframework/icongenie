@@ -1,6 +1,6 @@
 {
   "name": "@quasar/quasar-app-extension-icon-factory",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.6",
   "description": "A Quasar CLI Extension",
   "license": "MIT",
   "author": "Daniel Thompson-Yvetot <35242872+nothingismagick@users.noreply.github.com>",
@@ -10,7 +10,7 @@
     "iconfactory": "./bin/cli.js"
   },
   "scripts": {
-    "format": "prettier --write bin/*.js lib/*.js test/*.js",
+    "format": "prettier --write bin/*.js lib/*.js src/*.js test/*.js",
     "test": "mocha --reporter spec test/__tests__/test.js"
   },
   "publishConfig": {
