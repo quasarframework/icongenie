@@ -10,14 +10,14 @@ const crypto = require('crypto')
 const validatePng = function (fileName) {
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(fileName)) {
-      return reject("file don't found")
+      return reject('File not found.')
     }
-  
+
     fs.readFile(fileName, (err, data) => {
       if (err)
         return reject(err.message);
       if (!isPng(data))
-        return reject("the selected file isn't a valid png")
+        return reject('The selected file is not a valid png.')
       return resolve(true)
     })
   })
