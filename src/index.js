@@ -40,7 +40,7 @@ const copyFiles = async (target, modeName, retries = 0) => {
   }
 }
 
-const initilize = async function (api, ctx, config) {
+const initialize = async function (api, ctx, config) {
   let mode, source, minify, iconConfig, hash
   if (ctx.dev) {
     mode = 'dev'
@@ -97,6 +97,6 @@ const initilize = async function (api, ctx, config) {
 module.exports = function (api, ctx) {
   // TODO: check if ssr is on pwa mode without extend quasar conf.
   api.extendQuasarConf(async (config) => {
-    await initilize(api, ctx, config)
+    await initialize(api, ctx, config)
   })
 }
