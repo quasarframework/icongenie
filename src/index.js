@@ -25,14 +25,11 @@ const initilize = async function (api, ctx, config) {
     modeName = config.ssr.pwa ? 'pwa' : 'spa'
   }
 
-  let target = './icon-factory/' + modeName + '/' + mode
+  let target = './icon-factory/' + mode
   let processImagess = async function () {
-    if (!fs.existsSync(target)) {
-      fs.mkdirSync(target, { recursive: true })
-    }
-    await iconfactory[ctx.modeName](source, target, minify)
+    await iconfactory[modeName](source, target, minify)
     iconConfig.source[mode] = hash
-    iconConfig.target[ctx.modeName][mode] = hash
+    iconConfig.target[modeName][mode] = hash
     fs.writeFile(configFileName, JSON.stringify(iconConfig, null, 2), (err) => {
       if (err) throw err
     })
@@ -50,12 +47,14 @@ const initilize = async function (api, ctx, config) {
   } else {
     iconConfig = await createConfig(api.prompts)
   }
+
   hash = await computeHash(source, 'md5', minify)
-  if (!fs.existsSync(target)) {
+  fs.ensureDirSync(target)
+  if (!fs.existsSync(target + '/' + modeName)) {
     await processImagess()
   } else if (iconConfig.source[mode] !== hash) {
     await processImagess()
-  } else if  (iconConfig.target[modeName][mode] !== hash) {
+  } else if (iconConfig.target[modeName][mode] !== hash) {
     await processImagess()
   }
 
