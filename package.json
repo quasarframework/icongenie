@@ -1,6 +1,6 @@
 {
   "name": "@quasar/quasar-app-extension-icon-factory",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "A Quasar CLI Extension",
   "license": "MIT",
   "author": "Daniel Thompson-Yvetot <35242872+nothingismagick@users.noreply.github.com>",
@@ -30,7 +30,6 @@
     "potrace": "^2.1.1",
     "read-chunk": "^3.0.0",
     "sharp": "^0.21.3",
-    "svgo": "^1.2.0",
     "to-ico": "^1.1.5"
   },
   "devDependencies": {
