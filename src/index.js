@@ -43,9 +43,7 @@ const initilize = async function (api, ctx, config) {
   }
 
   hash = await computeHash(source, 'md5', minify)
-  if (!fs.existsSync(target)) {
-    fs.mkdirSync(target, { recursive: true })
-  }
+  fs.ensureDirSync(target)
   if (!fs.existsSync(target + '/' + modeName)) {
     await processImagess()
   } else if (iconConfig.source[mode] !== hash) {
