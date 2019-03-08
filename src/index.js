@@ -1,7 +1,23 @@
-const fs = require('fs-extra')
-const deasync = require('deasync')
-const iconfactory = require('../lib/index.js')
+const fs = require('fs-extra'),
+  deasync = require('deasync'),
+  iconfactory = require('../lib/index.js')
+
 const { validatePng, computeHash, createConfig } = require('./utils')
+
+console.log=(function() {
+  // log, log, its big its heavy its wood.
+  // represent the icon-factory
+
+  let log = console.log
+  return function () {
+    log.apply(console, arguments)
+    process.stdout.write(`★`)
+  }
+})()
+
+console.log('★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
+console.log(' [icon-factory] ★ The star means your icons are factory produced ★')
+console.log('★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
 
 const copy = (src, dest) => {
   return new Promise((resolve, reject) => {
@@ -16,7 +32,7 @@ const copyFiles = async (target, modeName, retries = 0) => {
       await copy(target + '/spa/icon-32x32.png', './src/statics/icons/favicon-32x32.png')
 
       // since pwa mode create a spa folder, so there is a chance of the spa folder didn't have all need icons.
-      var root = fs.existsSync(target + '/spa/icon-128x128.png') ? '/spa/' : '/pwa/generic-'
+      let root = fs.existsSync(target + '/spa/icon-128x128.png') ? '/spa/' : '/pwa/generic-'
       await copy(target + root + 'icon-128x128.png', './src/statics/quasar-logo.png')
       await copy(target + root + 'icon-128x128.png', './src/statics/icons/icon-128x128.png')
       await copy(target + root + 'icon-192x192.png', './src/statics/icons/icon-192x192.png')
@@ -37,14 +53,14 @@ const copyFiles = async (target, modeName, retries = 0) => {
 
       await copy(target + '/pwa/ms-icon-144x144.png', './src/statics/icons/ms-icon-144x144.png')
       await copy(target + '/pwa/apple-icon-152x152.png', './src/statics/icons/apple-icon-152x152.png')
-      break;
+      break
     case 'electron':
       await copy(target + '/electron', './src-electron/icons')
-      // await copy(target + '/electron/icon.icns', './src-electron/icons/icon.icns')
-      // await copy(target + '/electron/icon.ico', './src-electron/icons/icon.ico')
-      // await copy(target + '/electron/icon.png', './src-electron/icons/icon.png')
-      // await copy(target + '/electron/linux-512x512', './src-electron/icons/linux-512x512')
-      break;
+      await copy(target + '/electron/icon.icns', './src-electron/icons/icon.icns')
+      await copy(target + '/electron/icon.ico', './src-electron/icons/icon.ico')
+      await copy(target + '/electron/icon.png', './src-electron/icons/icon.png')
+      await copy(target + '/electron/linux-512x512', './src-electron/icons/linux-512x512')
+      break
     case 'cordova':
       await copy(target + '/cordova/android/ldpi.png', './src-cordova/res/icon/android/icon-36-ldpi.png')
       await copy(target + '/cordova/android/mdpi.png', './src-cordova/res/icon/android/icon-48-mdpi.png')
@@ -98,7 +114,7 @@ const copyFiles = async (target, modeName, retries = 0) => {
       await copy(target + '/cordova/ios/screen-iphone-portrait.png', './src-cordova/res/screen/ios/screen-iphone-portrait.png')
 
       await copy(target + '/cordova/windows/Splashscreen-480x800.png', './src-cordova/res/screen/windows-phone/screen-portrait.png')
-      break;
+      break
   }
 }
 
