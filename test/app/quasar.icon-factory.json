@@ -1,13 +1,15 @@
 {
   "source": {
     "dev": "e4cc187a7dfdda5392a261f178577e7e",
-    "build": "a442eb9df0a9c926395a9c1005ebe452"
+    "build": ""
   },
   "target": {
     "spa": {
       "dev": "e4cc187a7dfdda5392a261f178577e7e"
     },
-    "pwa": {},
+    "pwa": {
+      "dev": ""
+    },
     "cordova": {},
     "electron": {}
   }
