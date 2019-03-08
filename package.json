@@ -17,6 +17,7 @@
     "access": "public"
   },
   "dependencies": {
+    "deasync": "^0.1.14",
     "fs-extra": "^7.0.1",
     "imagemin": "^6.1.0",
     "imagemin-optipng": "^6.0.0",

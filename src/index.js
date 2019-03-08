@@ -1,4 +1,5 @@
 const fs = require('fs-extra')
+const deasync = require('deasync')
 const iconfactory = require('../lib/index.js')
 const { validatePng, computeHash, createConfig } = require('./utils')
 
@@ -157,7 +158,11 @@ const initialize = async function(api, ctx, config) {
 
 module.exports = function(api, ctx) {
   // TODO: check if ssr is on pwa mode without extend quasar conf.
-  api.extendQuasarConf(async config => {
-    await initialize(api, ctx, config)
+  api.extendQuasarConf(config => {
+    let done = false
+    initialize(api, ctx, config).then(() => {
+      done = true
+    })
+    deasync.loopWhile(() => !done)
   })
 }
