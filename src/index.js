@@ -4,7 +4,7 @@ const { validatePng, computeHash, createConfig } = require('./utils')
 
 const copy = (src, dest) => {
   return new Promise((resolve, reject) => {
-    fs.copy(src, dest, { overwrite: true }, err => err ? reject(err) : resolve())
+    fs.copy(src, dest, { overwrite: true }, err => (err ? reject(err) : resolve()))
   })
 }
 
@@ -21,8 +21,8 @@ const copyFiles = async (target, modeName, retries = 0) => {
       await copy(target + root + 'icon-192x192.png', './src/statics/icons/icon-192x192.png')
       await copy(target + root + 'icon-256x256.png', './src/statics/icons/icon-256x256.png')
       await copy(target + root + 'icon-384x384.png', './src/statics/icons/icon-384x384.png')
-      await copy(target + root + 'icon-512x512.png', './src/statics/icons/icon-512x512.png')  
-      break;
+      await copy(target + root + 'icon-512x512.png', './src/statics/icons/icon-512x512.png')
+      break
     case 'pwa':
       await copy(target + '/spa/icon-16x16.png', './src/statics/icons/favicon-16x16.png')
       await copy(target + '/spa/icon-32x32.png', './src/statics/icons/favicon-32x32.png')
@@ -101,7 +101,7 @@ const copyFiles = async (target, modeName, retries = 0) => {
   }
 }
 
-const initilize = async function (api, ctx, config) {
+const initialize = async function(api, ctx, config) {
   let mode, source, minify, iconConfig, hash
   if (ctx.dev) {
     mode = 'dev'
@@ -112,18 +112,18 @@ const initilize = async function (api, ctx, config) {
     source = api.prompts.source_build
     minify = api.prompts.minify_build
   }
-  
+
   let modeName = ctx.modeName
   if (modeName == 'ssr') {
     modeName = config.ssr.pwa ? 'pwa' : 'spa'
   }
 
   let target = './icon-factory/' + mode
-  let processImagess = async function () {
+  let processImagess = async function() {
     await iconfactory[modeName](source, target, minify)
     iconConfig.source[mode] = hash
     iconConfig.target[modeName][mode] = hash
-    fs.writeFile(configFileName, JSON.stringify(iconConfig, null, 2), (err) => {
+    fs.writeFile(configFileName, JSON.stringify(iconConfig, null, 2), err => {
       if (err) throw err
     })
   }
@@ -132,7 +132,7 @@ const initilize = async function (api, ctx, config) {
   await validatePng(source)
   if (fs.existsSync(configFileName)) {
     iconConfig = await new Promise(resolve => {
-      fs.readFile(configFileName, "utf8", (err, data) => {
+      fs.readFile(configFileName, 'utf8', (err, data) => {
         let _config = JSON.parse(data)
         resolve(_config)
       })
@@ -155,9 +155,9 @@ const initilize = async function (api, ctx, config) {
   // TODO: move icons to the correct place
 }
 
-module.exports = function (api, ctx) {
+module.exports = function(api, ctx) {
   // TODO: check if ssr is on pwa mode without extend quasar conf.
-  api.extendQuasarConf(async (config) => {
-    await initilize(api, ctx, config)
+  api.extendQuasarConf(async config => {
+    await initialize(api, ctx, config)
   })
 }

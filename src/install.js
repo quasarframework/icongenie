@@ -1,5 +1,5 @@
 const { createConfig } = require('./utils')
 
-module.exports = function (api) {
+module.exports = function(api) {
   createConfig(api.prompts)
 }
