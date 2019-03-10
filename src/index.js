@@ -1,5 +1,6 @@
 const fs = require('fs-extra'),
   deasync = require('deasync'),
+  util = require('util'),
   iconfactory = require('../lib/index.js')
 
 const { validatePng, computeHash, getConfig, saveConfig } = require('./utils')
@@ -20,27 +21,44 @@ console.log('★★★★★★★★★★★★★★★★★★★★★★�
 console.log(' [icon-factory] ★ The star means your icons are factory produced ★')
 console.log('★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
 
-const copy = (src, dest) => {
-  return new Promise((resolve, reject) => {
-    fs.copy(src, dest, { overwrite: true }, err => (err ? reject(err) : resolve()))
-  })
-}
+/**
+ * @param  {Object} context a object
+ * @param  {string} context.src the source - a directory or a file to be copied
+ * @param  {string} context.dest the destination - where the copy of the sources will be created.
+ * @returns {Promise} the result of the copy operation
+ */
+const copy = util.promisify((context, callback) => {
+  fs.copy(context.src, context.dest, { overwrite: true }, callback)
+})
 
-const copyFiles = async (target, modeName, retries = 0) => {
+/**
+ * copy files from the intermediate folder to the your final destination
+ * @param  {string} target the location of the intermediate folder
+ * @param  {string} modeName the mode than quasar cli is running (eg: `spa`, `pwa`, `electron`, `cordova`)
+ * @returns {undefined}
+ */
+const copyFiles = async (target, modeName) => {
   switch (modeName) {
     case 'spa':
     case 'pwa':
-      await copy(target, './src/statics')
+      await copy({ src: target, dest: './src/statics' })
       break
     case 'electron':
-      await copy(target, './src-electron/icons')
+      await copy({ src: target, dest: './src-electron/icons' })
       break;
     case 'cordova':
-      await copy(target, './src-cordova/res')
+      await copy({ src: target, dest: './src-cordova/res' })
       break
   }
 }
 
+/**
+ * configuring the icon factory extension
+ * @param {Object} api the IndexAPI object
+ * @param {Object} ctx the context object created by the @quasar/cli
+ * @param {Object} config quasar.config.js
+ * @returns {undefined}
+ */
 const initialize = async function(api, ctx, config) {
   let mode, source, minify, iconConfig, hash
   if (ctx.dev) {
@@ -76,6 +94,10 @@ const initialize = async function(api, ctx, config) {
     }
   }
   
+  /**
+   * creating the icons in the given target folder.
+   * @returns {undefined}
+   */
   let processImagess = async function() {
     await iconfactory[modeName](source, target, minify, iconConfig.options[modeName], true)
     iconConfig.modes[mode].source = hash
@@ -89,10 +111,10 @@ const initialize = async function(api, ctx, config) {
 
   await validatePng(source)
   iconConfig = await getConfig(api.prompts)
-  hash = await computeHash(source, 'md5', minify)
-  fs.ensureDirSync(target)
+  hash = await computeHash(source, 'md5', minify)  
   let targetHash = useIntermediateFolders ? iconConfig.modes[mode].targets[modeName] : iconConfig.targets[modeName]
   if (!fs.existsSync(target)) {
+    fs.ensureDirSync(target)
     await processImagess()
   } else if (iconConfig.modes[mode].source !== hash) {
     await processImagess()
@@ -103,7 +125,6 @@ const initialize = async function(api, ctx, config) {
   if (useIntermediateFolders) {
     await copyFiles(target, modeName, 0)
   }
-  // TODO: move icons to the correct place
 }
 
 module.exports = function(api, ctx) {
