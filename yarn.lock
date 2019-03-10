@@ -839,7 +839,7 @@ data-uri-to-buffer@2:
 
 deasync@^0.1.14:
   version "0.1.14"
-  resolved "https://registry.npmjs.org/deasync/-/deasync-0.1.14.tgz#232ea2252b443948cad033d792eb3b24b0a3d828"
+  resolved "https://registry.yarnpkg.com/deasync/-/deasync-0.1.14.tgz#232ea2252b443948cad033d792eb3b24b0a3d828"
   integrity sha512-wN8sIuEqIwyQh72AG7oY6YQODCxIp1eXzEZlZznBuwDF8Q03Tdy9QNp1BNZXeadXoklNrw+Ip1fch+KXo/+ASw==
   dependencies:
     bindings "~1.2.1"
@@ -3059,7 +3059,7 @@ node-abi@^2.7.0:
 
 node-addon-api@^1.6.0:
   version "1.6.2"
-  resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-1.6.2.tgz#d8aad9781a5cfc4132cc2fecdbdd982534265217"
+  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.6.2.tgz#d8aad9781a5cfc4132cc2fecdbdd982534265217"
   integrity sha512-479Bjw9nTE5DdBSZZWprFryHGjUaQC31y1wHo19We/k0BZlrmhqQitWoUL0cD8+scljCbIUL+E58oRDEakdGGA==
 
 node-environment-flags@1.0.4:
