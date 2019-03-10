@@ -1,6 +1,23 @@
-const fs = require('fs-extra')
-const iconfactory = require('../lib/index.js')
+const fs = require('fs-extra'),
+  deasync = require('deasync'),
+  iconfactory = require('../lib/index.js')
+
 const { validatePng, computeHash, getConfig, saveConfig } = require('./utils')
+
+console.log=(function() {
+  // log, log, its big its heavy its wood.
+  // represent the icon-factory
+
+  let log = console.log
+  return function () {
+    log.apply(console, arguments)
+    process.stdout.write(`★`)
+  }
+})()
+
+console.log('★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
+console.log(' [icon-factory] ★ The star means your icons are factory produced ★')
+console.log('★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
 
 const copy = (src, dest) => {
   return new Promise((resolve, reject) => {
@@ -72,7 +89,7 @@ const copyFiles = async (target, modeName, retries = 0) => {
       await copy(target + '/cordova/ios/screen-iphone-portrait.png', './src-cordova/res/screen/ios/screen-iphone-portrait.png')
 
       await copy(target + '/cordova/windows/Splashscreen-480x800.png', './src-cordova/res/screen/windows-phone/screen-portrait.png')
-      break;
+      break
   }
 }
 
@@ -119,7 +136,11 @@ const initialize = async function(api, ctx, config) {
 
 module.exports = function(api, ctx) {
   // TODO: check if ssr is on pwa mode without extend quasar conf.
-  api.extendQuasarConf(async config => {
-    await initialize(api, ctx, config)
+  api.extendQuasarConf(config => {
+    let done = false
+    initialize(api, ctx, config).then(() => {
+      done = true
+    })
+    deasync.loopWhile(() => !done)
   })
 }
