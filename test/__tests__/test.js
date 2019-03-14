@@ -11,7 +11,7 @@ chai.use(chaiFiles)
 const expect = chai.expect
 const file = chaiFiles.file
 
-
+/*
 describe('Illegal Ops 1', () => {
 
   it('missing file throws error', async () => {
@@ -33,13 +33,14 @@ describe('Illegal Ops 2', () => {
       expect(err).to.eql('Source image for icon-factory is not a png')
     }
   })
-  /*
+  */
+describe('Kitchensink', () => {
+
   it('original', async () => {
     const done = await iconfactory.kitchensink('test/__tests__/example-1240x1240.png', 'test/__tests__/output', 'pngquant')
     if (done) {
       expect(file('./test/__tests__/example-1240x1240.png')).to.exist
     }
   })
-  */
 })
 

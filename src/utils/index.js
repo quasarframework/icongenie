@@ -64,18 +64,15 @@ const readFile = util.promisify((context, callback) => {
 const validatePng = async function (fileName) {
   let fileExists = await exists(fileName)
   if (!fileExists) {
-    console.error(' [ERROR] Source image for icon-factory not found')
-    // we exit here because this means something is very wrong
-    process.exit(1)
+    throw new Error('File not found.')
   }
   let data = await readChunk(fileName, 0, 8)
   if (!isPng(data)) {
-    console.error(' [ERROR] Source image for icon-factory is not a png')
-    // we exit here because this means something is very wrong
-    process.exit(1)
+    throw new Error('The selected file is not a valid png.')
   }
   return true
 }
+
 
 /**
  * generating the `algorithm` sum of the `fileName`
