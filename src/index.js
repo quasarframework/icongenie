@@ -93,7 +93,7 @@ const initialize = async function(api, ctx, config) {
         break
     }
   }
-  
+
   /**
    * creating the icons in the given target folder.
    * @returns {undefined}
@@ -111,7 +111,7 @@ const initialize = async function(api, ctx, config) {
 
   await validatePng(source)
   iconConfig = await getConfig(api.prompts)
-  hash = await computeHash(source, 'md5', minify)  
+  hash = await computeHash(source, 'md5', minify)
   let targetHash = useIntermediateFolders ? iconConfig.modes[mode].targets[modeName] : iconConfig.targets[modeName]
   if (!fs.existsSync(target)) {
     fs.ensureDirSync(target)
@@ -127,13 +127,10 @@ const initialize = async function(api, ctx, config) {
   }
 }
 
-module.exports = function(api, ctx) {
+module.exports = async function(api, ctx) {
   // TODO: check if ssr is on pwa mode without extend quasar conf.
-  api.extendQuasarConf(config => {
+  api.extendQuasarConf(async config => {
     let done = false
-    initialize(api, ctx, config).then(() => {
-      done = true
-    })
-    deasync.loopWhile(() => !done)
+    await initialize(api, ctx, config)
   })
 }

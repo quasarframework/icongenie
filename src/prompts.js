@@ -2,13 +2,14 @@ const defaultImg = './logo-source.png'
 const { validatePng } = require('./utils')
 
 module.exports = function() {
+  console.log('PROJECT REPO: https://github.com/quasarframework/app-extension-icon-factory\n')
   return [
     {
       name: 'source_dev',
       type: 'input',
       required: true,
-      message:
-        'Your source image as a 1240x1240 png (with transparency) to be used during development:',
+      message: `Please type a relative path to the file you want to use as your source image.
+Best results with a 1240x1240 png (using transparency): `,
       default: defaultImg,
       validate: validatePng
     },
@@ -45,7 +46,7 @@ module.exports = function() {
       type: 'input',
       required: true,
       message:
-        'Your source image as a 1240x1240 png (with transparency) to be used during building for production:',
+        'If you want a separate file to be the source image during production, please specify it here: ',
       validate: validatePng,
       default: function(answers) {
         return answers.source_dev || defaultImg

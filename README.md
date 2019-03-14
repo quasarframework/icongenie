@@ -12,6 +12,53 @@ It has two primary interfaces (with Quasar CTX and as a standalone CLI) and alth
 
 > If you use an original that is smaller than 1240x1240 some icons will be naively upscaled. If you do not use a square original, it will be cropped square from the center using the smaller dimension as width and height. You have been warned.
 
+
+## Installation and Usage
+
+## Requires
+- node / yarn
+- Linux, MacOS or Windows
+- A square image in png format that is at least 1240px x 1240px (much bigger will merely slow down the conversions)
+
+### Install
+```bash
+$ quasar ext add @quasar/icon-factory
+```
+
+During the install phase, the extension will ask you for a path relative to the app folder where it can find your icon source file: 
+
+```bash
+? Please type a relative path to the file you want to use as your source image.
+Best results with a 1240x1240 png (using transparency):  (./logo-source.png) 
+```
+> **Note:** 
+  Please use a valid png of 1240x1240 pixels. If you choose an image that is not square or has smaller dimensions, the icon-factory will do its best, but the results will not be optimal. Transparency is recommended. PNG is required.
+
+Then choose a minification strategy:
+```bash 
+? Minify strategy to be used during development: (Use arrow keys)
+❯ pngquant (rate: 0.225 | quality: lossy | time: 01.4s) 
+  pngout (rate: 0.94 | quality: lossless | time: 10.7s) 
+  optipng (rate: 0.61 | quality: lossless | time: 13.9s) 
+  pngcrush (rate: 0.61 | quality: lossless | time: 28.1s) 
+  zopfli (rate: 0.57 | quality: lossless | time: 33.2s) 
+```
+
+> Note: we recommend using pngquant because it is the fastest. The times given are approximations for SPA. Other targets will take more time.
+
+You will be asked the same questions for production. Our recommendation is to choose `optipng`. It has the best time / quality trade-off for a lossless minification.
+
+Your selections will be registered and filehashes registered to the new file `quasar.icon-factory.json` in the root folder of your project repository. If you do not change this file - or you do not replace the source image - icon-factory will do nothing.
+
+### Triggering
+The first time you start Quasar, icon-factory will create the images needed for the specific app artifacts. They will not automatically be added to git, so you will need to manage that yourself.
+
+```bash
+$ quasar dev --mode electron 
+```
+
+If you change the image, the settings in `quasar.icon-factory.json` or the dev/build mode, this extension will be triggered and build your assets in the appropriate place. Don't forget to check the results and commit them.
+
 ## How it Works
 There are 5 1/2 things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will create SVG assets. Finally it will sort these icons into folders. 
 
@@ -36,28 +83,9 @@ There are five composed "recipes" that will create icons for you according to yo
 You may notice that very small icons (like 16x16 and 32x32) look a little strange. Achieving good results by simply downscaling to a very small size depends a great deal on your original, and it is highly recommended that you at least look at all of the icons before you publish your project to a store. While integration testing can make sure that you have an asset, judging the ability of your small icon to express the same content as a large one is highly subjective and something better left to humans. Not even hamming distance will get this right!
 
 ## But why did you make this?
-There are literally dozens of other projects out there that more or less do the same thing, why did you bother to make a new one? The answer is quite simple: Because none of them fulfill all the needs of the quasar project, and although lots of really smart people built them, we want to be able to maintain this library and grow it as quasar grows. Especially since many such image-library projects quickly grow outdated and maintainers drift away into a sea of micro-modules (yes imagemin, we mean you), we felt that it is a good property to keep "in-house".
+There are literally dozens of other projects out there that more or less do the same thing, why did you bother to make a new one? The answer is quite simple: Because none of them fulfill all the needs of the quasar project, and although lots of really smart people built them, we want to be able to maintain this library and grow it as quasar grows. Especially since many such image-library projects quickly grow outdated and maintainers drift away into a sea of micro-modules, we felt that it is a good property to keep "in-house".
 
-# Installation and Usage
-
-## Requires
-- node / yarn
-- Linux, MacOS or Windows
-- A square image in png format that is at least 1240px x 1240px (much bigger will merely slow down the conversions)
-
-## Install
-```bash
-$ quasar ext add @quasar/icon-factory
-```
-
-## Usage within Quasar
-```bash
-$ quasar dev
-# or
-$ quasar build
-```
-
-If you change the image, the settings in `quasar.icon-factory.json` or the dev/build mode, this extension will be triggered and build your assets in the appropriate place. Don't forget to check the results and commit them.
+Furthermore, we wanted to pay special attention to your security and it was obvious that other libraries aren't doing enough to protect developers.
 
 ### Minify
 There are six different minification algorithms available (because it is possible that one or the other just won't build on your system or worse becomes compromised via some kind of exploit). Using totally non-scientific tests, these are the results of this command that ran one time on a 3,2 GHz Quad-Core Intel Xeon with 16 GB of ram: 

@@ -6,10 +6,12 @@ const readChunk = require('read-chunk')
 const { options } = require('../../lib/settings')
 
 const fileName = './quasar.icon-factory.json'
+
 /**
  * Check if a given file exists and if the current user had access
- * @param  {string} file the path do the file who will be checked
- * @returns {Promise} a Promise who will be successed resolved if the file exists
+ *
+ * @param  {string} file - the path of the file to be checked
+ * @returns {Promise} a Promise that will be successfully resolved if the file exists
  */
 const access = util.promisify((file, callback) => {
   fs.access(file, fs.constants.F_OK, callback)
@@ -17,7 +19,8 @@ const access = util.promisify((file, callback) => {
 
 /**
  * Check if a given file exists and if the current user had access
- * @param  {string} file the path do the file who will be checked if exists
+ *
+ * @param  {string} file - the path of the file to be checked
  * @returns {Promise<boolean>} the result of the operation
  */
 const exists = async function (file) {
@@ -31,10 +34,11 @@ const exists = async function (file) {
 
 /**
  * write `data` to a `file`
- * @param  {Object} context a object
- * @param  {String | Number | Buffer} context.file the file or stream to be used to store the content
- * @param  {Object} context.data the context to be saved in the file
- * @returns {Promise} a promise who will successed resolve if the file got writed with success
+ *
+ * @param  {Object} context - a object
+ * @param  {String | Number | Buffer} context.file - the file or stream to be used to store the content
+ * @param  {Object} context.data - the context to be saved in the file
+ * @returns {Promise} a promise that will successfully resolve if the file was written with successfully
  */
 const writeFile = util.promisify((context, callback) => {
   fs.writeFile(context.file, context.data, callback)
@@ -42,9 +46,10 @@ const writeFile = util.promisify((context, callback) => {
 
 /**
  * @param  {Object} context a object
+ *
  * @param  {String | Number | Buffer} context.file the file or stream to be read
  * @param  {String} context.data the enconding of the file
- * @returns {Promise} a promise who will successed resolve with the context of the readed file
+ * @returns {Promise} a promise that will successfully resolve with the context of the read file
  */
 const readFile = util.promisify((context, callback) => {
   fs.readFile(context.file, context.encoding, callback)
@@ -52,23 +57,29 @@ const readFile = util.promisify((context, callback) => {
 
 /**
  * validate if the `fileName` is a valid png file.
+ *
  * @param  {String} fileName the path to the png file to be validated
  * @returns {Promise<Boolean>} the result of the validation
  */
 const validatePng = async function (fileName) {
   let fileExists = await exists(fileName)
   if (!fileExists) {
-    throw new Error('File not found.')
+    console.error(' [ERROR] Source image for icon-factory not found')
+    // we exit here because this means something is very wrong
+    process.exit(1)
   }
   let data = await readChunk(fileName, 0, 8)
   if (!isPng(data)) {
-    throw new Error('The selected file is not a valid png.')
+    console.error(' [ERROR] Source image for icon-factory is not a png')
+    // we exit here because this means something is very wrong
+    process.exit(1)
   }
   return true
 }
 
 /**
  * generating the `algorithm` sum of the `fileName`
+ *
  * @param  {String} fileName the path to the png file to be validated
  * @param  {String} algorithm algorithm used to generate the hash
  * @param  {String | Buffer} secret the secret used while generating the hash
@@ -93,6 +104,7 @@ const computeHash = async function (fileName, algorithm, secret) {
 
 /**
  * clone the `options` to the `settings` object
+ *
  * @returns {undefined}
  */
 const mapOptions = function () {
@@ -106,7 +118,8 @@ const mapOptions = function () {
 
 /**
  * save the settings object to the disk
- * @param  {Object} settings the settings object to be saved
+ *
+ * @param  {Object} settings - the settings object to be saved
  * @returns {undefined}
  */
 const saveConfig = async function (settings) {
@@ -114,9 +127,10 @@ const saveConfig = async function (settings) {
 }
 
 /**
- * create the json file who will hold the hash of the generated icons
- * @param  {Object} prompts a object with the answers given by the user while inquired
- * @returns {Promise<Object>} a object who hold the hash of the generated icons
+ * create the json file that will hold the hash of the generated icons
+ *
+ * @param  {Object} prompts - an object with the answers given by the user while inquired
+ * @returns {Promise<Object>} an object that holds the hash of the generated icons
  */
 const createConfig = async function (prompts) {
   var modes = { dev: null, build: null }
@@ -149,8 +163,9 @@ const createConfig = async function (prompts) {
 
 /**
  * get the settings from the disk
- * @param  {Object} prompts the answers given by the user while installing the extesion 
- * @returns {Object} a object with the current `settings`
+ *
+ * @param  {Object} prompts - the answers given by the user while installing the extension
+ * @returns {Object} an object with the current `settings`
  */
 const getConfig = async function (prompts) {
   if (await exists(fileName)) {
