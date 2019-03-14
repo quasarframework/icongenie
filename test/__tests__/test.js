@@ -11,7 +11,7 @@ chai.use(chaiFiles)
 const expect = chai.expect
 const file = chaiFiles.file
 
-/*
+
 describe('Illegal Ops 1', () => {
 
   it('missing file throws error', async () => {
@@ -33,7 +33,8 @@ describe('Illegal Ops 2', () => {
       expect(err).to.eql('Source image for icon-factory is not a png')
     }
   })
-  */
+})
+
 describe('Kitchensink', () => {
 
   it('original', async () => {
