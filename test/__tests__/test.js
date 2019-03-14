@@ -23,6 +23,16 @@ describe('Illegal Ops 1', () => {
   })
 })
 
+
+describe('Kitchensink', () => {
+  it('original', async () => {
+    const done = await iconfactory.kitchensink('test/__tests__/example-1240x1240.png', 'test/__tests__/output', 'pngquant')
+    if (done) {
+      expect(file('./test/__tests__/example-1240x1240.png')).to.exist
+    }
+  })
+})
+
 describe('Illegal Ops 2', () => {
 
   it('invalid png throws error', async () => {
@@ -34,14 +44,3 @@ describe('Illegal Ops 2', () => {
     }
   })
 })
-
-describe('Kitchensink', () => {
-
-  it('original', async () => {
-    const done = await iconfactory.kitchensink('test/__tests__/example-1240x1240.png', 'test/__tests__/output', 'pngquant')
-    if (done) {
-      expect(file('./test/__tests__/example-1240x1240.png')).to.exist
-    }
-  })
-})
-
