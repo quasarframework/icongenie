@@ -3,21 +3,6 @@ const { copy, ensureDir, existsSync } = require('fs-extra')
 const { validatePng, computeHash, getConfig, saveConfig } = require('./utils')
 const useIntermediateFolders = false
 
-console.log=(function() {
-  // log, log, its big its heavy its wood.
-  // represent the icon-factory
-
-  let log = console.log
-  return function () {
-    log.apply(console, arguments)
-    process.stdout.write(`★`)
-  }
-})()
-
-console.log('★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
-console.log(' [icon-factory] ★ The star means your icons are factory produced ★')
-console.log('★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
-
 /**
  * copy files from the intermediate folder to the your final destination
  * @param  {string} target the location of the intermediate folder
@@ -100,9 +85,9 @@ const initialize = async function(api, ctx, config) {
   iconConfig = await getConfig(api.prompts)
   hash = await computeHash(source, 'md5', minify)
   let targetHash = useIntermediateFolders ? iconConfig.modes[mode].targets[modeName] : iconConfig.targets[modeName]
-  // async version of the exists is deprecated, while access is recomended async method to check if a file exists, 
+  // async version of the exists is deprecated, while access is recomended async method to check if a file exists,
   // that will throw a exception if the file didn't exists, use a try-catch just to check if a file exists, didn't had a good smell
-  
+
   if (!existsSync(target)) {
     await ensureDir(target)
     await processImagess()
