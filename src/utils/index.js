@@ -1,21 +1,9 @@
-const fs = require('fs-extra')
-const util = require('util')
 const isPng = require('is-png')
-const crypto = require('crypto')
 const readChunk = require('read-chunk')
+const { createHmac } = require('crypto')
 const { options } = require('../../lib/settings')
-
+const { access, writeFile, readFile, ReadStream } = require('fs-extra')
 const fileName = './quasar.icon-factory.json'
-
-/**
- * Check if a given file exists and if the current user had access
- *
- * @param  {string} file - the path of the file to be checked
- * @returns {Promise} a Promise that will be successfully resolved if the file exists
- */
-const access = util.promisify((file, callback) => {
-  fs.access(file, fs.constants.F_OK, callback)
-})
 
 /**
  * Check if a given file exists and if the current user had access
@@ -31,29 +19,6 @@ const exists = async function (file) {
     return false
   }
 }
-
-/**
- * write `data` to a `file`
- *
- * @param  {Object} context - a object
- * @param  {String | Number | Buffer} context.file - the file or stream to be used to store the content
- * @param  {Object} context.data - the context to be saved in the file
- * @returns {Promise} a promise that will successfully resolve if the file was written with successfully
- */
-const writeFile = util.promisify((context, callback) => {
-  fs.writeFile(context.file, context.data, callback)
-})
-
-/**
- * @param  {Object} context a object
- *
- * @param  {String | Number | Buffer} context.file the file or stream to be read
- * @param  {String} context.data the enconding of the file
- * @returns {Promise} a promise that will successfully resolve with the context of the read file
- */
-const readFile = util.promisify((context, callback) => {
-  fs.readFile(context.file, context.encoding, callback)
-})
 
 /**
  * validate if the `fileName` is a valid png file.
@@ -85,10 +50,10 @@ const validatePng = async function (fileName) {
 const computeHash = async function (fileName, algorithm, secret) {
   if (!Buffer.isBuffer(secret))
     secret = Buffer.from(secret)
-  let hmac = crypto.createHmac(algorithm, secret)
+  let hmac = createHmac(algorithm, secret)
   await validatePng(fileName)
   return new Promise(resolve => {
-    let stream = fs.ReadStream(fileName)
+    let stream = ReadStream(fileName)
     stream.on('data', function (data) {
       hmac.update(data)
     })
@@ -120,7 +85,7 @@ const mapOptions = function () {
  * @returns {undefined}
  */
 const saveConfig = async function (settings) {
-  await writeFile({ file: fileName, data: JSON.stringify(settings, null, 2) })
+  await writeFile(fileName, JSON.stringify(settings, null, 2))
 }
 
 /**
@@ -166,7 +131,7 @@ const createConfig = async function (prompts) {
  */
 const getConfig = async function (prompts) {
   if (await exists(fileName)) {
-    let data = await readFile({ file: fileName, encoding: 'utf8' })
+    let data = await readFile(fileName, 'utf8')
     let settings = JSON.parse(data)
     if (!settings.options) {
       settings.options = mapOptions()

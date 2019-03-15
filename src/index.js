@@ -1,8 +1,5 @@
-const fs = require('fs-extra'),
-  deasync = require('deasync'),
-  util = require('util'),
-  iconfactory = require('../lib/index.js')
-
+const iconfactory = require('../lib/index.js')
+const { copy, ensureDir, existsSync } = require('fs-extra')
 const { validatePng, computeHash, getConfig, saveConfig } = require('./utils')
 const useIntermediateFolders = false
 
@@ -22,16 +19,6 @@ console.log(' [icon-factory] ★ The star means your icons are factory produced 
 console.log('★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
 
 /**
- * @param  {Object} context a object
- * @param  {string} context.src the source - a directory or a file to be copied
- * @param  {string} context.dest the destination - where the copy of the sources will be created.
- * @returns {Promise} the result of the copy operation
- */
-const copy = util.promisify((context, callback) => {
-  fs.copy(context.src, context.dest, { overwrite: true }, callback)
-})
-
-/**
  * copy files from the intermediate folder to the your final destination
  * @param  {string} target the location of the intermediate folder
  * @param  {string} modeName the mode than quasar cli is running (eg: `spa`, `pwa`, `electron`, `cordova`)
@@ -41,13 +28,13 @@ const copyFiles = async (target, modeName) => {
   switch (modeName) {
     case 'spa':
     case 'pwa':
-      await copy({ src: target, dest: './src/statics' })
+      await copy(target, './src/statics')
       break
     case 'electron':
-      await copy({ src: target, dest: './src-electron/icons' })
+      await copy(target, './src-electron/icons')
       break;
     case 'cordova':
-      await copy({ src: target, dest: './src-cordova/res' })
+      await copy(target, './src-cordova/res')
       break
   }
 }
@@ -96,10 +83,10 @@ const initialize = async function(api, ctx, config) {
 
   /**
    * creating the icons in the given target folder.
-   * @returns {undefined}
+   * @returns {undefined}s
    */
   let processImagess = async function() {
-    await iconfactory[modeName](source, target, minify, iconConfig.options[modeName], true)
+    await iconfactory[modeName](source, target, minify, iconConfig.options[modeName])
     iconConfig.modes[mode].source = hash
     if (useIntermediateFolders) {
       iconConfig.modes[mode].targets[modeName] = hash
@@ -113,8 +100,11 @@ const initialize = async function(api, ctx, config) {
   iconConfig = await getConfig(api.prompts)
   hash = await computeHash(source, 'md5', minify)
   let targetHash = useIntermediateFolders ? iconConfig.modes[mode].targets[modeName] : iconConfig.targets[modeName]
-  if (!fs.existsSync(target)) {
-    fs.ensureDirSync(target)
+  // async version of the exists is deprecated, while access is recomended async method to check if a file exists, 
+  // that will throw a exception if the file didn't exists, use a try-catch just to check if a file exists, didn't had a good smell
+  
+  if (!existsSync(target)) {
+    await ensureDir(target)
     await processImagess()
   } else if (iconConfig.modes[mode].source !== hash) {
     await processImagess()
@@ -127,10 +117,9 @@ const initialize = async function(api, ctx, config) {
   }
 }
 
-module.exports = async function(api, ctx) {
+module.exports = function(api, ctx) {
   // TODO: check if ssr is on pwa mode without extend quasar conf.
   api.extendQuasarConf(async config => {
-    let done = false
     await initialize(api, ctx, config)
   })
 }
