@@ -12,7 +12,8 @@ const args = require('minimist')(process.argv.slice(2), {
     m: 'minify',
     d: 'mode',
     o: 'options',
-    v: 'version'
+    v: 'version',
+    l: 'validate'
   },
   default: {
     dir: process.cwd()
@@ -39,12 +40,13 @@ Flags:
                     [spa|pwa|cordova|electron|kitchensink|custom]
   -s, --source      Your source image as a large square png
   -t, --target      The destination directory for the files created
-  -o, --options     path to file that overrides defaults (if custom)
+  -o, --options     Path to file that overrides defaults (if custom)
   -m, --minify      Minify strategy to use. 
                     [pngcrush|pngquant|optipng|pngout|zopfli]
   -d, --mode        Minify mode if minify preset [folder|singlefile]
-  -v, --version     display version information
-  -h, --help        display this information
+  -v, --version     Display version information
+  -h, --help        Display this information
+  -l, --validate    Check the image is valid for processing 
   
 Usage:
     
@@ -127,6 +129,9 @@ switch (args.preset) {
     break
   case 'custom':
     iconfactory.custom(args.source, args.target, args.options)
+    break
+  case 'validate':
+    iconfactory.validate(args.source, args.target)
     break
   default:
     console.log('You must supply a preset')
