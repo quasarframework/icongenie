@@ -31,9 +31,9 @@ const copyFiles = async (target, modeName) => {
  * @param {Object} config quasar.config.js
  * @returns {undefined}
  */
-const initialize = async function(api, ctx, config) {
+const initialize = async function(api, config) {
   let mode, source, minify, iconConfig, hash
-  if (ctx.dev) {
+  if (api.ctx.dev) {
     mode = 'dev'
     source = api.prompts.source_dev
     minify = api.prompts.minify_dev
@@ -43,7 +43,7 @@ const initialize = async function(api, ctx, config) {
     minify = api.prompts.minify_build
   }
 
-  let modeName = ctx.modeName
+  let modeName = api.ctx.modeName
   if (modeName == 'ssr') {
     modeName = config.ssr.pwa ? 'pwa' : 'spa'
   }
@@ -102,9 +102,9 @@ const initialize = async function(api, ctx, config) {
   }
 }
 
-module.exports = function(api, ctx) {
+module.exports = function(api) {
   // TODO: check if ssr is on pwa mode without extend quasar conf.
   api.extendQuasarConf(async config => {
-    await initialize(api, ctx, config)
+    await initialize(api, config)
   })
 }
