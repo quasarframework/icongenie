@@ -27,7 +27,6 @@ const copyFiles = async (target, modeName) => {
 /**
  * configuring the icon factory extension
  * @param {Object} api the IndexAPI object
- * @param {Object} ctx the context object created by the @quasar/cli
  * @param {Object} config quasar.config.js
  * @returns {undefined}
  */
