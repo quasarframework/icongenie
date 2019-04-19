@@ -19,8 +19,10 @@ It has two primary interfaces (with Quasar CTX and as a standalone CLI) and alth
 - node / yarn
 - Linux, MacOS or Windows
 - A square image in png format that is at least 1240px x 1240px (much bigger will merely slow down the conversions)
+- @quasar/cli version 1.0.0-beta.4 (if building a new project) or @quasar/app v1.0.0-beta.18 or later in order to add this module as an app-extension.
 
 ### Install
+
 ```bash
 $ quasar ext add @quasar/icon-factory
 ```
