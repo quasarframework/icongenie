@@ -61,6 +61,13 @@ $ quasar dev --mode electron
 
 If you change the image, the settings in `quasar.icon-factory.json` or the dev/build mode, this extension will be triggered and build your assets in the appropriate place. Don't forget to check the results and commit them.
 
+### Special notes about Cordova
+
+If you choose to build icons for cordova, they WILL have a colored background, and this is why you are asked for an RGB value during the install phase. You can change this in the quasar.icon-factory.json, but be sure to use a valid hex code like: `#c0ff33`.
+ 
+This colored background color will also be used for the splashscreen. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), it will be installed for you.
+
+
 ## How it Works
 There are 5 1/2 things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will create SVG assets. Finally it will sort these icons into folders. 
 

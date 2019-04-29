@@ -1,6 +1,6 @@
 const iconfactory = require('../lib/index.js')
 const { copy, ensureDir, existsSync } = require('fs-extra')
-const { validatePng, computeHash, getConfig, saveConfig } = require('./utils')
+const { validatePng, computeHash, getConfig, saveConfig, validateHexRBG } = require('./utils')
 const useIntermediateFolders = false
 
 /**
@@ -43,9 +43,12 @@ const initialize = async function(api, config) {
   }
 
   let modeName = api.ctx.modeName
-  if (modeName == 'ssr') {
+  if (modeName === 'ssr') {
     modeName = config.ssr.pwa ? 'pwa' : 'spa'
   }
+
+  const backgroundColor = api.prompts.background_color
+  const themeColor = api.prompts.theme_color
 
   let target = ''
   if (useIntermediateFolders) {
@@ -69,8 +72,13 @@ const initialize = async function(api, config) {
    * creating the icons in the given target folder.
    * @returns {undefined}s
    */
-  let processImagess = async function() {
-    await iconfactory[modeName](source, target, minify, iconConfig.options[modeName])
+  let processImages = async function() {
+    const options = {
+      ...iconConfig.options[modeName],
+      background_color: iconConfig.options.background_color,
+      theme_color: iconConfig.options.theme_color
+    }
+    await iconfactory[modeName](source, target, minify, options)
     iconConfig.modes[mode].source = hash
     if (useIntermediateFolders) {
       iconConfig.modes[mode].targets[modeName] = hash
@@ -87,15 +95,10 @@ const initialize = async function(api, config) {
   // async version of the exists is deprecated, while access is recomended async method to check if a file exists,
   // that will throw a exception if the file didn't exists, use a try-catch just to check if a file exists, didn't had a good smell
 
-  if (!existsSync(target)) {
+  if (!existsSync(target) || (iconConfig.modes[mode].source !== hash) || (targetHash !== hash)) {
     await ensureDir(target)
-    await processImagess()
-  } else if (iconConfig.modes[mode].source !== hash) {
-    await processImagess()
-  } else if (targetHash !== hash) {
-    await processImagess()
+    await processImages()
   }
-
   if (useIntermediateFolders) {
     await copyFiles(target, modeName, 0)
   }

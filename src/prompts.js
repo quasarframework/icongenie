@@ -1,5 +1,5 @@
 const defaultImg = './logo-source.png'
-const { validatePng } = require('./utils')
+const { validatePng, validateHexRBG } = require('./utils')
 
 module.exports = function() {
   console.log('PROJECT REPO: https://github.com/quasarframework/app-extension-icon-factory\n')
@@ -78,7 +78,25 @@ Best results with a 1240x1240 png (using transparency): `,
           value: 'zopfli'
         }
       ],
-      default: 'optipng'
-    }
+      default: function(answers) {
+        return answers.minify_dev || 'optipng'
+      }
+    },
+    {
+      name: 'background_color',
+      type: 'input',
+      required: true,
+      message: `Please type a background color to use for Duochrome SVGs and Cordova Icons / Splashscreens (no transparency): `,
+      default: '#000074',
+      validate: validateHexRBG
+    },
+    {
+      name: 'theme_color',
+      type: 'input',
+      required: true,
+      message: `Please enter a highlight color to use for Duochrome SVGs (no transparency: `,
+      default: '#02aa9b',
+      validate: validateHexRBG
+    },
   ]
 }

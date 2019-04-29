@@ -6,12 +6,12 @@ const { access, writeFile, readFile, ReadStream } = require('fs-extra')
 const fileName = './quasar.icon-factory.json'
 
 /**
- * Check if a given file exists and if the current user had access
+ * Check if a given file exists and if the current user has access
  *
  * @param  {string} file - the path of the file to be checked
  * @returns {Promise<boolean>} the result of the operation
  */
-const exists = async function (file) {
+const __exists = async function (file) {
   try {
     await access(file)
     return true
@@ -27,7 +27,7 @@ const exists = async function (file) {
  * @returns {Promise<Boolean>} the result of the validation
  */
 const validatePng = async function (fileName) {
-  let fileExists = await exists(fileName)
+  let fileExists = await __exists(fileName)
   if (!fileExists) {
     throw new Error('File not found.')
   }
@@ -38,6 +38,15 @@ const validatePng = async function (fileName) {
   return true
 }
 
+/**
+ * make sure the prompted RGB HEX really is correct
+ *
+ * @param  {String} hex - the answer given by the user while installing the extension
+ * @returns {Boolean} true if it is a valid 3 or 6 letter RGB HEX
+ */
+const validateHexRBG = async function (hex) {
+  return typeof hex === "string" && /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hex)
+}
 
 /**
  * generating the `algorithm` sum of the `fileName`
@@ -59,7 +68,7 @@ const computeHash = async function (fileName, algorithm, secret) {
     })
     stream.on('end', function () {
       let hash = hmac.digest('hex')
-      return resolve(hash);
+      return resolve(hash)
     })
   })
 }
@@ -71,6 +80,8 @@ const computeHash = async function (fileName, algorithm, secret) {
  */
 const mapOptions = function () {
   return {
+    background_color: options.background_color,
+    theme_color: options.theme_color,
     spa: options.spa,
     pwa: options.pwa,
     electron: options.electron,
@@ -130,7 +141,7 @@ const createConfig = async function (prompts) {
  * @returns {Object} an object with the current `settings`
  */
 const getConfig = async function (prompts) {
-  if (await exists(fileName)) {
+  if (await __exists(fileName)) {
     let data = await readFile(fileName, 'utf8')
     let settings = JSON.parse(data)
     if (!settings.options) {
@@ -144,6 +155,7 @@ const getConfig = async function (prompts) {
 }
 
 exports.validatePng = validatePng
+exports.validateHexRBG = validateHexRBG
 exports.computeHash = computeHash
 exports.createConfig = createConfig
 exports.saveConfig = saveConfig
