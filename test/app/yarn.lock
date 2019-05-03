@@ -971,10 +971,10 @@
   resolved "https://registry.npmjs.org/@positron/stack-trace/-/stack-trace-1.0.0.tgz#14fcc712a530038ef9be1ce6952315a839f466a8"
   integrity sha1-FPzHEqUwA475vhzmlSMVqDn0Zqg=
 
-"@quasar/app@^1.0.0-beta.20":
-  version "1.0.0-beta.20"
-  resolved "https://registry.npmjs.org/@quasar/app/-/app-1.0.0-beta.20.tgz#536c711c14dd7f929a81bcf1beb12cd9e2dad314"
-  integrity sha512-nG5u5uM5QU61UZDku16mLOv8OrZpWLuMvJo+MXM8HY2+tztUcSULnXqScFc0mJIEah970fZiP5Iah+24b9oNsg==
+"@quasar/app@^1.0.0-beta.22":
+  version "1.0.0-beta.22"
+  resolved "https://registry.npmjs.org/@quasar/app/-/app-1.0.0-beta.22.tgz#f6d6f3cace2656f7e5ca4038c0b7a35df63ac4c4"
+  integrity sha512-4bXYUIZeAb3ZFQ/KS25jaWx07sb/KyxoUZNouQmy2pTJr8PA4yshF+Auy4YrHpm4VuSlXrgNtAMVomY/h8DYhA==
   dependencies:
     "@quasar/babel-preset-app" "1.0.2"
     "@vue/preload-webpack-plugin" "1.1.0"
@@ -1022,7 +1022,6 @@
     register-service-worker "1.6.2"
     semver "6.0.0"
     strip-ansi "=3.0.1"
-    style-resources-loader "1.2.1"
     stylus "0.54.5"
     stylus-loader "3.0.2"
     terser-webpack-plugin "1.2.3"
@@ -1063,10 +1062,10 @@
     babel-plugin-dynamic-import-node "2.2.0"
     core-js "2.6.5"
 
-"@quasar/extras@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@quasar/extras/-/extras-1.1.0.tgz#acb43f7b2bb8e65851b5ba30bc05147c48854168"
-  integrity sha512-594TNuQrQLwzSwhlZMkMn5AIAcNk8zPrsCkdHT021dswMv+IHATGyKJaTH4KuLKLWse+oPRoB0NddLNf9PXiuw==
+"@quasar/extras@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/@quasar/extras/-/extras-1.1.2.tgz#8b3a5faa52a824ffe53d233b9dffa2de15377f37"
+  integrity sha512-gas3jD/ArAtRNwUgvosUNl8ueWZJD4ULd7n6nWrWIH3I+I3A1u3CJbwVlsR1czlY7eawMFXmhJ3KKnx3IbkASg==
 
 "@quasar/quasar-app-extension-icon-factory@link:../..":
   version "0.0.0"
@@ -9419,10 +9418,10 @@ qs@6.5.2, qs@~6.5.2:
   resolved "https://registry.npmjs.org/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
 
-quasar@^1.0.0-beta.19:
-  version "1.0.0-beta.19"
-  resolved "https://registry.npmjs.org/quasar/-/quasar-1.0.0-beta.19.tgz#e835da672f027fd87f7a0d448b2235ffdab044c9"
-  integrity sha512-8DSET+Jsoi7QvUXZuFxt1yB3tSR2uuk5Sc24vfrBQGSDzUqHJcxxvwrs4RT7zy3u96iAnWIG4hnNRw5X6/JXXw==
+quasar@^1.0.0-beta.20:
+  version "1.0.0-beta.20"
+  resolved "https://registry.npmjs.org/quasar/-/quasar-1.0.0-beta.20.tgz#71f4ec4f31a4cd9d43cda623e7b987b1084099ee"
+  integrity sha512-oI0dlUsNVQl6WXkT6W8OesNCT0K4oAU20OTRgiid7+hngTTfDJa8UYfzKxq1jUogiRSFjvRoHU95EVlhHP7kUA==
 
 query-string@^5.0.1:
   version "5.1.1"
@@ -10972,17 +10971,6 @@ strip-outer@^1.0.0:
   integrity sha512-k55yxKHwaXnpYGsOzg4Vl8+tDrWylxDEpknGjhTiZB8dFRU5rTo9CAzeycivxV3s+zlTKwrs6WxMxR95n26kwg==
   dependencies:
     escape-string-regexp "^1.0.2"
-
-style-resources-loader@1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npmjs.org/style-resources-loader/-/style-resources-loader-1.2.1.tgz#7679d5dc2f27046b2fc2b83c1d5b6c1b8a9b820c"
-  integrity sha512-ekId7AwZRW429UjQo02CJTt0Y8GwoT9zidvJLq4lRTJbu0cghv9XNRmt9mS4MR41+gZwMRT0EpFzP68HDWLbXQ==
-  dependencies:
-    glob "^7.1.2"
-    is-callable "^1.1.4"
-    is-plain-object "^2.0.4"
-    is-promise "^2.1.0"
-    loader-utils "^1.1.0"
 
 stylehacks@^4.0.0:
   version "4.0.3"

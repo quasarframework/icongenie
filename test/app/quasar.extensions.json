@@ -22,7 +22,7 @@
     "minify_dev": "pngquant",
     "source_build": "./logo-source.png",
     "minify_build": "pngquant",
-    "background_color": "#000074",
-    "theme_color": "#02aa9b"
+    "background_color": "#ff0000",
+    "theme_color": "#ffff00"
   }
 }

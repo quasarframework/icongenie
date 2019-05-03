@@ -50,6 +50,8 @@ Then choose a minification strategy:
 
 You will be asked the same questions for production. Our recommendation is to choose `optipng`. It has the best time / quality trade-off for a lossless minification.
 
+You will also be asked for a background and a highlight color. These are used in the few cases that a background is required, as with cordova splashscreens and cordova iOS icons.
+
 Your selections will be registered and filehashes registered to the new file `quasar.icon-factory.json` in the root folder of your project repository. If you do not change this file - or you do not replace the source image - icon-factory will do nothing.
 
 ### Triggering
@@ -129,26 +131,13 @@ This module uses the amazing [`png2icons`](https://github.com/idesis-gmbh/png2ic
 To make the favicon.ico, it uses [`to-ico`](https://github.com/kevva/to-ico) and concats a 16x16 and a 32x32 png.
 
 ## Splash Screens for Cordova
-These are constructed for your app and use your project's background color for the background. If you undefine this value, the process will automatically create a black background. You can also change the option with a hex triplet like `#c0ffee`. 
+These are constructed for your app using the background color that you specified during the install phase.  
 
 ## SVG
-The `safari-pinned-tab.svg` mask is created by adding contrast (via threshold) to the original and then applying even more threshold to the SVG tracing. If you set a background color, the mask will be solid, which is probably not what you want. If you are indeed of a discerning nature (and have used gradients in your icon design), there is another option available to you:svg-duochrome. It too will be created in the spa folder within the spa task. As usual, you can also override our sensible defaults and get some wild SVG action going on.
+The `safari-pinned-tab.svg` mask is created by adding contrast (via threshold) to the original and then applying even more threshold to the SVG tracing.
+ 
+ If you are indeed of a discerning nature (and have used gradients in your icon design), there is another option available to you:svg-duochrome. It too will be created in the spa folder within the spa task, but it will be up to you to rename it to `safari-pinned-tab.svg`. Be forewarned, that gradients used in a duochrome svg have a very particular character.
 
-Here are the options you will want to set:
-
-```js 
-options: {
-  background_color: '#000074',
-  theme_color: '#02aa9b',
-  svg: {
-    png_threshold: 200,
-    svg_threshold: 128,
-    turdSize: 3,
-    optTolerance: 0.3,
-    steps: [40, 85, 135, 180]
-  },
-}
-```
 
 ## CLI Usage
 `quasar-icon-factory` can be used as a command line tool for batch invocation, and you can simply add it by installing it "globally" with your node package manager:
