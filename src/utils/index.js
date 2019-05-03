@@ -74,14 +74,15 @@ const computeHash = async function (fileName, algorithm, secret) {
 }
 
 /**
- * clone the `options` to the `settings` object
+ * clone the `options` to the `settings` object, inject color choices
  *
+ * @param  {Object} prompts - the settings object to be saved
  * @returns {undefined}
  */
-const mapOptions = function () {
+const mapOptions = function (prompts) {
   return {
-    background_color: options.background_color,
-    theme_color: options.theme_color,
+    background_color: prompts.background_color,
+    theme_color: prompts.theme_color,
     spa: options.spa,
     pwa: options.pwa,
     electron: options.electron,
@@ -127,7 +128,7 @@ const createConfig = async function (prompts) {
       cordova: null,
       electron: null
     },
-    options: mapOptions()
+    options: mapOptions(prompts)
   }
 
   await saveConfig(settings)

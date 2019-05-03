@@ -94,7 +94,7 @@ Best results with a 1240x1240 png (using transparency): `,
       name: 'theme_color',
       type: 'input',
       required: true,
-      message: `Please enter a highlight color to use for Duochrome SVGs (no transparency: `,
+      message: `Please enter a highlight color to use for Duochrome SVGs (no transparency): `,
       default: '#02aa9b',
       validate: validateHexRBG
     },
