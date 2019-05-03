@@ -136,8 +136,9 @@ These are constructed for your app using the background color that you specified
 ## SVG
 The `safari-pinned-tab.svg` mask is created by adding contrast (via threshold) to the original and then applying even more threshold to the SVG tracing.
  
- If you are indeed of a discerning nature (and have used gradients in your icon design), there is another option available to you:svg-duochrome. It too will be created in the spa folder within the spa task, but it will be up to you to rename it to `safari-pinned-tab.svg`. Be forewarned, that gradients used in a duochrome svg have a very particular character.
+If you are indeed of a discerning nature (and have used gradients in your icon design), there is another option available to you:svg-duochrome. It too will be created in the spa folder within the spa task, but it will be up to you to rename it to `safari-pinned-tab.svg`. Be forewarned, that gradients used in a duochrome svg have a very particular character - and you will have a very large file.
 
+To make these SVG's as small as possible, they are compressed with SVGO. There are no scripts or remote resources included in these SVG assets.
 
 ## CLI Usage
 `quasar-icon-factory` can be used as a command line tool for batch invocation, and you can simply add it by installing it "globally" with your node package manager:
