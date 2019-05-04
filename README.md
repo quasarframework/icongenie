@@ -70,6 +70,9 @@ If you choose to build icons for Cordova, on iOS they WILL have a colored backgr
  
 This colored background color will also be used for the splashscreen. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), it will be installed for you.
 
+Splashscreens are obviously a little different depending on whether you are targetting iOS or Android. Please read this document to find out more:
+
+- https://github.com/apache/cordova-plugin-splashscreen#readme
 
 ## How it Works
 There are 5 1/2 things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will create SVG assets. Finally it will sort these icons into folders. 

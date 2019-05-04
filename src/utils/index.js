@@ -44,7 +44,7 @@ const validatePng = async function (fileName) {
  * @param  {String} hex - the answer given by the user while installing the extension
  * @returns {Boolean} true if it is a valid 3 or 6 letter RGB HEX
  */
-const validateHexRBG = async function (hex) {
+const validateHexRGB = async function (hex) {
   return typeof hex === "string" && /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hex)
 }
 
@@ -156,7 +156,7 @@ const getConfig = async function (prompts) {
 }
 
 exports.validatePng = validatePng
-exports.validateHexRBG = validateHexRBG
+exports.validateHexRGB = validateHexRGB
 exports.computeHash = computeHash
 exports.createConfig = createConfig
 exports.saveConfig = saveConfig
