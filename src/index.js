@@ -52,7 +52,6 @@ Updating Cordova config.xml
     // it's there, so wire up for icons and splashes
     const jobs = settings.options.cordova
     for (let job in jobs) {
-      console.log(jobs[job])
       if (jobs[job].platform === 'android') {
         if (jobs[job].splash === true) {
           console.log(jobs[job].prefix)
