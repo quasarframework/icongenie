@@ -1,4 +1,5 @@
 const iconfactory = require('../lib/index.js')
+const settings = require('../lib/settings')
 const { copy, ensureDir, existsSync, readFileSync, writeFileSync } = require('fs-extra')
 // const fs = require('fs-extra')
 const { validatePng, computeHash, getConfig, saveConfig, validateHexRGB } = require('./utils')
@@ -27,21 +28,97 @@ const copyFiles = async (target, modeName) => {
 }
 
 /**
- * create
+ * update Cordova config.xml for images
  *
- * @param nodes
  * @returns {Promise<void>}
  */
-const renderCordovaConfig = async function (nodes, ) {
+const renderCordovaConfig = async function (api) {
+  const filePath = api.resolve.cordova('config.xml')
+  const doc = et.parse(readFileSync(filePath, 'utf-8'))
+  const root = doc.getroot()
+  const android = root.find('platform[@name="android"]')
+  const ios = root.find('platform[@name="ios"]')
 
+  // detect if plugin exists / if not exit
+  // cordova plugin add cordova-plugin-splashscreen
+  const plugins = root.findall('plugin')
+
+  if (plugins.find(node => node.attrib.name ===
+    'cordova-plugin-splashscreen')) {
+    console.log(`
+Updating Cordova config.xml
+    `)
+
+    // it's there, so wire up for icons and splashes
+    const jobs = settings.options.cordova
+    for (let job in jobs) {
+      console.log(jobs[job])
+      if (jobs[job].platform === 'android') {
+        if (jobs[job].splash === true) {
+          console.log(jobs[job].prefix)
+          if (!android.find(`splash[@density="${jobs[job].density}"]`)) {
+            let splash = et.SubElement(android, 'splash')
+            splash.set('density', jobs[job].density)
+            splash.set('src', `res/${jobs[job].folder}/${jobs[job].prefix}${jobs[job].suffix}`)
+            doc.write({ indent: 4 })
+          }
+        } else { // an icon, not a splash
+          if (!android.find(`icon[@density="${jobs[job].density}"]`)) {
+            let icon = null
+            icon = et.SubElement(android, 'icon')
+            icon.set('density', jobs[job].density)
+            icon.set('src', `res/${jobs[job].folder}/${jobs[job].prefix}${jobs[job].suffix}`)
+            doc.write({ indent: 4 })
+          }
+        }
+      }
+      else if (jobs[job].platform === 'ios') {
+        if (jobs[job].splash === true) {
+          if (!ios.find(`splash[@width="${jobs[job].sizes[0][0]}"][@height="${jobs[job].sizes[0][1]}"]`)) {
+            let splash = null
+            splash = et.SubElement(ios, 'splash')
+            splash.set('width', jobs[job].sizes[0][0])
+            splash.set('height', jobs[job].sizes[0][1])
+            splash.set('src', `res/${jobs[job].folder}/${jobs[job].prefix}${jobs[job].suffix}`)
+            doc.write({ indent: 4 })
+
+          }
+        } else { // an icon, not a splash
+          if (!ios.find(`icon[@width="${jobs[job].sizes[0]}"]`)) {
+            let icon = null
+            icon = et.SubElement(ios, 'icon')
+            icon.set('width', jobs[job].sizes[0])
+            icon.set('height', jobs[job].sizes[0])
+            icon.set('src', `res/${jobs[job].folder}/${jobs[job].prefix}${jobs[job].suffix}`)
+            doc.write({ indent: 4 })
+          }
+        }
+      }
+    }
+
+    const content = doc.write({ indent: 4 })
+    writeFileSync(filePath, content, 'utf8')
+    console.log('* Updated Cordova config.xml')
+  } else {
+    console.log(`
+
+Splashscreens for Cordova require a Cordova plugin. 
+Please go to the src-cordova folder and run:
+
+  $ cordova plugin add cordova-plugin-splashscreen
+`)
+    process.exit(0)
+  }
 }
 
 /**
  * configuring the icon factory extension
+ *
  * @param {Object} api the IndexAPI object
  * @param {Object} config quasar.config.js
  * @returns {undefined}
  */
+
 const initialize = async function (api, config) {
   let mode, source, minify, iconConfig, hash
   if (api.ctx.dev) {
@@ -59,55 +136,7 @@ const initialize = async function (api, config) {
     modeName = config.ssr.pwa ? 'pwa' : 'spa'
   }
   if (modeName === 'cordova') {
-    // detect if plugin exists
-    // cordova plugin add cordova-plugin-splashscreen
-    let filePath = api.resolve.cordova('config.xml')
-    const doc = et.parse(readFileSync(filePath, 'utf-8'))
-    const root = doc.getroot()
-
-    const plugins = root.findall('plugin')
-
-    if (plugins.find(node => node.attrib.name ===
-      'cordova-plugin-splashscreen')) {
-
-      const android = root.find('platform[@name="android"]')
-      const ios = root.find('platform[@name="ios"]')
-
-
-
-      if (!android.find('splash[@density="land-hdpi"]')) {
-        let splash = et.SubElement(android, 'splash')
-        splash.set('density', 'land-hdpi')
-        splash.set('src', 'res/screen/android/splash-land-hdpi.png')
-      }
-
-      if (!ios.find('splash[@width="320"]')) {
-        let splash = et.SubElement(ios, 'splash')
-        splash.set('width', '320')
-        splash.set('height', '480')
-        splash.set('src', 'res/screen/ios/Default~iphone.png')
-      }
-
-      // update the config
-      // <platform name="android">
-      //   <splash src="res/screen/android/splash-land-hdpi.png" density="land-hdpi"/>
-
-      // <platform name="ios">
-      //   <splash src="res/screen/ios/Default~iphone.png" width="320" height="480"/>
-      //   ...
-      //   <splash src="res/screen/ios/Default@2x~universal~anyany.png" />
-      const content = doc.write({ indent: 4 })
-      writeFileSync(filePath, content, 'utf8')
-      console.log('Updated Cordova config.xml')
-    } else {
-      console.log(`
-Splashscreens for Cordova require a Cordova plugin. 
-Please go to the src-cordova folder and run:
-
-  $ cordova plugin add cordova-plugin-splashscreen
-`)
-      process.exit(0)
-    }
+    renderCordovaConfig(api)
   }
 
   let target = ''

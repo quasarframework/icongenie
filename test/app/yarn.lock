@@ -1071,11 +1071,15 @@
   version "0.0.0"
   uid ""
 
-"@quasar/quasar-app-extension-testing-security@^1.0.0-alpha.3":
-  version "1.0.0-alpha.3"
-  resolved "https://registry.npmjs.org/@quasar/quasar-app-extension-testing-security/-/quasar-app-extension-testing-security-1.0.0-alpha.3.tgz#c210caeeee1d9c3fb592a81e1b5f6e1b152065cc"
-  integrity sha512-/j/i5UvCMeP2yteEvpNnmZjLMcf8cxvC+Jb3CMb7Bbmn4+l6YSr1zllcrsBEfbs6hKe0ps652/f0Q3UfocYdPw==
+"@quasar/quasar-app-extension-testing-security@^1.0.0-alpha.5":
+  version "1.0.0-alpha.5"
+  resolved "https://registry.npmjs.org/@quasar/quasar-app-extension-testing-security/-/quasar-app-extension-testing-security-1.0.0-alpha.5.tgz#ba932439b7ad2a4318089725a18079ad150da877"
+  integrity sha512-l8n61y19UeO6NvkcQQjvQUib/5qRcn7YWpszC63dqZPuTYP5D5jobcI3zzyt061uNZmhRtupUPQ368Dzpur4Nw==
   dependencies:
+    adm-zip "^0.4.13"
+    axios "^0.18.0"
+    elementtree "^0.1.7"
+    platform-detect "^1.2.0"
     snyk "^1.130.0"
 
 "@quasar/quasar-app-extension-testing-unit-jest@^1.0.0-beta.23":
@@ -1100,10 +1104,10 @@
     regenerator-runtime "^0.13.1"
     vue-jest "^3.0.2"
 
-"@quasar/quasar-app-extension-testing@^1.0.0-rc.6":
-  version "1.0.0-rc.6"
-  resolved "https://registry.npmjs.org/@quasar/quasar-app-extension-testing/-/quasar-app-extension-testing-1.0.0-rc.6.tgz#9bd0ff5e0809ecaf4cfca18c6ad0c6ccf2e8fc3c"
-  integrity sha512-PAy4yOplwLGEbq+VvT5/BZXrXhV5cdxcUaH5jfb8n8kgvLW4ra+B8DLGUzkum6hGCiotTp/LWsTAsjXtC6A2TA==
+"@quasar/quasar-app-extension-testing@^1.0.0-rc.7":
+  version "1.0.0-rc.7"
+  resolved "https://registry.npmjs.org/@quasar/quasar-app-extension-testing/-/quasar-app-extension-testing-1.0.0-rc.7.tgz#98fa43514e35e78c12a10da007c5fda79455d6fc"
+  integrity sha512-GtIU7XPCG+KMLcFnxa8kMTH+uMrUsWxZS/KUXipdl2hvBQn3J4gOgfNVlhWbAsWig7h5j9ZWyC+VMHjcmv4Z5g==
   dependencies:
     chalk "^2.4.2"
     execa "^1.0.0"
@@ -1494,6 +1498,11 @@ acorn@^6.0.1, acorn@^6.0.2, acorn@^6.0.5, acorn@^6.0.7:
   resolved "https://registry.npmjs.org/acorn/-/acorn-6.1.1.tgz#7d25ae05bb8ad1f9b699108e1094ecd7884adc1f"
   integrity sha512-jPTiwtOxaHNaAPg/dmrJ/beuzLRnXtB0kQPQ8JpotKJgTB6rX6c8mlf315941pyjBSaPg8NHXS9fhP4u17DpGA==
 
+adm-zip@^0.4.13:
+  version "0.4.13"
+  resolved "https://registry.npmjs.org/adm-zip/-/adm-zip-0.4.13.tgz#597e2f8cc3672151e1307d3e95cddbc75672314a"
+  integrity sha512-fERNJX8sOXfel6qCBCMPvZLzENBEhZTzKqg6vrOW5pvoEaQuJhRU4ndTAh6lHOxn1I6jnz2NHra56ZODM751uw==
+
 agent-base@4, agent-base@^4.1.0, agent-base@^4.2.0:
   version "4.2.1"
   resolved "https://registry.npmjs.org/agent-base/-/agent-base-4.2.1.tgz#d89e5999f797875674c07d87f260fc41e83e8ca9"
@@ -1805,6 +1814,14 @@ aws4@^1.8.0:
   version "1.8.0"
   resolved "https://registry.npmjs.org/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
   integrity sha512-ReZxvNHIOv88FlT7rxcXIIC0fPt4KZqZbOlivyWtXLt8ESx84zd3kMC6iK5jVeS2qt+g7ftS7ye4fi06X5rtRQ==
+
+axios@^0.18.0:
+  version "0.18.0"
+  resolved "https://registry.npmjs.org/axios/-/axios-0.18.0.tgz#32d53e4851efdc0a11993b6cd000789d70c05102"
+  integrity sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=
+  dependencies:
+    follow-redirects "^1.3.0"
+    is-buffer "^1.1.5"
 
 babel-code-frame@^6.26.0:
   version "6.26.0"
@@ -4859,7 +4876,7 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
 
-follow-redirects@^1.0.0:
+follow-redirects@^1.0.0, follow-redirects@^1.3.0:
   version "1.7.0"
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.7.0.tgz#489ebc198dc0e7f64167bd23b03c4c19b5784c76"
   integrity sha512-m/pZQy4Gj287eNy94nivy5wchN3Kp+Q5WgUPNy5lJSZ3sgkVKSYV/ZChMAQVIgx1SqfZ2zBZtPA2YlXIWxxJOQ==
@@ -6867,6 +6884,14 @@ js-yaml@^3.12.0, js-yaml@^3.9.0:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
+js-yaml@^3.13.1:
+  version "3.13.1"
+  resolved "https://registry.npmjs.org/js-yaml/-/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
+  integrity sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==
+  dependencies:
+    argparse "^1.0.7"
+    esprima "^4.0.0"
+
 jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.npmjs.org/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
@@ -8732,6 +8757,11 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
+platform-detect@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/platform-detect/-/platform-detect-1.2.0.tgz#f8a8425c43d03ddc149bfe121667205976d9f20d"
+  integrity sha512-OUX1QgYHb2E+nJSZNXyhFaRBYkzLsXXe+UHGk5yDW9D+OzBFXsBS7LnJfZaJPhrPozhQHSRomOD0H28r+fABig==
+
 pn@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
@@ -9418,10 +9448,10 @@ qs@6.5.2, qs@~6.5.2:
   resolved "https://registry.npmjs.org/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
 
-quasar@^1.0.0-beta.20:
-  version "1.0.0-beta.20"
-  resolved "https://registry.npmjs.org/quasar/-/quasar-1.0.0-beta.20.tgz#71f4ec4f31a4cd9d43cda623e7b987b1084099ee"
-  integrity sha512-oI0dlUsNVQl6WXkT6W8OesNCT0K4oAU20OTRgiid7+hngTTfDJa8UYfzKxq1jUogiRSFjvRoHU95EVlhHP7kUA==
+quasar@^1.0.0-beta.21:
+  version "1.0.0-beta.21"
+  resolved "https://registry.npmjs.org/quasar/-/quasar-1.0.0-beta.21.tgz#3db10d9a1b4797ea40dd3281cfc69747f15d7d0e"
+  integrity sha512-0gg8vjEyCeEgv0muj3m5uf1oxFQeTFfHBCqXdDcpUMKSo5Xnt0PmHpJJbfeWGflyH3Yunb3HXUyiJuO352fctQ==
 
 query-string@^5.0.1:
   version "5.1.1"
@@ -11048,6 +11078,26 @@ svgo@^1.0.0:
     css-url-regex "^1.1.0"
     csso "^3.5.1"
     js-yaml "^3.12.0"
+    mkdirp "~0.5.1"
+    object.values "^1.1.0"
+    sax "~1.2.4"
+    stable "^0.1.8"
+    unquote "~1.1.1"
+    util.promisify "~1.0.0"
+
+svgo@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.npmjs.org/svgo/-/svgo-1.2.2.tgz#0253d34eccf2aed4ad4f283e11ee75198f9d7316"
+  integrity sha512-rAfulcwp2D9jjdGu+0CuqlrAUin6bBWrpoqXWwKDZZZJfXcUXQSxLJOFJCQCSA0x0pP2U0TxSlJu2ROq5Bq6qA==
+  dependencies:
+    chalk "^2.4.1"
+    coa "^2.0.2"
+    css-select "^2.0.0"
+    css-select-base-adapter "^0.1.1"
+    css-tree "1.0.0-alpha.28"
+    css-url-regex "^1.1.0"
+    csso "^3.5.1"
+    js-yaml "^3.13.1"
     mkdirp "~0.5.1"
     object.values "^1.1.0"
     sax "~1.2.4"
