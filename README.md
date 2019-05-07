@@ -146,9 +146,9 @@ To make these SVG's as small as possible, they are compressed with SVGO. There a
 ## CLI Usage
 `quasar-icon-factory` can be used as a command line tool for batch invocation, and you can simply add it by installing it "globally" with your node package manager:
 ```bash
-$ yarn global add quasar-icon-factory 
+$ yarn global add @quasar/app-extension-icon-factory 
 - or -
-$ npm install --global quasar-icon-factory 
+$ npm install --global @quasar/app-extension-icon-factory 
 ```
 
 To find out about the settings, just use
@@ -180,6 +180,9 @@ Usage:
 $ iconfactory -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder -m=pngquant  
 $ iconfactory -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlefile  
 ```
+
+## Consuming as a library
+You can use this module as a library to provide production and minification assets if you so desire. It will only work in the server context. Import and use at your discretion, but please note: this is not the primary purpose of this library and only security issues will be addressed. Please do not file feature requests for this unless you provide a PR.
 
 ## Performance
 Solving compression problems takes time, and the more complex the approach the more linear time is needed. Some compression algorithms are fast, some are great. None are both. This package tries to write from the buffer only when a file is created and (mostly) avoids creating intermediary files.
