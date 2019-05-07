@@ -68,7 +68,7 @@ If you change the image, the settings in `quasar.icon-factory.json` or the dev/b
 
 If you choose to build icons for Cordova, on iOS they WILL have a colored background (because transparency is not allowed), and this is why you are asked for an RGB value during the install phase. (Android allows transparency, btw.) You can change this in the quasar.icon-factory.json, but be sure to use a valid hex code like: `#c0ff33`.
  
-This colored background color will also be used for the splashscreen. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), it will be installed for you.
+This colored background color will also be used for the splashscreen. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), the process will exit and remind you to install the plugin first.
 
 Splashscreens are obviously a little different depending on whether you are targetting iOS or Android. Please read this document to find out more:
 
