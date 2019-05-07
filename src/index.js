@@ -45,16 +45,12 @@ const renderCordovaConfig = async function (api) {
 
   if (plugins.find(node => node.attrib.name ===
     'cordova-plugin-splashscreen')) {
-    console.log(`
-Updating Cordova config.xml
-    `)
 
     // it's there, so wire up for icons and splashes
     const jobs = settings.options.cordova
     for (let job in jobs) {
       if (jobs[job].platform === 'android') {
         if (jobs[job].splash === true) {
-          console.log(jobs[job].prefix)
           if (!android.find(`splash[@density="${jobs[job].density}"]`)) {
             let splash = et.SubElement(android, 'splash')
             splash.set('density', jobs[job].density)
