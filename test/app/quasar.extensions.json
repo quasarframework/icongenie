@@ -21,8 +21,11 @@
     "source_dev": "./logo-source.png",
     "minify_dev": "pngquant",
     "source_build": "./logo-source.png",
-    "minify_build": "optipng",
-    "background_color": "#000074",
-    "theme_color": "#02aa9b"
+    "minify_build": "pngquant",
+    "background_color": "#000000",
+    "theme_color": "#fff",
+    "build": [
+      "rebuild_always"
+    ]
   }
 }

@@ -19,11 +19,11 @@
   "dependencies": {
     "@quasar/extras": "^1.1.2",
     "elementtree": "^0.1.7",
-    "quasar": "^1.0.0-beta.21"
+    "quasar": "^1.0.0-beta.22"
   },
   "devDependencies": {
     "@quasar/app": "^1.0.0-beta.22",
-    "@quasar/quasar-app-extension-icon-factory": "link:../../",
+    "@quasar/quasar-app-extension-icon-factory": "link:../../.",
     "@quasar/quasar-app-extension-testing": "^1.0.0-rc.7",
     "@quasar/quasar-app-extension-testing-security": "^1.0.0-alpha.5",
     "@quasar/quasar-app-extension-testing-unit-jest": "^1.0.0-beta.23",
