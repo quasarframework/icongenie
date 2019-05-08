@@ -61,14 +61,16 @@ The first time you start Quasar, icon-factory will create the images needed for 
 $ quasar dev --mode electron 
 ```
 
-If you change the image, the settings in `quasar.icon-factory.json` or the dev/build mode, this extension will be triggered and build your assets in the appropriate place. Don't forget to check the results and commit them.
+There is an option during the install phase to "always rebuild", which is useful for fine-tuning e.g. background colors, but if you don't remove this flag in quasar.extensions.json, the icon-factory will always run and slow down the dev buildtime.
+
+If you change the image, the settings in `quasar.extensions.json` (like e.g. the background color) or the dev/build mode, this extension will be triggered and rebuild your assets in the appropriate place. Don't forget to check the results and commit them.
 
 
 ### Special notes about Cordova (iOS and Android only)
 
 If you choose to build icons for Cordova, on iOS they WILL have a colored background (because transparency is not allowed), and this is why you are asked for an RGB value during the install phase. (Android allows transparency, btw.) You can change this in the quasar.icon-factory.json, but be sure to use a valid hex code like: `#c0ff33`.
  
-This colored background color will also be used for the splashscreen. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), the process will exit and remind you to install the plugin first.
+This colored background color will also be used for the splashscreen. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), the process will remind you to install the plugin first and then continue to build the icons before proceeding to the actual cordova dev or build pipeline.
 
 Splashscreens are obviously a little different depending on whether you are targetting iOS or Android. Please read this document to find out more:
 

@@ -39,15 +39,22 @@ const renderCordovaConfig = async function (api) {
   const android = root.find('platform[@name="android"]')
   const ios = root.find('platform[@name="ios"]')
 
+  const cordovaJson = JSON.parse(readFileSync(api.resolve.cordova('package.json'), 'utf-8'))
+
   // detect if plugin exists / if not exit
   // cordova plugin add cordova-plugin-splashscreen
   const plugins = root.findall('plugin')
 
   if (plugins.find(node => node.attrib.name ===
-    'cordova-plugin-splashscreen')) {
+     'cordova-plugin-splashscreen') ||
+     cordovaJson.cordova.plugins.hasOwnProperty(
+     'cordova-plugin-splashscreen')
+  ) {
 
     // it's there, so wire up for icons and splashes
-    const jobs = settings.options.cordova
+    // fallback to hardwired cordova options in case iconconfig is borked
+    // or doesn't exist yet
+    const jobs = iconConfig.options.cordova || settings.options.cordova
     for (let job in jobs) {
       if (jobs[job].platform === 'android') {
         if (jobs[job].splash === true) {
@@ -98,11 +105,15 @@ const renderCordovaConfig = async function (api) {
     console.log(`
 
 Splashscreens for Cordova require a Cordova plugin. 
+It can't be found in your config.xml
 Please go to the src-cordova folder and run:
 
   $ cordova plugin add cordova-plugin-splashscreen
+  
+Continuing to build your icons.  
 `)
-    process.exit(0)
+    // temporarily turned off
+    // process.exit(0)
   }
 }
 
@@ -130,9 +141,6 @@ const initialize = async function (api, config) {
   if (modeName === 'ssr') {
     modeName = config.ssr.pwa ? 'pwa' : 'spa'
   }
-  if (modeName === 'cordova') {
-    renderCordovaConfig(api)
-  }
 
   let target = ''
   if (useIntermediateFolders) {
@@ -157,12 +165,13 @@ const initialize = async function (api, config) {
    * @returns {undefined}s
    */
   let processImages = async function() {
+
     const options = {
       ...iconConfig.options[modeName],
-      background_color: validateHexRGB(iconConfig.options.background_color) ?
-        iconConfig.options.background_color : '#000000',
-      theme_color: validateHexRGB(iconConfig.options.theme_color) ?
-        iconConfig.options.theme_color : '#ffffff'
+      background_color: validateHexRGB(api.prompts.background_color) ?
+        api.prompts.background_color : '#000000',
+      theme_color: validateHexRGB(api.prompts.theme_color) ?
+        api.prompts.theme_color : '#ffffff'
     }
     await iconfactory[modeName](source, target, minify, options)
     iconConfig.modes[mode].source = hash
@@ -171,6 +180,9 @@ const initialize = async function (api, config) {
     } else {
       iconConfig.targets[modeName] = hash
     }
+    // in case there's been a change
+    iconConfig.options.background_color = api.prompts.background_color
+    iconConfig.options.theme_color = api.prompts.theme_color
     saveConfig(iconConfig)
   }
 
@@ -184,8 +196,16 @@ const initialize = async function (api, config) {
   // that will throw a exception if the file didn't exists,
   // use a try-catch just to check if a file exists
 
-  if (!existsSync(target) || (iconConfig.modes[mode].source !== hash) || (targetHash !== hash)) {
+  if (!existsSync(target) ||
+      (iconConfig.modes[mode].source !== hash) ||
+      (targetHash !== hash) ||
+      (iconConfig.options.background_color !== api.prompts.background_color) ||
+      (iconConfig.options.theme_color !== api.prompts.theme_color) ||
+      (api.prompts.build.find(prompt => prompt === 'rebuild_always'))) {
     await ensureDir(target)
+    if (modeName === 'cordova') {
+      await renderCordovaConfig(api)
+    }
     await processImages()
   }
   // should use this for build and dev actually

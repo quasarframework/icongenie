@@ -39,7 +39,7 @@ const validatePng = async function (fileName) {
 }
 
 /**
- * make sure the prompted RGB HEX really is correct
+ * make sure the prompted RGB HEX really is valid
  *
  * @param  {String} hex - the answer given by the user while installing the extension
  * @returns {Boolean} true if it is a valid 3 or 6 letter RGB HEX

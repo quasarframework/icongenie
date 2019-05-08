@@ -97,6 +97,18 @@ Best results with a 1240x1240 png (using transparency): `,
       message: `Please enter a highlight color to use for Duochrome SVGs (no transparency): `,
       default: '#02aa9b',
       validate: validateHexRGB
+    },
+    {
+      name: 'build',
+      type: 'checkbox',
+      required: true,
+      message: 'Construction method:',
+      choices: [
+        {
+          name: 'Always rebuild (useful for fine-tuning)',
+          value: 'rebuild_always',
+        }
+      ]
     }
   ]
 }
