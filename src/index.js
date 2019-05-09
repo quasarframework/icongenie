@@ -3,7 +3,7 @@ const settings = require('../lib/settings')
 const { copy, ensureDir, existsSync, readFileSync, writeFileSync } = require('fs-extra')
 // const fs = require('fs-extra')
 const { validatePng, computeHash, getConfig, saveConfig, validateHexRGB } = require('./utils')
-const useIntermediateFolders = false
+const useIntermediateFolders = true
 const et = require('elementtree')
 
 /**
@@ -144,7 +144,7 @@ const initialize = async function (api, config) {
 
   let target = ''
   if (useIntermediateFolders) {
-    target = './icon-factory/' + mode + '/' + modeName
+    target = './.icon-factory/' + mode + '/' + modeName
   } else {
     switch (modeName) {
       case 'spa':
@@ -191,10 +191,6 @@ const initialize = async function (api, config) {
   hash = await computeHash(source, 'md5', minify)
   let targetHash = useIntermediateFolders ?
     iconConfig.modes[mode].targets[modeName] : iconConfig.targets[modeName]
-  // async version of exists is deprecated, while access is
-  // recommended async method to check if a file exists,
-  // that will throw a exception if the file didn't exists,
-  // use a try-catch just to check if a file exists
 
   if (!existsSync(target) ||
       (iconConfig.modes[mode].source !== hash) ||
@@ -211,7 +207,7 @@ const initialize = async function (api, config) {
   // should use this for build and dev actually
   // todo: place tmp in module
   if (useIntermediateFolders) {
-    await copyFiles(target, modeName, 0)
+    await copyFiles(target, modeName)
   }
 }
 
