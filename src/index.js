@@ -61,7 +61,6 @@ If splashscreen is not available, please go to the src-cordova folder and run:
   $ cordova plugin add cordova-plugin-splashscreen 
   $ cordova plugin save
   
-Continuing to build your icons.  
 `)
     execa.shellSync(`cd ${api.resolve.cordova('.')} && cordova plugin add cordova-plugin-splashscreen`)
     if(!plugins.find(node => node.attrib.name ===
