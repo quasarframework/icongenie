@@ -29,7 +29,7 @@ const __exists = async function (file) {
 const validatePng = async function (fileName) {
   let fileExists = await __exists(fileName)
   if (!fileExists) {
-    throw new Error('File not found.')
+    throw new Error('File not found. Are you in the root folder of your project?')
   }
   let data = await readChunk(fileName, 0, 8)
   if (!isPng(data)) {

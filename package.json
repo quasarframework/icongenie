@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "elementtree": "^0.1.7",
+    "execa": "^1.0.0",
     "fs-extra": "^7.0.1",
     "imagemin": "^6.1.0",
     "imagemin-optipng": "^6.0.0",
