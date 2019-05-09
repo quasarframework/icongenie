@@ -12,6 +12,7 @@ It has two primary interfaces (with Quasar CTX and as a standalone CLI) and alth
 
 > If you use an original that is smaller than 1240x1240 some icons will be naively upscaled. If you do not use a square original, it will be cropped square from the center using the smaller dimension as width and height. You have been warned.
 
+A final note: You should always pad your icon design with about 1% of empty space. This is because you will lose aliasing resolution when downscaling, which means at smaller sizes your round icon will seem to have a flattened top, bottom, left and right sides.
 
 ## Installation and Usage
 
