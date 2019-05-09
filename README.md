@@ -65,6 +65,8 @@ There is an option during the install phase to "always rebuild", which is useful
 
 If you change the image, the settings in `quasar.extensions.json` (like e.g. the background color) or the dev/build mode, this extension will be triggered and rebuild your assets in the appropriate place. Don't forget to check the results and commit them.
 
+### Intermediary Folder
+The icon-factory makes an intermediary folder in your project folder at `/.icon-factory` to host the images when you switch between dev and build. If you haven't changed the source icon, these will merely be copied to the right destination folders. 
 
 ### Special notes about Cordova (iOS and Android only)
 
