@@ -146,7 +146,7 @@ const getConfig = async function (prompts) {
     let data = await readFile(fileName, 'utf8')
     let settings = JSON.parse(data)
     if (!settings.options) {
-      settings.options = mapOptions()
+      settings.options = mapOptions(prompts)
       await saveConfig(settings)
     }
     return settings

@@ -30,9 +30,11 @@ const copyFiles = async (target, modeName) => {
 /**
  * update Cordova config.xml for images
  *
+ * @param  {object} api
+ * @param  {object} iconConfig
  * @returns {Promise<void>}
  */
-const renderCordovaConfig = async function (api) {
+const renderCordovaConfig = async function (api, iconConfig) {
   const filePath = api.resolve.cordova('config.xml')
   const doc = et.parse(readFileSync(filePath, 'utf-8'))
   const root = doc.getroot()
@@ -54,6 +56,7 @@ const renderCordovaConfig = async function (api) {
     // it's there, so wire up for icons and splashes
     // fallback to hardwired cordova options in case iconconfig is borked
     // or doesn't exist yet
+
     const jobs = iconConfig.options.cordova || settings.options.cordova
     for (let job in jobs) {
       if (jobs[job].platform === 'android') {
@@ -200,7 +203,7 @@ const initialize = async function (api, config) {
       (api.prompts.build.find(prompt => prompt === 'rebuild_always'))) {
     await ensureDir(target)
     if (modeName === 'cordova') {
-      await renderCordovaConfig(api)
+      await renderCordovaConfig(api, iconConfig)
     }
     await processImages()
   }
