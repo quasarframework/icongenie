@@ -122,8 +122,6 @@ If splashscreen is not available, please go to the src-cordova folder and run:
   const content = doc.write({ indent: 4 })
   writeFileSync(filePath, content, 'utf8')
   console.log('* Updated Cordova config.xml')
-
-
 }
 
 /**
@@ -133,7 +131,6 @@ If splashscreen is not available, please go to the src-cordova folder and run:
  * @param {Object} config quasar.config.js
  * @returns {undefined}
  */
-
 const initialize = async function (api, config) {
   let mode, source, minify, iconConfig, hash
   if (api.ctx.dev) {
@@ -206,7 +203,7 @@ const initialize = async function (api, config) {
       (targetHash !== hash) ||
       (iconConfig.options.background_color !== api.prompts.background_color) ||
       (iconConfig.options.theme_color !== api.prompts.theme_color) ||
-      (api.prompts.build.find(prompt => prompt === 'rebuild_always'))) {
+      (api.prompts.build_always === true)) {
     await ensureDir(target)
     if (modeName === 'cordova') {
       await renderCordovaConfig(api, iconConfig)

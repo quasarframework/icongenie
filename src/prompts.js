@@ -99,16 +99,11 @@ Best results with a 1240x1240 png (using transparency): `,
       validate: validateHexRGB
     },
     {
-      name: 'build',
-      type: 'checkbox',
+      name: 'build_always',
+      type: 'confirm',
       required: true,
-      message: 'Construction method:',
-      choices: [
-        {
-          name: 'Always rebuild (useful for fine-tuning)',
-          value: 'rebuild_always',
-        }
-      ]
+      message: 'Always rebuild (useful for fine-tuning):',
+      default: false
     }
   ]
 }
