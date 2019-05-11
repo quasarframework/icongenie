@@ -1,9 +1,31 @@
-const isPng = require('is-png')
-const readChunk = require('read-chunk')
-const { createHmac } = require('crypto')
-const { options } = require('../../lib/settings')
-const { access, writeFile, readFile, ReadStream } = require('fs-extra')
-const fileName = './quasar.icon-factory.json'
+const isPng = require('is-png'),
+  readChunk = require('read-chunk'),
+  { createHmac } = require('crypto'),
+  path = require('path'),
+  join = path.join,
+  { options } = require('../../lib/settings'),
+  { access, writeFile, readFile, ReadStream, existsSync } = require('fs-extra'),
+  fileName = './quasar.icon-factory.json'
+
+
+
+/**
+ * Find the App Dir - cloned from Quasar Core
+ *
+ * @returns {string | any}
+ * @private
+ */
+const getAppDir = function () {
+  let dir = process.cwd()
+
+  while (dir.length && dir[dir.length - 1] !== path.sep) {
+    if (existsSync(join(dir, 'quasar.conf.js'))) {
+      return dir
+    }
+
+    dir = path.normalize(join(dir, '..'))
+  }
+}
 
 /**
  * Check if a given file exists and if the current user has access
@@ -11,7 +33,7 @@ const fileName = './quasar.icon-factory.json'
  * @param  {string} file - the path of the file to be checked
  * @returns {Promise<boolean>} the result of the operation
  */
-const __exists = async function (file) {
+const exists = async function (file) {
   try {
     await access(file)
     return true
@@ -22,12 +44,13 @@ const __exists = async function (file) {
 
 /**
  * validate if the `fileName` is a valid png file.
+ * be sure to only pass a scoped file here
  *
  * @param  {String} fileName the path to the png file to be validated
  * @returns {Promise<Boolean>} the result of the validation
  */
 const validatePng = async function (fileName) {
-  let fileExists = await __exists(fileName)
+  let fileExists = await exists(fileName)
   if (!fileExists) {
     throw new Error('File not found. Are you in the root folder of your project?')
   }
@@ -79,10 +102,11 @@ const computeHash = async function (fileName, algorithm, secret) {
  * @param  {Object} prompts - the settings object to be saved
  * @returns {undefined}
  */
-const mapOptions = function (prompts) {
+const mapOptions = function (api) {
   return {
-    background_color: prompts.background_color,
-    theme_color: prompts.theme_color,
+    background_color: api.prompts.background_color,
+    //theme_color: prompts.theme_color,
+    splashscreen_type: api.prompts.generate,
     spa: options.spa,
     pwa: options.pwa,
     electron: options.electron,
@@ -103,14 +127,31 @@ const saveConfig = async function (settings) {
 /**
  * create the json file that will hold the hash of the generated icons
  *
- * @param  {Object} prompts - an object with the answers given by the user while inquired
+ * @param  {Object} api - an object with the answers given by the user while inquired
  * @returns {Promise<Object>} an object that holds the hash of the generated icons
  */
-const createConfig = async function (prompts) {
-  var modes = { dev: null, build: null }
+const createConfig = async function (api) {
+  // wish there was another way to do this
+
+
+  const iconHash = await computeHash(api.resolve.app('app-icon.png'), 'md5', 'icon-factory!!!')
+  const splashscreenHash = await computeHash(api.resolve.app('app-splashscreen.png'), 'md5', 'icon-factory!!!')
+  const splashType = api.prompts.splash_type || 'generate'
+  /*
+  api.extendJsonFile('quasar.extensions.json', {
+    '@quasar/icon-factory': {
+      source: iconHash,
+      source_splashscreen: splashscreenHash
+    }
+  })
+  */
+
+  const modes = { dev: null, build: null }
   for (var key in modes) {
     modes[key] = {
-      source: await computeHash(prompts['source_' + key], 'md5', prompts['minify_' + key]),
+      source: iconHash,
+      source_splashscreen: splashscreenHash,
+      splash_type: splashType,
       targets: {
         spa: null,
         pwa: null,
@@ -122,13 +163,7 @@ const createConfig = async function (prompts) {
 
   let settings = {
     modes: modes,
-    targets: {
-      spa: null,
-      pwa: null,
-      cordova: null,
-      electron: null
-    },
-    options: mapOptions(prompts)
+    options: mapOptions(api)
   }
 
   await saveConfig(settings)
@@ -138,23 +173,25 @@ const createConfig = async function (prompts) {
 /**
  * get the settings from the disk
  *
- * @param  {Object} prompts - the answers given by the user while installing the extension
+ * @param  {Object} api - pass the api object and prompts
  * @returns {Object} an object with the current `settings`
  */
-const getConfig = async function (prompts) {
-  if (await __exists(fileName)) {
+const getConfig = async function (api) {
+  if (await exists(fileName)) {
     let data = await readFile(fileName, 'utf8')
     let settings = JSON.parse(data)
     if (!settings.options) {
-      settings.options = mapOptions(prompts)
+      settings.options = mapOptions(api)
       await saveConfig(settings)
     }
     return settings
   } else {
-    return createConfig(prompts)
+    return createConfig(api)
   }
 }
 
+exports.getAppDir = getAppDir
+exports.exists = exists
 exports.validatePng = validatePng
 exports.validateHexRGB = validateHexRGB
 exports.computeHash = computeHash

@@ -2,7 +2,6 @@ const iconfactory = require('../lib/index.js')
 const execa = require('execa')
 const settings = require('../lib/settings')
 const { copy, ensureDir, existsSync, readFileSync, writeFileSync } = require('fs-extra')
-// const fs = require('fs-extra')
 const { validatePng, computeHash, getConfig, saveConfig, validateHexRGB } = require('./utils')
 const useIntermediateFolders = true
 const et = require('elementtree')
@@ -132,16 +131,17 @@ If splashscreen is not available, please go to the src-cordova folder and run:
  * @returns {undefined}
  */
 const initialize = async function (api, config) {
-  let mode, source, minify, iconConfig, hash
+  let mode, minify, source, sourceSplashscreen, iconConfig, hash, hashSplashscreen
   if (api.ctx.dev) {
     mode = 'dev'
-    source = api.prompts.source_dev
     minify = api.prompts.minify_dev
   } else {
     mode = 'build'
-    source = api.prompts.source_build
     minify = api.prompts.minify_build
   }
+
+  source = api.resolve.app('app-icon.png')
+  sourceSplashscreen = api.resolve.app('app-splashscreen.png')
 
   let modeName = api.ctx.modeName
   if (modeName === 'ssr') {
@@ -176,31 +176,37 @@ const initialize = async function (api, config) {
       ...iconConfig.options[modeName],
       background_color: validateHexRGB(api.prompts.background_color) ?
         api.prompts.background_color : '#000000',
-      theme_color: validateHexRGB(api.prompts.theme_color) ?
-        api.prompts.theme_color : '#ffffff'
+      // theme_color: validateHexRGB(api.prompts.theme_color) ?
+      //  api.prompts.theme_color : '#ffffff'
+      splashscreen_type: api.prompts.splashscreen_type || 'generate'
     }
-    await iconfactory[modeName](source, target, minify, options)
-    iconConfig.modes[mode].source = hash
-    if (useIntermediateFolders) {
-      iconConfig.modes[mode].targets[modeName] = hash
+    if (modeName === 'cordova') {
+      await iconfactory[modeName](source, target, minify, options, sourceSplashscreen)
     } else {
-      iconConfig.targets[modeName] = hash
+      await iconfactory[modeName](source, target, minify, options)
     }
-    // in case there's been a change
+
+    iconConfig.modes[mode].source = hash
+    iconConfig.modes[mode].targets[modeName] = hash
     iconConfig.options.background_color = api.prompts.background_color
     iconConfig.options.theme_color = api.prompts.theme_color
+
     saveConfig(iconConfig)
   }
 
   await validatePng(source)
-  iconConfig = await getConfig(api.prompts)
-  hash = await computeHash(source, 'md5', minify)
-  let targetHash = useIntermediateFolders ?
-    iconConfig.modes[mode].targets[modeName] : iconConfig.targets[modeName]
+  await validatePng(sourceSplashscreen)
+  iconConfig = await getConfig(api)
+  hash = await computeHash(source, 'md5', 'icon-factory!!!')
+  hashSplashscreen = await computeHash(sourceSplashscreen, 'md5', 'icon-factory!!!')
+  let targetHashSplashscreen = iconConfig.modes[mode].targets[modeName]
+  let targetHash = iconConfig.modes[mode].targets[modeName]
 
   if (!existsSync(target) ||
       (iconConfig.modes[mode].source !== hash) ||
+      (iconConfig.modes[mode].sourceSplashscreen !== hashSplashscreen) ||
       (targetHash !== hash) ||
+      (targetHashSplashscreen !== hashSplashscreen) ||
       (iconConfig.options.background_color !== api.prompts.background_color) ||
       (iconConfig.options.theme_color !== api.prompts.theme_color) ||
       (api.prompts.build_always === true)) {

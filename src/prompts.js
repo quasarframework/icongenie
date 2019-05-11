@@ -1,86 +1,83 @@
-const defaultImg = './logo-source.png'
-const { validatePng, validateHexRGB } = require('./utils')
+const { validateHexRGB } = require('./utils')
 
 module.exports = function() {
-  console.log('PROJECT REPO: https://github.com/quasarframework/app-extension-icon-factory\n')
+  console.log(`PROJECT Repo and documentation:
+https://github.com/quasarframework/app-extension-icon-factory
+
+--------------------------- ATTENTION! -----------------------------
+
+ You must replace app-icon.png in the root folder of your project.
+ If you plan on building for Cordova, you must also replace the    
+ app-splashscreen.png image in the same place. File details:
+ 
+  -> app-icon.png           1240x1240   (with transparency)
+  -> app-splashscreen.png   2436x2436   (no transparency)
+--------------------------------------------------------------------
+`)
+
   return [
     {
-      name: 'source_dev',
-      type: 'input',
+      name: 'confirm_icon',
+      type: 'confirm',
       required: true,
-      message: `Please type a relative path to the file you want to use as your source image.
-Best results with a 1240x1240 png (using transparency): `,
-      default: defaultImg,
-      validate: validatePng
+      message: 'Have you replaced the app assets?',
+      default: false,
     },
     {
       name: 'minify_dev',
       type: 'list',
-      message: 'Minify strategy to be used during development:',
+      message: 'Minify strategy to be used for development:',
       choices: [
         {
-          name: 'pngquant (rate: 0.225 | quality: lossy | time: 01.4s)',
+          name: 'pngquant  => quality: lossy        |  time: 1x',
           value: 'pngquant'
         },
         {
-          name: 'pngout (rate: 0.94 | quality: lossless | time: 10.7s)',
+          name: 'pngout    => quality: lossless     |  time: 25x',
           value: 'pngout'
         },
         {
-          name: 'optipng (rate: 0.61 | quality: lossless | time: 13.9s)',
-          value: 'optipng'
-        },
-        {
-          name: 'pngcrush (rate: 0.61 | quality: lossless | time: 28.1s)',
+          name: 'pngcrush  => quality: lossless+    |  time: 5x',
           value: 'pngcrush'
         },
         {
-          name: 'zopfli (rate: 0.57 | quality: lossless | time: 33.2s)',
+          name: 'optipng   => quality: lossless++   |  time: 2x',
+          value: 'optipng'
+        },
+        {
+          name: 'zopfli    => quality: lossless+++  |  time: 40x',
           value: 'zopfli'
         }
       ],
       default: 'pngquant'
     },
     {
-      name: 'source_build',
-      type: 'input',
-      required: true,
-      message:
-        'If you want a separate file to be the source image during production, please specify it here: ',
-      validate: validatePng,
-      default: function(answers) {
-        return answers.source_dev || defaultImg
-      }
-    },
-    {
       name: 'minify_build',
       type: 'list',
-      message: 'Minify strategy to be used during building for production:',
+      message: 'Minify strategy to be used for production: ',
       choices: [
         {
-          name: 'pngquant (rate: 0.225 | quality: lossy | time: 01.4s)',
+          name: 'pngquant  => quality: lossy        |  time: -',
           value: 'pngquant'
         },
         {
-          name: 'pngout (rate: 0.94 | quality: lossless | time: 10.7s)',
+          name: 'pngout    => quality: lossless     |  time: +',
           value: 'pngout'
         },
         {
-          name: 'optipng (rate: 0.61 | quality: lossless | time: 13.9s)',
-          value: 'optipng'
-        },
-        {
-          name: 'pngcrush (rate: 0.61 | quality: lossless | time: 28.1s)',
+          name: 'pngcrush  => quality: lossless+    |  time: ++',
           value: 'pngcrush'
         },
         {
-          name: 'zopfli (rate: 0.57 | quality: lossless | time: 33.2s)',
+          name: 'optipng   => quality: lossless++   |  time: +',
+          value: 'optipng'
+        },
+        {
+          name: 'zopfli    => quality: lossless+++  |  time: ++++',
           value: 'zopfli'
         }
       ],
-      default: function(answers) {
-        return answers.minify_dev || 'optipng'
-      }
+      default: 'zopfli'
     },
     {
       name: 'background_color',
@@ -90,6 +87,7 @@ Best results with a 1240x1240 png (using transparency): `,
       default: '#000074',
       validate: validateHexRGB
     },
+    /*
     {
       name: 'theme_color',
       type: 'input',
@@ -97,6 +95,27 @@ Best results with a 1240x1240 png (using transparency): `,
       message: `Please enter a highlight color to use for Duochrome SVGs (no transparency): `,
       default: '#02aa9b',
       validate: validateHexRGB
+    },
+    */
+    {
+      name: 'splashscreen_type',
+      type: 'list',
+      message: 'Build strategy for Cordova Splashscreen:',
+      choices: [
+        {
+          name: 'Generate with background color and icon',
+          value: 'generate'
+        },
+        {
+          name: 'Overlay app-icon.png centered on top of app-splashscreen.png',
+          value: 'overlay'
+        },
+        {
+          name: 'Only use app-splashscreen.png',
+          value: 'pure'
+        }
+      ],
+      default: 'generate'
     },
     {
       name: 'build_always',
