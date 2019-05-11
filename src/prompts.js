@@ -11,7 +11,7 @@ https://github.com/quasarframework/app-extension-icon-factory
  app-splashscreen.png image in the same place. File details:
  
   -> app-icon.png           1240x1240   (with transparency)
-  -> app-splashscreen.png   2436x2436   (no transparency)
+  -> app-splashscreen.png   2436x2436   (transparency optional)
 --------------------------------------------------------------------
 `)
 
@@ -29,23 +29,23 @@ https://github.com/quasarframework/app-extension-icon-factory
       message: 'Minify strategy to be used for development:',
       choices: [
         {
-          name: 'pngquant  => quality: lossy        |  time: 1x',
-          value: 'pngquant'
-        },
-        {
-          name: 'pngout    => quality: lossless     |  time: 25x',
+          name: 'pngout    => quality: lossless     |  time: 1x',
           value: 'pngout'
         },
         {
-          name: 'pngcrush  => quality: lossless+    |  time: 5x',
+          name: 'pngquant  => quality: lossy        |  time: 2x',
+          value: 'pngquant'
+        },
+        {
+          name: 'pngcrush  => quality: lossless+    |  time: 10x',
           value: 'pngcrush'
         },
         {
-          name: 'optipng   => quality: lossless++   |  time: 2x',
+          name: 'optipng   => quality: lossless++   |  time: 4x',
           value: 'optipng'
         },
         {
-          name: 'zopfli    => quality: lossless+++  |  time: 40x',
+          name: 'zopfli    => quality: lossless+++  |  time: 80x',
           value: 'zopfli'
         }
       ],
