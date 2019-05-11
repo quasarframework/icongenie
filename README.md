@@ -2,17 +2,23 @@
   <img src="iconfactory.png" />
 </div>
 
+![official icon](https://img.shields.io/badge/Quasar%201.0-Official%20UI%20App%20Extension-blue.svg)
+![npm (scoped)](https://img.shields.io/npm/v/@quasar/quasar-app-extension-icon-factory.svg)
+[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/quasarframework/app-extension-icon-factory.svg)]()
+[![GitHub repo size in bytes](https://img.shields.io/github/repo-size/quasarframework/app-extension-icon-factory.svg)]()
+[![npm](https://img.shields.io/npm/dt/@quasar/quasar-app-extension-icon-factory.svg)](https://www.npmjs.com/package/@quasar/quasar-app-extension-icon-factory)
+
 # @quasar/icon-factory
 
-This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens and two different types of svgs.
+This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens for Cordova and svgs.
 
 It works cross-platform to even generate those pesky `.icns` and `.ico` files for some reason still used by Electron apps and in the case of the latter prefered by some browsers and webscrapers (favicon.ico) - even though modern development guidelines for Apple and Windows recommend using `.png`. 
 
 It has two primary interfaces (with Quasar CTX and as a standalone CLI) and although it is built for the Quasar Framework, it should work anywhere you can run node. You can even import it and use it in your own pipelines if that's your thing. It is designed to be a very useful tool that you will be glad to have lying around.
 
-> If you use an original that is smaller than 1240x1240 some icons will be naively upscaled. If you do not use a square original, it will be cropped square from the center using the smaller dimension as width and height. You have been warned.
+> If you use an original that is smaller than 1240x1240 some icons will be naively upscaled. If you do not use a square original, it will be cropped square from the center using the smaller dimension as width and height - but will never upscale. You have been warned.
 
-A final note: You should always pad your icon design with about 1% of empty space. This is because you will lose aliasing resolution when downscaling, which means at smaller sizes your round icon will seem to have a flattened top, bottom, left and right sides.
+A final note: You should always pad your icon design with about 1% of empty space. This is because you will lose aliasing resolution when downscaling, which means at smaller sizes your round icon (if it doesn't have padding) will seem to have flattened top, bottom, left and right sides.
 
 ## Installation and Usage
 
@@ -22,38 +28,53 @@ A final note: You should always pad your icon design with about 1% of empty spac
 - A square image in png format that is at least 1240px x 1240px (much bigger will merely slow down the conversions)
 - @quasar/cli version 1.0.0-beta.4 (if building a new project) or @quasar/app v1.0.0-beta.18 or later in order to add this module as an app-extension.
 
-### Install
+### Note for early adopters
+Things have changes along the way to the RC, and if you have a version of the Icon Factory that is less than v1.0.0-beta.26, please follow these instructions:
+
+1. delete the `.icon-factory/` and all its components
+2. delete the `quasar.icon-factory.json` file
+3. run: `$ quasar ext remove @quasar/icon-factory`
+4. move your icon source-file to `app-icon.png` in the root of your app
+5. if you want a custom splashscreen, put that file at `app-splashscreen.png`
+6. run: `$ quasar ext add @quasar/icon-factory`
+
+### Install as an App Extension (Quasar v1.0+)
 
 ```bash
 $ quasar ext add @quasar/icon-factory
 ```
 
-During the install phase, the extension will ask you for a path relative to the app folder where it can find your icon source file: 
+The most important part (and indeed the only reason to use this extension) is pointing it at your shiny icon (and splashscreen if you are building for Cordova.) So the first thing you are reminded of is that you need to do that!
 
-```bash
-? Please type a relative path to the file you want to use as your source image.
-Best results with a 1240x1240 png (using transparency):  (./logo-source.png) 
+```
+--------------------------- ATTENTION! -----------------------------
+
+ You must replace app-icon.png in the root folder of your project. 
+ If you plan on building for Cordova, you must also replace the    
+ app-splashscreen.png image in the same place. File details:
+
+  -> app-icon.png           1240x1240   (with transparency)
+  -> app-splashscreen.png   2436x2436   (transparency optional)
+--------------------------------------------------------------------
 ```
 > **Note:** 
   Please use a valid png of 1240x1240 pixels. If you choose an image that is not square or has smaller dimensions, the icon-factory will do its best, but the results will not be optimal. Transparency is recommended. PNG is required.
 
 Then choose a minification strategy:
 ```bash 
-? Minify strategy to be used during development: (Use arrow keys)
-❯ pngquant (rate: 0.225 | quality: lossy | time: 01.4s) 
-  pngout (rate: 0.94 | quality: lossless | time: 10.7s) 
-  optipng (rate: 0.61 | quality: lossless | time: 13.9s) 
-  pngcrush (rate: 0.61 | quality: lossless | time: 28.1s) 
-  zopfli (rate: 0.57 | quality: lossless | time: 33.2s) 
+? Minify strategy to be used for development:
+  pngout    => quality: lossless     |  time: 1x 
+  pngquant  => quality: lossy        |  time: 2x 
+  pngcrush  => quality: lossless+    |  time: 10x 
+  optipng   => quality: lossless++   |  time: 4x 
+  zopfli    => quality: lossless+++  |  time: 80x 
 ```
 
-> Note: we recommend using pngquant because it is the fastest. The times given are approximations for SPA. Other targets will take more time.
+> Note: we recommend using pngquant for dev because it is the fastest minification. Other targets will take more time, but that is highly dependent on both the mode and the underlying hardware.
 
-You will be asked the same questions for production. Our recommendation is to choose `optipng`. It has the best time / quality trade-off for a lossless minification.
+You will be asked the same question for production. Our recommendation is to choose `optipng`. It has the best time / quality trade-off for a lossless minification - but zopfli WILL shave off a bit more filesize.
 
-You will also be asked for a background and a highlight color. These are used in the few cases that a background is required, as with cordova splashscreens and cordova iOS icons.
-
-Your selections will be registered and filehashes registered to the new file `quasar.icon-factory.json` in the root folder of your project repository. If you do not change this file - or you do not replace the source image - icon-factory will do nothing.
+You will also be asked for a background and a highlight color. These are used in the few cases that a background is required, as with Cordova splashscreens and Cordova iOS icons.
 
 ### Triggering
 The first time you start Quasar, icon-factory will create the images needed for the specific app artifacts. They will not automatically be added to git, so you will need to manage that yourself.
@@ -62,18 +83,25 @@ The first time you start Quasar, icon-factory will create the images needed for 
 $ quasar dev --mode electron 
 ```
 
-There is an option during the install phase to "always rebuild", which is useful for fine-tuning e.g. background colors, but if you don't remove this flag in quasar.extensions.json, the icon-factory will always run and slow down the dev buildtime.
+You will also be asked which method of splashscreen generation you prefer, ranging from the mere placement of your logo upon the background color you specified, overlaying your icon on top of a splashscreen image, or just using the splashscreen image. If you aren't happy with the results, don't forget you can change it in `quasar.extensions.json`.
+
+The final option during the install phase is to "always rebuild", which is useful for fine-tuning e.g. background colors, but if you don't remove this flag in quasar.extensions.json (or set it to false), the icon-factory will always run and slow down your dev buildtime.
 
 If you change the image, the settings in `quasar.extensions.json` (like e.g. the background color) or the dev/build mode, this extension will be triggered and rebuild your assets in the appropriate place. Don't forget to check the results and commit them.
 
 ### Intermediary Folder
-The icon-factory makes an intermediary folder in your project folder at `/.icon-factory` to host the images when you switch between dev and build. If you haven't changed the source icon, these will merely be copied to the right destination folders. 
+The icon-factory makes an intermediary folder in your project at `/.icon-factory` to host the images when you switch between dev and build. If you haven't changed the source icon, these will merely be copied to the right destination folders. 
 
 ### Special notes about Cordova (iOS and Android only)
 
 If you choose to build icons for Cordova, on iOS they WILL have a colored background (because transparency is not allowed), and this is why you are asked for an RGB value during the install phase. (Android allows transparency, btw.) You can change this in the quasar.icon-factory.json, but be sure to use a valid hex code like: `#c0ff33`.
+
+There are three methods to create your splashscreens:
+- Generate with background color and icon
+- Overlay app-icon.png centered on top of app-splashscreen.png
+- Only use app-splashscreen.png
  
-This colored background color will also be used for the splashscreen. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), the process will remind you to install the plugin first and then continue to build the icons before proceeding to the actual cordova dev or build pipeline.
+This colored background color will be used for the splashscreen (if you choose the background-color + icon or if your splashscreen is transparent. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), the process will remind you to install the plugin first and then continue to build the icons before proceeding to the actual Cordova dev or build pipeline.
 
 Splashscreens are obviously a little different depending on whether you are targetting iOS or Android. Please read this document to find out more:
 
