@@ -29,8 +29,8 @@ https://github.com/quasarframework/app-extension-icon-factory
       message: 'Minify strategy to be used for development:',
       choices: [
         {
-          name: 'pngout    => quality: lossless     |  time: 1x',
-          value: 'pngout'
+          name: 'pngquant    => quality: lossless     |  time: 1x',
+          value: 'pngquant'
         },
         {
           name: 'pngcrush  => quality: lossless+    |  time: 10x',
@@ -53,19 +53,19 @@ https://github.com/quasarframework/app-extension-icon-factory
       message: 'Minify strategy to be used for production: ',
       choices: [
         {
-          name: 'pngquant  => quality: lossy        |  time: -',
+          name: 'pngquant  => quality: lossy        |  time: 1x',
           value: 'pngquant'
         },
         {
-          name: 'pngcrush  => quality: lossless+    |  time: ++',
+          name: 'pngcrush  => quality: lossless+    |  time: 10x',
           value: 'pngcrush'
         },
         {
-          name: 'optipng   => quality: lossless+    |  time: +',
+          name: 'optipng   => quality: lossless+    |  time: 4x',
           value: 'optipng'
         },
         {
-          name: 'zopfli    => quality: lossless++   |  time: ++++',
+          name: 'zopfli    => quality: lossless++   |  time: 80x',
           value: 'zopfli'
         }
       ],

@@ -29,7 +29,7 @@ A final note: You should always pad your icon design with about 1% of empty spac
 - @quasar/cli version 1.0.0-beta.7 or higher (if building a new project) or @quasar/app v1.0.0-beta.18 or later in order to add this module as an app-extension.
 
 ### Note for early adopters
-Things have changes along the way to the RC, and if you have a version of the Icon Factory that is less than v1.0.0-beta.26 (you can find out by running `$ quasar info`), please follow these instructions:
+Things have changed along the way to the RC, and if you have a version of the Icon Factory that is less than v1.0.0-beta.26 (you can find out by running `$ quasar info`), please follow these instructions:
 
 1. delete the `.icon-factory/` and all its components
 2. delete the `quasar.icon-factory.json` file
@@ -63,10 +63,10 @@ The most important part (and indeed the only reason to use this extension) is po
 Then choose a minification strategy:
 ```bash 
 ? Minify strategy to be used for development:
-  pngout    => quality: lossless     |  time: 1x 
-  pngcrush  => quality: lossless+    |  time: 10x 
-  optipng   => quality: lossless++   |  time: 4x 
-  zopfli    => quality: lossless+++  |  time: 80x 
+  pngquant  => quality: lossy       |  time: 1x 
+  pngcrush  => quality: lossless+   |  time: 10x 
+  optipng   => quality: lossless+   |  time: 4x 
+  zopfli    => quality: lossless++  |  time: 80x 
 ```
 
 > Note: we recommend using pngquant for dev because it is the fastest minification. Other targets will take more time, but that is highly dependent on both the mode and the underlying hardware.
