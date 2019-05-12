@@ -23,7 +23,6 @@
     "imagemin": "^6.1.0",
     "imagemin-optipng": "^6.0.0",
     "imagemin-pngcrush": "^6.0.0",
-    "imagemin-pngout": "^4.0.0",
     "imagemin-pngquant": "^7.0.0",
     "imagemin-zopfli": "^6.0.0",
     "is-png": "^1.1.0",

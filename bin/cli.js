@@ -42,7 +42,7 @@ Flags:
   -t, --target      The destination directory for the files created
   -o, --options     Path to file that overrides defaults (if custom)
   -m, --minify      Minify strategy to use. 
-                    [pngcrush|pngquant|optipng|pngout|zopfli]
+                    [pngcrush|pngquant|optipng|zopfli]
   -d, --mode        Minify mode if minify preset [folder|singlefile]
   -v, --version     Display version information
   -h, --help        Display this information
@@ -60,7 +60,7 @@ if (!args.preset) {
   console.log('Icon Factory: v.' + info.version)
   console.log('You must choose a preset or declare custom.')
   console.log(
-    '  -p, --preset      [minify|splash|svg|svgduochrome|favicon]\n' +
+    '  -p, --preset      [minify|splash|svg|favicon]\n' +
       '                    [kitchensink|spa|pwa|cordova|electron|custom]\n'
   )
   process.exit(0)
@@ -105,9 +105,6 @@ switch (args.preset) {
     break
   case 'svg':
     iconfactory.svg(args.source, args.target)
-    break
-  case 'svgduochrome':
-    iconfactory.svgDuochrome(args.source, args.target)
     break
   case 'favicon':
     iconfactory.favicon(args.source, args.target)

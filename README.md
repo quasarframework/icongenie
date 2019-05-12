@@ -1,12 +1,12 @@
-<div style="text-align:center">
-  <img src="iconfactory.png" />
-</div>
-
 ![official icon](https://img.shields.io/badge/Quasar%201.0-Official%20UI%20App%20Extension-blue.svg)
 ![npm (scoped)](https://img.shields.io/npm/v/@quasar/quasar-app-extension-icon-factory.svg)
 [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/quasarframework/app-extension-icon-factory.svg)]()
 [![GitHub repo size in bytes](https://img.shields.io/github/repo-size/quasarframework/app-extension-icon-factory.svg)]()
 [![npm](https://img.shields.io/npm/dt/@quasar/quasar-app-extension-icon-factory.svg)](https://www.npmjs.com/package/@quasar/quasar-app-extension-icon-factory)
+
+<div style="text-align:center">
+  <img src="iconfactory.png" />
+</div>
 
 # @quasar/icon-factory
 
@@ -16,20 +16,20 @@ It works cross-platform to even generate those pesky `.icns` and `.ico` files fo
 
 It has two primary interfaces (with Quasar CTX and as a standalone CLI) and although it is built for the Quasar Framework, it should work anywhere you can run node. You can even import it and use it in your own pipelines if that's your thing. It is designed to be a very useful tool that you will be glad to have lying around.
 
-> If you use an original that is smaller than 1240x1240 some icons will be naively upscaled. If you do not use a square original, it will be cropped square from the center using the smaller dimension as width and height - but will never upscale. You have been warned.
+> You **MUST** use PNG. If you use a source image that is smaller than 1240x1240 some icons will be naively upscaled. If you do not use a square original, it will be cropped square from the center using the smaller dimension as width and height - but will never upscale - which can potentially result in non-square results. You have been warned. 
 
 A final note: You should always pad your icon design with about 1% of empty space. This is because you will lose aliasing resolution when downscaling, which means at smaller sizes your round icon (if it doesn't have padding) will seem to have flattened top, bottom, left and right sides.
 
 ## Installation and Usage
 
-## Requires
+### Requires
 - node / yarn
 - Linux, MacOS or Windows
 - A square image in png format that is at least 1240px x 1240px (much bigger will merely slow down the conversions)
-- @quasar/cli version 1.0.0-beta.4 (if building a new project) or @quasar/app v1.0.0-beta.18 or later in order to add this module as an app-extension.
+- @quasar/cli version 1.0.0-beta.7 or higher (if building a new project) or @quasar/app v1.0.0-beta.18 or later in order to add this module as an app-extension.
 
 ### Note for early adopters
-Things have changes along the way to the RC, and if you have a version of the Icon Factory that is less than v1.0.0-beta.26, please follow these instructions:
+Things have changes along the way to the RC, and if you have a version of the Icon Factory that is less than v1.0.0-beta.26 (you can find out by running `$ quasar info`), please follow these instructions:
 
 1. delete the `.icon-factory/` and all its components
 2. delete the `quasar.icon-factory.json` file
@@ -64,7 +64,6 @@ Then choose a minification strategy:
 ```bash 
 ? Minify strategy to be used for development:
   pngout    => quality: lossless     |  time: 1x 
-  pngquant  => quality: lossy        |  time: 2x 
   pngcrush  => quality: lossless+    |  time: 10x 
   optipng   => quality: lossless++   |  time: 4x 
   zopfli    => quality: lossless+++  |  time: 80x 
@@ -72,9 +71,9 @@ Then choose a minification strategy:
 
 > Note: we recommend using pngquant for dev because it is the fastest minification. Other targets will take more time, but that is highly dependent on both the mode and the underlying hardware.
 
-You will be asked the same question for production. Our recommendation is to choose `optipng`. It has the best time / quality trade-off for a lossless minification - but zopfli WILL shave off a bit more filesize.
+You will be asked the same question for production. Our recommendation is to choose `optipng`. It has the best time / quality trade-off for a lossless minification - but `zopfli` WILL shave off a bit more bytes.
 
-You will also be asked for a background and a highlight color. These are used in the few cases that a background is required, as with Cordova splashscreens and Cordova iOS icons.
+You will also be asked for a background color. This is used in the few cases that a background is required, as with Cordova splashscreens and Cordova iOS icons.
 
 ### Triggering
 The first time you start Quasar, icon-factory will create the images needed for the specific app artifacts. They will not automatically be added to git, so you will need to manage that yourself.
@@ -101,30 +100,28 @@ There are three methods to create your splashscreens:
 - Overlay app-icon.png centered on top of app-splashscreen.png
 - Only use app-splashscreen.png
  
-This colored background color will be used for the splashscreen (if you choose the background-color + icon or if your splashscreen is transparent. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), the process will remind you to install the plugin first and then continue to build the icons before proceeding to the actual Cordova dev or build pipeline.
+This colored background color will be used for the splashscreen (if you choose the background-color + icon or if your splashscreen is transparent. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), the process will attempt to install the plugin first and then continue to build the icons before proceeding to the actual Cordova dev or build pipeline.
 
 Splashscreens are obviously a little different depending on whether you are targetting iOS or Android. Please read this document to find out more:
 
 - https://github.com/apache/cordova-plugin-splashscreen#readme
 
 ## How it Works
-There are 5 1/2 things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will create SVG assets. Finally it will sort these icons into folders. 
+There are 5 things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will create SVG assets. Finally it will sort these icons into folders. 
 
 Here is the description of these general functions that are used internally to compose icon sets and if you just want to use them, feel free:
 
 - **build** - This function creates all assets requested from the sizes object or presets object.
-- **minify** - The default usage minifies all assets in the target folder in-place with `pngquant`. Compared to using `pngcrush --brute`, it is a relatively fast process. If you are not in a hurry and want the best results, consider using pngcrush instead. 
+- **minify** - The default usage minifies all assets in the target folder in-place with `pngquant`. Compared to using `pngcrush --brute`, it is a relatively fast process. If you are not in a hurry and want the best results, consider using zopfli for your production assets. 
 - **icns** - This will create the special MacOS (icns) and Windows icon (ico) files.
 - **favicon** - This will create the classical and never going out of style favicon.ico
 - **svg** - With this command you can trace the outlines of your PNG to create an SVG and style it with some options.
-- **svgduochrome** - This tool will help you make a posterized SVG from your PNG. Choose your colors and setting wisely.
 
-There are five composed "recipes" that will create icons for you according to your needs as assembled by our research:
+There are five composed "recipes" that will create icons for you and place them in the appropriate folders according to your needs and as assembled by our research:
 
-- **cordova** (all icons, splashscreens, all platforms)
+- **cordova** (all icons, splashscreens, iOS & Android)
 - **electron** (all platforms)
-- **pwa** (incl. chrome special icon name, favicon)
-- **spa** (common icon sizes, favicon)
+- **pwa**, **spa**, **ssr** (incl. chrome special icon name, favicon)
 - **kitchensink** (all icons, all platforms)
 
 ### Head's Up!
@@ -135,25 +132,22 @@ There are literally dozens of other projects out there that more or less do the 
 
 Furthermore, we wanted to pay special attention to your security and it was obvious that other libraries aren't doing enough to protect developers.
 
-### Minify
-There are six different minification algorithms available (because it is possible that one or the other just won't build on your system or worse becomes compromised via some kind of exploit). Using totally non-scientific tests, these are the results of this command that ran one time on a 3,2 GHz Quad-Core Intel Xeon with 16 GB of ram: 
+## Minify
+There are four different minification algorithms available (because it is possible that one or the other just won't build on your system or worse becomes compromised via some kind of exploit). Using totally non-scientific tests, these are the results of this command that ran one time on a 3,2 GHz Quad-Core Intel Xeon with 16 GB of ram: 
 
-`$ time node cli.js -p=spa -s=test/example-1240x1240.png -t=test/output -m="$minify" && du -sh test/output/spa`
+`$ time node ./bin/cli.js -p=spa -s=test/example-1240x1240.png -t=test/output -m="$minify" && du -sh test/output/spa`
 
 It takes a source image, scales it down according to the settings and then minifies it according to the library listed and the default settings tuned to give the best results.
 
 | Library       | Time        | Quality    | Size   |
 |:-------------:|:-----------:|:----------:|:------:| 
 | *no minify*   | 00.7s       | original   | 664K   |
-| pngquant-bad  | 00.9s       | very lossy | 100K   |
 | pngquant-good | 01.4s       | lossy      | 144K   |
-| pngout        | 10.7s       | lossless   | 624K   |
 | optipng       | 13.9s       | lossless   | 404K   |
 | pngcrush      | 28.1s       | lossless   | 404K   |
-| zopfli        | 33.2s       | lossless   | 380K   |
 | zopfli.more   | 81.3s       | lossless   | 336K   |
 
-This is why it is recommended to use pngquant during development (to have a proxy image), but to use optipng when building for production.
+This is why it is recommended to use pngquant during development (to have a proxy image), but to use optipng (or zopfli) when building for production.
 
 <div style="text-align:center">
     <img src="./test/__tests__/sources/quant_opti_orig.png?raw=true" width="701" height="195" >
@@ -165,9 +159,7 @@ These are notoriously difficult to acquire and make. For icns you usually need a
 This module uses the amazing [`png2icons`](https://github.com/idesis-gmbh/png2icons) module, which actually does all of the decoding and encoding on a byte-level with javascript. This of course takes a bit of time, but it also works cross-platform, so please think about going over there and giving those devs a :star:. This is actually one of the slowest parts of the `kitchensink` and the files are huge. By feeding it from the `sharp` buffer it has been sped up a little bit (and the final icns file is actually about 20% smaller!)
 
 To make the favicon.ico, it uses [`to-ico`](https://github.com/kevva/to-ico) and concats a 16x16 and a 32x32 png.
-
-## Splash Screens for Cordova
-These are constructed for your app using the background color that you specified during the install phase.  
+ 
 
 ## SVG
 The `safari-pinned-tab.svg` mask is created by adding contrast (via threshold) to the original and then applying even more threshold to the SVG tracing.
@@ -203,7 +195,7 @@ Flags:
   -t, --target      The destination directory for the files created
   -o, --options     path to file that overrides defaults (if custom)
   -m, --minify      Minify strategy to use. 
-                    [pngcrush|pngquant|optipng|pngout|zopfli]
+                    [pngcrush|optipng|pngout|zopfli]
   -d, --mode        Minify mode if minify preset [folder|singlefile]
   -v, --version     display version information
   -h, --help        display this information

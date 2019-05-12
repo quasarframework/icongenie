@@ -33,19 +33,15 @@ https://github.com/quasarframework/app-extension-icon-factory
           value: 'pngout'
         },
         {
-          name: 'pngquant  => quality: lossy        |  time: 2x',
-          value: 'pngquant'
-        },
-        {
           name: 'pngcrush  => quality: lossless+    |  time: 10x',
           value: 'pngcrush'
         },
         {
-          name: 'optipng   => quality: lossless++   |  time: 4x',
+          name: 'optipng   => quality: lossless+   |  time: 4x',
           value: 'optipng'
         },
         {
-          name: 'zopfli    => quality: lossless+++  |  time: 80x',
+          name: 'zopfli    => quality: lossless++  |  time: 80x',
           value: 'zopfli'
         }
       ],
@@ -61,19 +57,15 @@ https://github.com/quasarframework/app-extension-icon-factory
           value: 'pngquant'
         },
         {
-          name: 'pngout    => quality: lossless     |  time: +',
-          value: 'pngout'
-        },
-        {
           name: 'pngcrush  => quality: lossless+    |  time: ++',
           value: 'pngcrush'
         },
         {
-          name: 'optipng   => quality: lossless++   |  time: +',
+          name: 'optipng   => quality: lossless+    |  time: +',
           value: 'optipng'
         },
         {
-          name: 'zopfli    => quality: lossless+++  |  time: ++++',
+          name: 'zopfli    => quality: lossless++   |  time: ++++',
           value: 'zopfli'
         }
       ],
