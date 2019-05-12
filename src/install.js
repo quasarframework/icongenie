@@ -12,9 +12,7 @@ module.exports = async function (api) {
     console.log('Creating demo splashscreen.')
     api.render('./templates/splashscreen')
   }
-  setTimeout(()=> {
-    createConfig(api)
-  }, 1)
+  createConfig(api)
 
   let log = ''
   if (api.prompts.confirm_icon === false) {

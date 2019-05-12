@@ -134,8 +134,8 @@ const createConfig = async function (api) {
   // wish there was another way to do this
 
 
-  const iconHash = await computeHash(api.resolve.app('app-icon.png'), 'md5', 'icon-factory!!!')
-  const splashscreenHash = await computeHash(api.resolve.app('app-splashscreen.png'), 'md5', 'icon-factory!!!')
+  const iconHash = ''
+  const splashscreenHash = ''
   const splashType = api.prompts.splash_type || 'generate'
   /*
   api.extendJsonFile('quasar.extensions.json', {

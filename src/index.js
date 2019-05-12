@@ -187,6 +187,7 @@ const initialize = async function (api, config) {
     }
 
     iconConfig.modes[mode].source = hash
+    iconConfig.modes[mode].source_splashscreen = hashSplashscreen
     iconConfig.modes[mode].targets[modeName] = hash
     iconConfig.options.background_color = api.prompts.background_color
     iconConfig.options.theme_color = api.prompts.theme_color
