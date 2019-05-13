@@ -4,15 +4,13 @@
 [![GitHub repo size in bytes](https://img.shields.io/github/repo-size/quasarframework/app-extension-icon-factory.svg)]()
 [![npm](https://img.shields.io/npm/dt/@quasar/quasar-app-extension-icon-factory.svg)](https://www.npmjs.com/package/@quasar/quasar-app-extension-icon-factory)
 
-<div style="text-align:center">
-  <img src="iconfactory.png" />
-</div>
+ <img src="iconfactory.png" />
 
 # @quasar/icon-factory
 
 This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens for Cordova and svgs.
 
-It works cross-platform to even generate those pesky `.icns` and `.ico` files for some reason still used by Electron apps and in the case of the latter prefered by some browsers and webscrapers (favicon.ico) - even though modern development guidelines for Apple and Windows recommend using `.png`. 
+It works cross-platform to even generate those pesky `.icns` and `.ico` files used by Electron apps and in the case of the latter preferred by some browsers and webscrapers (favicon.ico) - even though modern development guidelines for Apple and Windows recommend using `.png`. 
 
 It has two primary interfaces (with Quasar CTX and as a standalone CLI) and although it is built for the Quasar Framework, it should work anywhere you can run node. You can even import it and use it in your own pipelines if that's your thing. It is designed to be a very useful tool that you will be glad to have lying around.
 
@@ -26,13 +24,13 @@ A final note: You should always pad your icon design with about 1% of empty spac
 - node / yarn
 - Linux, MacOS or Windows
 - A square image in png format that is at least 1240px x 1240px (much bigger will merely slow down the conversions)
-- @quasar/cli version 1.0.0-beta.7 or higher (if building a new project) or @quasar/app v1.0.0-beta.18 or later in order to add this module as an app-extension.
+- @quasar/cli version 1.0.0-beta.7 or higher (if building a new project) or @quasar/app v1.0.0-beta.25 or later in order to add this module as an app-extension.
 
 ### Note for early adopters
-Things have changed along the way to the RC, and if you have a version of the Icon Factory that is less than v1.0.0-beta.26 (you can find out by running `$ quasar info`), please follow these instructions:
+Things have changed along the way to the RC, and if you have a version of the Icon Factory that is less than v1.0.0-beta.30 (you can find out by running `$ quasar info`), please follow these instructions:
 
 1. delete the `.icon-factory/` and all its components
-2. delete the `quasar.icon-factory.json` file
+2. if its still there, delete the `quasar.icon-factory.json` file
 3. run: `$ quasar ext remove @quasar/icon-factory`
 4. move your icon source-file to `app-icon.png` in the root of your app
 5. if you want a custom splashscreen, put that file at `app-splashscreen.png`
@@ -86,28 +84,42 @@ You will also be asked which method of splashscreen generation you prefer, rangi
 
 The final option during the install phase is to "always rebuild", which is useful for fine-tuning e.g. background colors, but if you don't remove this flag in quasar.extensions.json (or set it to false), the icon-factory will always run and slow down your dev buildtime.
 
-If you change the image, the settings in `quasar.extensions.json` (like e.g. the background color) or the dev/build mode, this extension will be triggered and rebuild your assets in the appropriate place. Don't forget to check the results and commit them.
-
 ### Intermediary Folder
-The icon-factory makes an intermediary folder in your project at `/.icon-factory` to host the images when you switch between dev and build. If you haven't changed the source icon, these will merely be copied to the right destination folders. 
+The icon-factory makes an intermediary folder in the `node_modules/@quasar/icon-factory/tmp` folder to host the images when you switch between dev and build. If you haven't changed the source icon, these will merely be copied to the right destination folders. 
+
+### Changing the Source Image
+If you don't change the source image for the icon or the splashscreen, you will see a default iamge that reminds you to do this. 
+Any time you change the source image, its hash won't match what is recorded in the settings - so it will trigger a rebuild.
+
+### Changing the Settings
+All relevant settings are stored in `quasar.extensions.json`, and if you change them, you will notice that the extension is not rerun. To force the rerun, remove the hash of the respective target. 
+
+### Uninstalling
+Run:
+``` 
+$ quasar ext remove @quasar/icon-factory
+```
+
+This will remove the extension, its dependencies - but not any of the icons it created.
+
 
 ### Special notes about Cordova (iOS and Android only)
 
-If you choose to build icons for Cordova, on iOS they WILL have a colored background (because transparency is not allowed), and this is why you are asked for an RGB value during the install phase. (Android allows transparency, btw.) You can change this in the quasar.icon-factory.json, but be sure to use a valid hex code like: `#c0ff33`.
+If you choose to build icons for Cordova, on iOS they WILL have a colored background (because transparency is not allowed), and this is why you are asked for an RGB value during the install phase. (Android allows transparency, btw.) You can change this in the quasar.extensions.json, but be sure to use a valid hex code like: `#c0ff33`.
 
 There are three methods to create your splashscreens:
+- Only use app-splashscreen.png (default)
 - Generate with background color and icon
 - Overlay app-icon.png centered on top of app-splashscreen.png
-- Only use app-splashscreen.png
  
-This colored background color will be used for the splashscreen (if you choose the background-color + icon or if your splashscreen is transparent. If you don't provide one, black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), the process will attempt to install the plugin first and then continue to build the icons before proceeding to the actual Cordova dev or build pipeline.
+This colored background color will be used for the splashscreen (if you choose the background-color + icon or if your splashscreen is transparent. If you don't provide one (or your color code is invalid), black will be used. If you haven't already installed the [cordova-plugin-splashscreen](https://github.com/apache/cordova-plugin-splashscreen#readme), the process will attempt to install the plugin first and then continue to build the icons before proceeding to the actual Cordova dev or build pipeline.
 
-Splashscreens are obviously a little different depending on whether you are targetting iOS or Android. Please read this document to find out more:
+Splashscreens are obviously a little different depending on whether you are targeting iOS or Android. Please read this document to find out more:
 
 - https://github.com/apache/cordova-plugin-splashscreen#readme
 
 ## How it Works
-There are 5 things that icon-factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will create SVG assets. Finally it will sort these icons into folders. 
+There are 5 things that Icon Factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will create SVG assets. Finally it will sort these icons into folders. 
 
 Here is the description of these general functions that are used internally to compose icon sets and if you just want to use them, feel free:
 
@@ -169,11 +181,11 @@ If you are indeed of a discerning nature (and have used gradients in your icon d
 To make these SVG's as small as possible, they are compressed with SVGO. There are no scripts or remote resources included in these SVG assets.
 
 ## CLI Usage
-`quasar-icon-factory` can be used as a command line tool for batch invocation, and you can simply add it by installing it "globally" with your node package manager:
+The Icon Factory can be used as a command line tool for batch invocation, and you can simply add it by installing it "globally" with your node package manager:
 ```bash
-$ yarn global add @quasar/app-extension-icon-factory 
+$ yarn global add @quasar/quasar-app-extension-icon-factory 
 - or -
-$ npm install --global @quasar/app-extension-icon-factory 
+$ npm install --global @quasar/quasar-app-extension-icon-factory 
 ```
 
 To find out about the settings, just use
@@ -189,13 +201,13 @@ useful for other build pipelines.
     
 Flags:    
   -p, --preset      Choose a preset output or make your own
-                    [minify|splash|svg|svgduochrome|favicon]
+                    [minify|splash|svg|favicon]
                     [spa|pwa|cordova|electron|kitchensink|custom]
   -s, --source      Your source image as a large square png
   -t, --target      The destination directory for the files created
   -o, --options     path to file that overrides defaults (if custom)
   -m, --minify      Minify strategy to use. 
-                    [pngcrush|optipng|pngout|zopfli]
+                    [pngcrush|optipng|pngquant|zopfli]
   -d, --mode        Minify mode if minify preset [folder|singlefile]
   -v, --version     display version information
   -h, --help        display this information
@@ -207,7 +219,7 @@ $ iconfactory -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlef
 ```
 
 ## Consuming as a library
-You can use this module as a library to provide production and minification assets if you so desire. It will only work in the server context. Import and use at your discretion, but please note: this is not the primary purpose of this library and only security issues will be addressed. Please do not file feature requests for this unless you provide a PR.
+You can use this module as a library to provide production and minification assets if you so desire. It will only work in the server context. Import and use at your discretion, but please note: this is not the primary purpose of this library and only security / core functionality issues will be addressed. Please do not file feature requests for this unless you provide a PR.
 
 ## Performance
 Solving compression problems takes time, and the more complex the approach the more linear time is needed. Some compression algorithms are fast, some are great. None are both. This package tries to write from the buffer only when a file is created and (mostly) avoids creating intermediary files.
@@ -216,11 +228,12 @@ Solving compression problems takes time, and the more complex the approach the m
 `git clone`, `yarn install`, `yarn test`
 
 ## Security
-We only permit you to use .png files as the source, and there is a `magic-number` check to ensure that the file being processed is indeed a valid and proper `image/png`. Furthermore, there are neither imagemagick nor graphicsmagick dependencies and this project should build and run on all platforms supported by @quasar/cli.
+This library only permits the usage of `.png` files as the source, and there is a `magic-number` check to ensure that the file being processed is indeed a valid and proper `image/png`. Furthermore, there are neither imagemagick nor graphicsmagick dependencies and this project should build and run on all platforms supported by `@quasar/cli`.
+
+If you discover a security issue, please contact us via email: `security@quasar-framework.org`
 
 ## Contributing
-You are totally welcome to join this project. Please file issues and make PRs! Let us know how it goes and join us at our [discord server](https://discord.gg/5TDhbDg) to talk shop. There are a number of tasks that will be marked as "help wanted" on the Issue board, so please make sure to have a look there.
-
+You are welcome to join this project. Please file issues and make PRs! Let us know how it goes and join us at our [discord server](https://discord.gg/5TDhbDg) to talk shop.
 
 ### Resources for more information about App Icons
 - [Favicon Cheat Sheet](https://github.com/audreyr/favicon-cheat-sheet)
@@ -244,33 +257,6 @@ You are totally welcome to join this project. Please file issues and make PRs! L
 - [Wikipedia PNG Optimizing](https://en.wikipedia.org/wiki/Portable_Network_Graphics#Optimizing_tools)
 - [PNG Minification Comparison](https://css-ig.net/png-tools-overview#overview)
 - [.ico file-header Information](https://en.wikipedia.org/wiki/ICO_(file_format)#Outline)
-
-## Future Work
-Stage 0 - Collection
-- [X] CLI interface
-- [X] Switch for Cordova / Electron / Webapps
-- [X] Get all the sizes!!!
-- [X] Find cross-platform alternative for MacOS .icns
-- [X] Find a smaller (and safe!) alternative to graphicsmagick
-- [X] Be smarter about chaining
-- [X] pngquant the results
-- [X] get some svg's in there yo
-
-Stage 1 - Connection
-- [X] Node API interface
-- [X] Webpack plugin extension
-- [X] - rebuild the options and config
-- [X] - map to quasar outputs
-- [ ] Add debug logging (verbose, minimal, file, none)
-
-Stage 2 - Refactoring
-- [ ] Complete set of unit tests with 95% coverage target
-- [ ] Audit imagemin lib and deps
-- [ ] Build JSDocs on git precommit 
-- [ ] Real benchmarks
-- [ ] Refactor internal methods and patterns to streamline process
-- [ ]  - multithreading of sharp via .clone()
-- [ ]  - be even smarter about only REALLY making the icons that are needed and then writing targets from that specific buffer
 
 
 ## Thanks to
