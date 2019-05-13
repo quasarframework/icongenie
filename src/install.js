@@ -7,6 +7,8 @@ And consider becoming a Patreon Sponsor to support development:
 https://patreon.com/quasarframework`
 
 module.exports = function (api) {
+  api.compatibleWith('@quasar/app', '^1.0.0-beta.25')
+
   if (!existsSync(api.resolve.app('app-icon.png'))) {
     console.log('Creating demo icon.')
     api.render('./templates/icon')
