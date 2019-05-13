@@ -36,12 +36,13 @@ function copyFiles (source, modeName) {
  */
 const updateCordovaConfig = async function (api) {
   const filePath = api.resolve.cordova('config.xml')
+  const pkgPath = api.resolve.cordova('package.json')
   const doc = et.parse(readFileSync(filePath, 'utf-8'))
   const root = doc.getroot()
   const android = root.find('platform[@name="android"]')
   const ios = root.find('platform[@name="ios"]')
 
-  const cordovaJson = require(api.resolve.cordova('package.json'))
+  const cordovaJson = require(pkgPath)
   const plugins = root.findall('plugin')
 
   // not sure why it can't always be found, checking in both possible places
@@ -58,7 +59,8 @@ Attempting to install it...
 
     if(!plugins.find(node => node.attrib.name === 'cordova-plugin-splashscreen')) {
       // add the splashscreen but get the right version installed
-      const newCordovaJson = require(api.resolve.cordova('package.json'))
+      delete require.cache[pkgPath]
+      const newCordovaJson = require(pkgPath)
 
       let plugin = et.SubElement(root, 'plugin')
       plugin.set('name', 'cordova-plugin-splashscreen')
