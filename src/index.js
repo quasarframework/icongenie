@@ -1,71 +1,64 @@
+const { join } = require('path')
 const iconfactory = require('../lib/index.js')
 const execa = require('execa')
 const settings = require('../lib/settings')
-const { copy, ensureDir, existsSync, readFileSync, writeFileSync } = require('fs-extra')
-const { validatePng, computeHash, getConfig, saveConfig, validateHexRGB } = require('./utils')
-const useIntermediateFolders = true
+const { copySync, existsSync, readFileSync, writeFileSync } = require('fs-extra')
+const { validatePng, computeHash, validateHexRGB } = require('./utils')
 const et = require('elementtree')
 
 /**
- * copy files from the intermediate folder to the your final destination
- * @param  {string} target the location of the intermediate folder
- * @param  {string} modeName the mode than quasar cli is running (eg: `spa`, `pwa`, `electron`, `cordova`)
+ * Copy files from the intermediate folder to the your final destination
+ *
+ * @param  {string} source - the location of the intermediate folder
+ * @param  {string} modeName - the running mode (eg: `spa`, `pwa`, `electron`, `cordova`)
  * @returns {undefined}
  */
-const copyFiles = async (target, modeName) => {
+function copyFiles (source, modeName) {
   switch (modeName) {
     case 'spa':
     case 'pwa':
-      await copy(target, './src/statics')
+      copySync(source, './src/statics')
       break
     case 'electron':
-      await copy(target, './src-electron/icons')
+      copySync(source, './src-electron/icons')
       break;
     case 'cordova':
-      await copy(target, './src-cordova/res')
+      copySync(source, './src-cordova/res')
       break
   }
 }
 
 /**
- * update Cordova config.xml for images
+ * Update Cordova config.xml for images
  *
  * @param  {object} api
- * @param  {object} iconConfig
  * @returns {Promise<void>}
  */
-const renderCordovaConfig = async function (api, iconConfig) {
+const updateCordovaConfig = async function (api) {
   const filePath = api.resolve.cordova('config.xml')
   const doc = et.parse(readFileSync(filePath, 'utf-8'))
   const root = doc.getroot()
   const android = root.find('platform[@name="android"]')
   const ios = root.find('platform[@name="ios"]')
 
-  const cordovaJson = JSON.parse(readFileSync(api.resolve.cordova('package.json'), 'utf-8'))
+  const cordovaJson = require(api.resolve.cordova('package.json'))
   const plugins = root.findall('plugin')
 
   // not sure why it can't always be found, checking in both possible places
-  if (!cordovaJson.cordova.plugins.hasOwnProperty(
-    'cordova-plugin-splashscreen')) {
-
+  if (!cordovaJson.cordova.plugins.hasOwnProperty('cordova-plugin-splashscreen')) {
     console.log(`
 
-Splashscreens for Cordova requires a Cordova plugin. 
-It can't be found in your config.xml
+Splashscreens for Cordova requires a Cordova plugin
+(cordova-plugin-splashscreen) which was not found.
 
-Attempting to install now.
-
-If splashscreen is not available, please go to the src-cordova folder and run:
-
-  $ cordova plugin add cordova-plugin-splashscreen 
-  $ cordova plugin save
-  
+Attempting to install it...
 `)
+
     execa.shellSync(`cd ${api.resolve.cordova('.')} && cordova plugin add cordova-plugin-splashscreen`)
-    if(!plugins.find(node => node.attrib.name ===
-      'cordova-plugin-splashscreen')) {
+
+    if(!plugins.find(node => node.attrib.name === 'cordova-plugin-splashscreen')) {
       // add the splashscreen but get the right version installed
-      const newCordovaJson = JSON.parse(readFileSync(api.resolve.cordova('package.json'), 'utf-8'))
+      const newCordovaJson = require(api.resolve.cordova('package.json'))
 
       let plugin = et.SubElement(root, 'plugin')
       plugin.set('name', 'cordova-plugin-splashscreen')
@@ -74,8 +67,8 @@ If splashscreen is not available, please go to the src-cordova folder and run:
     }
   }
 
+  const jobs = settings.options.cordova
 
-  const jobs = iconConfig.options.cordova || settings.options.cordova
   for (let job in jobs) {
     if (jobs[job].platform === 'android') {
       if (jobs[job].splash === true) {
@@ -85,7 +78,8 @@ If splashscreen is not available, please go to the src-cordova folder and run:
           splash.set('src', `res/${jobs[job].folder}/${jobs[job].prefix}${jobs[job].suffix}`)
           doc.write({ indent: 4 })
         }
-      } else { // an icon, not a splash
+      }
+      else { // an icon, not a splash
         if (!android.find(`icon[@density="${jobs[job].density}"]`)) {
           let icon = null
           icon = et.SubElement(android, 'icon')
@@ -105,7 +99,8 @@ If splashscreen is not available, please go to the src-cordova folder and run:
           splash.set('src', `res/${jobs[job].folder}/${jobs[job].prefix}${jobs[job].suffix}`)
           doc.write({ indent: 4 })
         }
-      } else { // an icon, not a splash
+      }
+      else { // an icon, not a splash
         if (!ios.find(`icon[@width="${jobs[job].sizes[0]}"]`)) {
           let icon = null
           icon = et.SubElement(ios, 'icon')
@@ -124,109 +119,68 @@ If splashscreen is not available, please go to the src-cordova folder and run:
 }
 
 /**
- * configuring the icon factory extension
- *
- * @param {Object} api the IndexAPI object
- * @param {Object} config quasar.config.js
- * @returns {undefined}
+ * Configuring the icon factory extension
  */
-const initialize = async function (api, config) {
-  let mode, minify, source, sourceSplashscreen, iconConfig, hash, hashSplashscreen
-  if (api.ctx.dev) {
-    mode = 'dev'
-    minify = api.prompts.minify_dev
-  } else {
-    mode = 'build'
-    minify = api.prompts.minify_build
+module.exports = async function (api) {
+  api.compatibleWith('@quasar/app', '^1.0.0-beta.25')
+
+  const buildMode = api.ctx.dev ? 'dev' : 'build'
+  const modeName = api.ctx.modeName === 'ssr'
+    ? (api.ctx.mode.pwa ? 'pwa' : 'spa')
+    : api.ctx.modeName
+
+  const iconSource = api.resolve.app('app-icon.png')
+  const splashscreenSource = api.resolve.app('app-splashscreen.png')
+  const target = join(__dirname, '../tmp/' + buildMode + '/' + modeName)
+
+  const prevConfig = api.getPersistentConf(api)[buildMode][modeName] || {}
+  const currentConfig = {
+    iconHash: await computeHash(iconSource, 'md5', 'icon-factory!!!')
   }
 
-  source = api.resolve.app('app-icon.png')
-  sourceSplashscreen = api.resolve.app('app-splashscreen.png')
-
-  let modeName = api.ctx.modeName
-  if (modeName === 'ssr') {
-    modeName = config.ssr.pwa ? 'pwa' : 'spa'
-  }
-
-  let target = ''
-  if (useIntermediateFolders) {
-    target = './.icon-factory/' + mode + '/' + modeName
-  } else {
-    switch (modeName) {
-      case 'spa':
-      case 'pwa':
-        target = './src/statics'
-        break
-      case 'electron':
-        target = './src-electron/icons'
-        break;
-      case 'cordova':
-        target = './src-cordova/res'
-        break
-    }
-  }
-
-  /**
-   * creating the icons in the given target folder.
-   * @returns {undefined}s
-   */
-  let processImages = async function() {
-
-    const options = {
-      ...iconConfig.options[modeName],
-      background_color: validateHexRGB(api.prompts.background_color) ?
-        api.prompts.background_color : '#000000',
-      // theme_color: validateHexRGB(api.prompts.theme_color) ?
-      //  api.prompts.theme_color : '#ffffff'
-      splashscreen_type: api.prompts.splashscreen_type || 'generate'
-    }
-    if (modeName === 'cordova') {
-      await iconfactory[modeName](source, target, minify, options, sourceSplashscreen)
-    } else {
-      await iconfactory[modeName](source, target, minify, options)
-    }
-
-    iconConfig.modes[mode].source = hash
-    iconConfig.modes[mode].source_splashscreen = hashSplashscreen
-    iconConfig.modes[mode].targets[modeName] = hash
-    iconConfig.options.background_color = api.prompts.background_color
-    iconConfig.options.theme_color = api.prompts.theme_color
-
-    saveConfig(iconConfig)
-  }
-
-  await validatePng(source)
-  await validatePng(sourceSplashscreen)
-  iconConfig = await getConfig(api)
-  hash = await computeHash(source, 'md5', 'icon-factory!!!')
-  hashSplashscreen = await computeHash(sourceSplashscreen, 'md5', 'icon-factory!!!')
-  let targetHashSplashscreen = iconConfig.modes[mode].targets[modeName]
-  let targetHash = iconConfig.modes[mode].targets[modeName]
-
-  if (!existsSync(target) ||
-      (iconConfig.modes[mode].source !== hash) ||
-      (iconConfig.modes[mode].sourceSplashscreen !== hashSplashscreen) ||
-      (targetHash !== hash) ||
-      (targetHashSplashscreen !== hashSplashscreen) ||
-      (iconConfig.options.background_color !== api.prompts.background_color) ||
-      (iconConfig.options.theme_color !== api.prompts.theme_color) ||
-      (api.prompts.build_always === true)) {
-    await ensureDir(target)
-    if (modeName === 'cordova') {
-      await renderCordovaConfig(api, iconConfig)
-    }
-    await processImages()
-  }
-  // should use this for build and dev actually
-  // todo: place tmp in module
-  if (useIntermediateFolders) {
-    await copyFiles(target, modeName)
-  }
-}
-
-module.exports = function(api) {
-  // TODO: check if ssr is on pwa mode without extend quasar conf.
-  api.extendQuasarConf(async config => {
-    await initialize(api, config)
+  modeName === 'cordova' && Object.assign(currentConfig, {
+    splashscreenHash: await computeHash(splashscreenSource, 'md5', 'icon-factory!!!'),
+    splashscreenType: api.prompts.cordova.splashscreen_type,
+    backgroundColor: api.prompts.cordova.background_color
   })
+
+  if (
+    api.prompts.build_always === true ||
+    !existsSync(target) ||
+    Object.keys(currentConfig).some(key => currentConfig[key] !== prevConfig[key])
+  ) {
+    await validatePng(iconSource)
+
+    const opts = { ...settings.options[modeName] }
+
+    if (modeName === 'cordova') {
+      await validatePng(splashscreenSource)
+      await updateCordovaConfig(api)
+
+      Object.assign(opts, {
+        background_color: validateHexRGB(currentConfig.backgroundColor)
+          ? currentConfig.backgroundColor
+          : '#000000',
+        // theme_color: validateHexRGB(api.prompts.theme_color) ?
+        //  api.prompts.theme_color : '#ffffff'
+        splashscreen_type: currentConfig.splashscreenType
+      })
+    }
+
+    await iconfactory[modeName](
+      iconSource,
+      target,
+      api.prompts['minify_' + buildMode],
+      opts,
+      splashscreenSource
+    )
+
+    api.mergePersistentConf({
+      [buildMode]: {
+        [modeName]: currentConfig
+      }
+    })
+  }
+
+  copyFiles(target, modeName)
 }

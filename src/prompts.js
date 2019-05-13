@@ -7,22 +7,15 @@ https://github.com/quasarframework/app-extension-icon-factory
 --------------------------- ATTENTION! -----------------------------
 
  You must replace app-icon.png in the root folder of your project.
- If you plan on building for Cordova, you must also replace the    
+ If you plan on building for Cordova, you must also replace the
  app-splashscreen.png image in the same place. File details:
- 
+
   -> app-icon.png           1240x1240   (with transparency)
   -> app-splashscreen.png   2436x2436   (transparency optional)
 --------------------------------------------------------------------
 `)
 
   return [
-    {
-      name: 'confirm_icon',
-      type: 'confirm',
-      required: true,
-      message: 'Have you replaced the app assets?',
-      default: false,
-    },
     {
       name: 'minify_dev',
       type: 'list',
@@ -72,7 +65,7 @@ https://github.com/quasarframework/app-extension-icon-factory
       default: 'zopfli'
     },
     {
-      name: 'background_color',
+      name: 'cordova.background_color',
       type: 'input',
       required: true,
       message: `Please type a background color to use for Cordova Icons / Splashscreens (no transparency): `,
@@ -90,10 +83,14 @@ https://github.com/quasarframework/app-extension-icon-factory
     },
     */
     {
-      name: 'splashscreen_type',
+      name: 'cordova.splashscreen_type',
       type: 'list',
       message: 'Build strategy for Cordova Splashscreen:',
       choices: [
+        {
+          name: 'Use app-splashscreen.png as-is',
+          value: 'pure'
+        },
         {
           name: 'Generate with background color and icon',
           value: 'generate'
@@ -101,13 +98,9 @@ https://github.com/quasarframework/app-extension-icon-factory
         {
           name: 'Overlay app-icon.png centered on top of app-splashscreen.png',
           value: 'overlay'
-        },
-        {
-          name: 'Only use app-splashscreen.png',
-          value: 'pure'
         }
       ],
-      default: 'generate'
+      default: 'pure'
     },
     {
       name: 'build_always',
