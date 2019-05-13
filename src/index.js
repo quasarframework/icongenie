@@ -121,11 +121,11 @@ Attempting to install it...
 }
 
 /**
- * Configuring the icon factory extension
+ * Run icon-factory
+ *
+ * @param {object} api - App Extension API object
  */
-module.exports = async function (api) {
-  api.compatibleWith('@quasar/app', '^1.0.0-beta.25')
-
+async function run (api) {
   const buildMode = api.ctx.dev ? 'dev' : 'build'
   const modeName = api.ctx.modeName === 'ssr'
     ? (api.ctx.mode.pwa ? 'pwa' : 'spa')
@@ -185,4 +185,14 @@ module.exports = async function (api) {
   }
 
   copyFiles(target, modeName)
+}
+
+/**
+ * Configuring the icon factory extension
+ */
+module.exports = function (api) {
+  api.compatibleWith('@quasar/app', '^1.0.0-beta.26')
+
+  api.beforeDev(run)
+  api.beforeBuild(run)
 }
