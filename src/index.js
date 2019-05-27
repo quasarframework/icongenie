@@ -13,17 +13,17 @@ const et = require('elementtree')
  * @param  {string} modeName - the running mode (eg: `spa`, `pwa`, `electron`, `cordova`)
  * @returns {undefined}
  */
-function copyFiles (source, modeName) {
+function copyFiles (source, modeName, api) {
   switch (modeName) {
     case 'spa':
     case 'pwa':
-      copySync(source, './src/statics')
+      copySync(source, api.resolve.app('/statics'))
       break
     case 'electron':
-      copySync(source, './src-electron/icons')
+      copySync(source, api.resolve.electron('/icons'))
       break;
     case 'cordova':
-      copySync(source, './src-cordova/res')
+      copySync(source, api.resolve.cordova('/res'))
       break
   }
 }
@@ -184,5 +184,5 @@ module.exports = async function (api) {
     })
   }
 
-  copyFiles(target, modeName)
+  copyFiles(target, modeName, api)
 }
