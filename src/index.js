@@ -11,13 +11,14 @@ const et = require('elementtree')
  *
  * @param  {string} source - the location of the intermediate folder
  * @param  {string} modeName - the running mode (eg: `spa`, `pwa`, `electron`, `cordova`)
+ * @param  {string} api - the api object
  * @returns {undefined}
  */
 function copyFiles (source, modeName, api) {
   switch (modeName) {
     case 'spa':
     case 'pwa':
-      copySync(source, api.resolve.app('/statics'))
+      copySync(source, api.resolve.app('/src/statics'))
       break
     case 'electron':
       copySync(source, api.resolve.electron('/icons'))
