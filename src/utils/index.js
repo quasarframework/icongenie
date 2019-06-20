@@ -14,13 +14,15 @@ const
  */
 const validatePng = async function (fileName) {
   if (!existsSync(fileName)) {
-    throw new Error('File not found: ' + fileName)
+    console.log('ICONFACTORY: File not found: ' + fileName)
+    process.exit(0)
   }
 
   let data = await readChunk(fileName, 0, 8)
 
   if (!isPng(data)) {
-    throw new Error('Not a valid png: ' + fileName)
+    console.log('ICONFACTORY: Not a valid png: ' + fileName)
+    process.exit(0)
   }
 }
 
