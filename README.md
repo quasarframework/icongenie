@@ -8,9 +8,9 @@
 
 # @quasar/icon-factory
 
-This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens for Cordova and svgs.
+This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens for Cordova and even a minified svg.
 
-It works cross-platform to even generate those pesky `.icns` and `.ico` files used by Electron apps and in the case of the latter preferred by some browsers and webscrapers (favicon.ico) - even though modern development guidelines for Apple and Windows recommend using `.png`. 
+It works cross-platform to generate those pesky `.icns` and `.ico` files used by Electron apps and in the case of the latter preferred by some browsers and webscrapers (favicon.ico) - even though modern development guidelines for Apple and Windows recommend using `.png`. 
 
 It has two primary interfaces (with Quasar CTX and as a standalone CLI) and although it is built for the Quasar Framework, it should work anywhere you can run node. You can even import it and use it in your own pipelines if that's your thing. It is designed to be a very useful tool that you will be glad to have lying around.
 

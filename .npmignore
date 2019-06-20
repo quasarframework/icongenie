@@ -4,3 +4,5 @@ research
 node_modules
 .git
 tmp
+.github
+.idea
