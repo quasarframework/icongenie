@@ -42,6 +42,12 @@ Things have changed along the way to the RC, and if you have a version of the Ic
 $ quasar ext add @quasar/icon-factory
 ```
 
+If you are on Windows and seeing an error the likes of `pngquant failed to build, make sure that libpng-dev is installed`, please do the following:
+
+```
+$ npm install --global --production windows-build-tools
+``` 
+
 The most important part (and indeed the only reason to use this extension) is pointing it at your shiny icon (and splashscreen if you are building for Cordova.) So the first thing you are reminded of is that you need to do that!
 
 ```
