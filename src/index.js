@@ -14,17 +14,17 @@ const et = require('elementtree')
  * @param  {string} api - the api object
  * @returns {undefined}
  */
-function copyFiles (source, modeName, api) {
+async function copyFiles (source, modeName, api) {
   switch (modeName) {
     case 'spa':
     case 'pwa':
-      copySync(source, api.resolve.app('/src/statics'))
+      await copySync(source, api.resolve.app('/src/statics'))
       break
     case 'electron':
-      copySync(source, api.resolve.electron('/icons'))
+      await copySync(source, api.resolve.electron('/icons'))
       break;
     case 'cordova':
-      copySync(source, api.resolve.cordova('/res'))
+      await copySync(source, api.resolve.cordova('/res'))
       break
   }
 }
@@ -190,7 +190,6 @@ async function run (api) {
       }
     })
   }
-
   copyFiles(target, modeName, api)
 }
 
@@ -198,7 +197,7 @@ async function run (api) {
  * Configuring the icon factory extension
  */
 module.exports = function (api) {
-  api.compatibleWith('@quasar/app', '^1.0.0-beta.26')
+  api.compatibleWith('@quasar/app', '^1.0.0-rc.1')
 
   api.beforeDev(run)
   api.beforeBuild(run)
