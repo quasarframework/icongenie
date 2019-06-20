@@ -131,18 +131,22 @@ async function run (api) {
   const modeName = api.ctx.modeName === 'ssr'
     ? (api.ctx.mode.pwa ? 'pwa' : 'spa')
     : api.ctx.modeName
-
+  let splashscreenSource, splashscreenHashBasis
   const iconSource = api.resolve.app('app-icon.png')
-  const splashscreenSource = api.resolve.app('app-splashscreen.png')
+  if (api.prompts.cordova.splashscreen_type !== 'generate') {
+    splashscreenSource = api.resolve.app('app-splashscreen.png')
+    splashscreenHashBasis = await computeHash(splashscreenSource, 'md5', 'icon-factory!!!')
+  } else {
+    splashscreenHashBasis = false
+  }
   const target = join(__dirname, '../tmp/' + buildMode + '/' + modeName)
 
   const prevConfig = api.getPersistentConf(api)[buildMode][modeName] || {}
   const currentConfig = {
     iconHash: await computeHash(iconSource, 'md5', 'icon-factory!!!')
   }
-
   modeName === 'cordova' && Object.assign(currentConfig, {
-    splashscreenHash: await computeHash(splashscreenSource, 'md5', 'icon-factory!!!'),
+    splashscreenHash: splashscreenHashBasis,
     splashscreenType: api.prompts.cordova.splashscreen_type,
     backgroundColor: api.prompts.cordova.background_color
   })
@@ -157,7 +161,9 @@ async function run (api) {
     const opts = { ...settings.options[modeName] }
 
     if (modeName === 'cordova') {
-      await validatePng(splashscreenSource)
+      if (api.prompts.cordova.splashscreen_type !== 'generate') {
+        await validatePng(splashscreenSource)
+      }
       await updateCordovaConfig(api)
 
       Object.assign(opts, {
