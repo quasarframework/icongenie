@@ -24,17 +24,8 @@ A final note: You should always pad your icon design with about 1% of empty spac
 - node / yarn
 - Linux, MacOS or Windows
 - A square image in png format that is at least 1240px x 1240px (much bigger will merely slow down the conversions)
-- @quasar/cli version 1.0.0-beta.7 or higher (if building a new project) or @quasar/app v1.0.0-beta.25 or later in order to add this module as an app-extension.
+- @quasar/cli version 1.0.0-rc.2 or later (if building a new project) or @quasar/app v1.0.0-beta.25 or later in order to add this module as an app-extension.
 
-### Note for early adopters
-Things have changed along the way to the RC, and if you have a version of the Icon Genie that is less than v1.0.0-beta.30 (you can find out by running `$ quasar info`), please follow these instructions:
-
-1. delete the `.icon-factory/` and all its components
-2. if its still there, delete the `quasar.icon-factory.json` file
-3. run: `$ quasar ext remove @quasar/icon-factory`
-4. move your icon source-file to `app-icon.png` in the root of your app
-5. if you want a custom splashscreen, put that file at `app-splashscreen.png`
-6. run: `$ quasar ext add @quasar/icon-genie`
 
 ### Install as an App Extension (Quasar v1.0+)
 
@@ -238,6 +229,10 @@ This library only permits the usage of `.png` files as the source, and there is 
 
 If you discover a security issue, please contact us via email: `security@quasar-framework.org`
 
+## Known Issues
+We have discovered a rare edge case, where the icns file is malformed on some MacOS systems - but only when using electron-builder. If you run into this, please help us triage by leaving a report at [this issue](https://github.com/quasarframework/app-extension-icon-genie/issues/73)
+
+
 ## Contributing
 You are welcome to join this project. Please file issues and make PRs! Let us know how it goes and join us at our [discord server](https://discord.gg/5TDhbDg) to talk shop.
 
@@ -269,6 +264,10 @@ You are welcome to join this project. Please file issues and make PRs! Let us kn
 - [image-trace-loader](https://github.com/EmilTholin/image-trace-loader)
 - the [image-min](https://github.com/imagemin) team
 - @TobyMosque, @maxMatteo, @Robin, @Rob, @trendchaser4u, @bloo_df
+
+
+## Naming
+We discovered very late that there is another project known as Icon Factory, so before we published 1.0.0, we did a last minute renaming. 
 
 
 ## Licenses
