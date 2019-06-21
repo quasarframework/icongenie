@@ -1,5 +1,5 @@
 const { join } = require('path')
-const iconfactory = require('../lib/index.js')
+const icongenie = require('../lib/index.js')
 const execa = require('execa')
 const settings = require('../lib/settings')
 const { copySync, existsSync, readFileSync, writeFileSync } = require('fs-extra')
@@ -122,7 +122,7 @@ Attempting to install it...
 }
 
 /**
- * Run icon-factory
+ * Run icon-genie
  *
  * @param {object} api - App Extension API object
  */
@@ -135,7 +135,7 @@ async function run (api) {
   const iconSource = api.resolve.app('app-icon.png')
   if (api.prompts.cordova.splashscreen_type !== 'generate') {
     splashscreenSource = api.resolve.app('app-splashscreen.png')
-    splashscreenHashBasis = await computeHash(splashscreenSource, 'md5', 'icon-factory!!!')
+    splashscreenHashBasis = await computeHash(splashscreenSource, 'md5', 'icon-genie!!!')
   } else {
     splashscreenHashBasis = false
   }
@@ -143,7 +143,7 @@ async function run (api) {
 
   const prevConfig = api.getPersistentConf(api)[buildMode][modeName] || {}
   const currentConfig = {
-    iconHash: await computeHash(iconSource, 'md5', 'icon-factory!!!')
+    iconHash: await computeHash(iconSource, 'md5', 'icon-genie!!!')
   }
   modeName === 'cordova' && Object.assign(currentConfig, {
     splashscreenHash: splashscreenHashBasis,
@@ -176,7 +176,7 @@ async function run (api) {
       })
     }
 
-    await iconfactory[modeName](
+    await icongenie[modeName](
       iconSource,
       target,
       api.prompts['minify_' + buildMode],
@@ -194,7 +194,7 @@ async function run (api) {
 }
 
 /**
- * Configuring the icon factory extension
+ * Configuring the icon genie extension
  */
 module.exports = function (api) {
   api.compatibleWith('@quasar/app', '^1.0.0-rc.1')

@@ -1,9 +1,9 @@
 const { existsSync } = require('fs')
 
 const banner = `If you like this app-extension please leave a star at:
-https://github.com/quasarframework/app-extension-icon-factory/stargazers
+https://github.com/quasarframework/app-extension-icon-genie/stargazers
 
-Please consider becoming a Sponsoring development:
+Please consider sponsoring the development of Quasar:
 https://donate.quasar.dev`
 
 module.exports = function (api) {

@@ -1,12 +1,12 @@
 ![official icon](https://img.shields.io/badge/Quasar%201.0-Official%20UI%20App%20Extension-blue.svg)
-![npm (scoped)](https://img.shields.io/npm/v/@quasar/quasar-app-extension-icon-factory.svg)
-[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/quasarframework/app-extension-icon-factory.svg)]()
-[![GitHub repo size in bytes](https://img.shields.io/github/repo-size/quasarframework/app-extension-icon-factory.svg)]()
-[![npm](https://img.shields.io/npm/dt/@quasar/quasar-app-extension-icon-factory.svg)](https://www.npmjs.com/package/@quasar/quasar-app-extension-icon-factory)
+![npm (scoped)](https://img.shields.io/npm/v/@quasar/quasar-app-extension-icon-genie.svg)
+[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/quasarframework/app-extension-icon-genie.svg)]()
+[![GitHub repo size in bytes](https://img.shields.io/github/repo-size/quasarframework/app-extension-icon-genie.svg)]()
+[![npm](https://img.shields.io/npm/dt/@quasar/quasar-app-extension-icon-genie.svg)](https://www.npmjs.com/package/@quasar/quasar-app-extension-icon-genie)
 
  <img src="iconfactory.png" />
 
-# @quasar/icon-factory
+# @quasar/icon-genie
 
 This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens for Cordova and even a minified svg.
 
@@ -27,19 +27,19 @@ A final note: You should always pad your icon design with about 1% of empty spac
 - @quasar/cli version 1.0.0-beta.7 or higher (if building a new project) or @quasar/app v1.0.0-beta.25 or later in order to add this module as an app-extension.
 
 ### Note for early adopters
-Things have changed along the way to the RC, and if you have a version of the Icon Factory that is less than v1.0.0-beta.30 (you can find out by running `$ quasar info`), please follow these instructions:
+Things have changed along the way to the RC, and if you have a version of the Icon Genie that is less than v1.0.0-beta.30 (you can find out by running `$ quasar info`), please follow these instructions:
 
 1. delete the `.icon-factory/` and all its components
 2. if its still there, delete the `quasar.icon-factory.json` file
 3. run: `$ quasar ext remove @quasar/icon-factory`
 4. move your icon source-file to `app-icon.png` in the root of your app
 5. if you want a custom splashscreen, put that file at `app-splashscreen.png`
-6. run: `$ quasar ext add @quasar/icon-factory`
+6. run: `$ quasar ext add @quasar/icon-genie`
 
 ### Install as an App Extension (Quasar v1.0+)
 
 ```bash
-$ quasar ext add @quasar/icon-factory
+$ quasar ext add @quasar/icon-genie
 ```
 
 If you are on Windows and seeing an error the likes of `pngquant failed to build, make sure that libpng-dev is installed`, please do the following:
@@ -62,7 +62,7 @@ The most important part (and indeed the only reason to use this extension) is po
 --------------------------------------------------------------------
 ```
 > **Note:** 
-  Please use a valid png of 1240x1240 pixels. If you choose an image that is not square or has smaller dimensions, the icon-factory will do its best, but the results will not be optimal. Transparency is recommended. PNG is required.
+  Please use a valid png of 1240x1240 pixels. If you choose an image that is not square or has smaller dimensions, the icon-genie will do its best, but the results will not be optimal. Transparency is recommended. PNG is required.
 
 Then choose a minification strategy:
 ```bash 
@@ -80,7 +80,7 @@ You will be asked the same question for production. Our recommendation is to cho
 You will also be asked for a background color. This is used in the few cases that a background is required, as with Cordova splashscreens and Cordova iOS icons.
 
 ### Triggering
-The first time you start Quasar, icon-factory will create the images needed for the specific app artifacts. They will not automatically be added to git, so you will need to manage that yourself.
+The first time you start Quasar, icon-genie will create the images needed for the specific app artifacts. They will not automatically be added to git, so you will need to manage that yourself.
 
 ```bash
 $ quasar dev --mode electron 
@@ -88,10 +88,10 @@ $ quasar dev --mode electron
 
 You will also be asked which method of splashscreen generation you prefer, ranging from the mere placement of your logo upon the background color you specified, overlaying your icon on top of a splashscreen image, or just using the splashscreen image. If you aren't happy with the results, don't forget you can change it in `quasar.extensions.json`.
 
-The final option during the install phase is to "always rebuild", which is useful for fine-tuning e.g. background colors, but if you don't remove this flag in quasar.extensions.json (or set it to false), the icon-factory will always run and slow down your dev buildtime.
+The final option during the install phase is to "always rebuild", which is useful for fine-tuning e.g. background colors, but if you don't remove this flag in quasar.extensions.json (or set it to false), the icon-genie will always run and slow down your dev buildtime.
 
 ### Intermediary Folder
-The icon-factory makes an intermediary folder in the `node_modules/@quasar/icon-factory/tmp` folder to host the images when you switch between dev and build. If you haven't changed the source icon, these will merely be copied to the right destination folders. 
+The icon-genie makes an intermediary folder in the `node_modules/@quasar/icon-genie/tmp` folder to host the images when you switch between dev and build. If you haven't changed the source icon, these will merely be copied to the right destination folders. 
 
 ### Changing the Source Image
 If you don't change the source image for the icon or the splashscreen, you will see a default iamge that reminds you to do this. 
@@ -103,7 +103,7 @@ All relevant settings are stored in `quasar.extensions.json`, and if you change 
 ### Uninstalling
 Run:
 ``` 
-$ quasar ext remove @quasar/icon-factory
+$ quasar ext remove @quasar/icon-genie
 ```
 
 This will remove the extension, its dependencies - but not any of the icons it created.
@@ -125,7 +125,7 @@ Splashscreens are obviously a little different depending on whether you are targ
 - https://github.com/apache/cordova-plugin-splashscreen#readme
 
 ## How it Works
-There are 5 things that Icon Factory does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will create SVG assets. Finally it will sort these icons into folders. 
+There are 5 things that Icon Genie does with your original file. It will create a set of webicons for your project, it will minify those icons, it can make special icns (Mac) / ico (Windows) files for apps that need them and it will create SVG assets. Finally it will sort these icons into folders. 
 
 Here is the description of these general functions that are used internally to compose icon sets and if you just want to use them, feel free:
 
@@ -187,21 +187,21 @@ If you are indeed of a discerning nature (and have used gradients in your icon d
 To make these SVG's as small as possible, they are compressed with SVGO. There are no scripts or remote resources included in these SVG assets.
 
 ## CLI Usage
-The Icon Factory can be used as a command line tool for batch invocation, and you can simply add it by installing it "globally" with your node package manager:
+The Icon Genie can be used as a command line tool for batch invocation, and you can simply add it by installing it "globally" with your node package manager:
 ```bash
-$ yarn global add @quasar/quasar-app-extension-icon-factory 
+$ yarn global add @quasar/quasar-app-extension-icon-genie 
 - or -
-$ npm install --global @quasar/quasar-app-extension-icon-factory 
+$ npm install --global @quasar/quasar-app-extension-icon-genie 
 ```
 
 To find out about the settings, just use
 ``` 
-$ iconfactory --help
+$ icongenie --help
 
-Quasar Icon Factory: v.1.0.0
+Quasar Icon Genie: v.1.0.0
      License: MIT
 
-Icon Factory is a node utility to create a batch of icons for your app. 
+Icon Genie is a node utility to create a batch of icons for your app. 
 Designed to work seamlessly with the Quasar Framework, but probably
 useful for other build pipelines.
     
@@ -220,8 +220,8 @@ Flags:
   
 Usage:
     
-$ iconfactory -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder -m=pngquant  
-$ iconfactory -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlefile  
+$ icongenie -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder -m=pngquant  
+$ icongenie -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlefile  
 ```
 
 ## Consuming as a library
@@ -274,5 +274,5 @@ You are welcome to join this project. Please file issues and make PRs! Let us kn
 ## Licenses
 - Code: MIT
 - © 2018: Present Daniel Thompson-Yvetot & Razvan Stoenescu
-- Original Image for iconfactory: [Public Domain](https://www.publicdomainpictures.net/pictures/180000/nahled/coffee-grinder-14658946414E8.jpg)
+- Original Image for icongenie: [Public Domain](https://www.publicdomainpictures.net/pictures/180000/nahled/coffee-grinder-14658946414E8.jpg)
 - Modifications: Daniel Thompson-Yvetot. CC-BY 

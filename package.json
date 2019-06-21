@@ -1,13 +1,13 @@
 {
-  "name": "@quasar/quasar-app-extension-icon-factory",
-  "version": "1.0.0-rc.6",
-  "description": "A Quasar CLI Extension",
+  "name": "@quasar/quasar-app-extension-icon-genie",
+  "version": "1.0.0",
+  "description": "A Quasar CLI Extension for Making All Your Icons",
   "license": "MIT",
   "author": "Daniel Thompson-Yvetot <35242872+nothingismagick@users.noreply.github.com>",
-  "repository": "git@github.com:quasarframework/app-extension-icon-factory.git",
+  "repository": "git@github.com:quasarframework/app-extension-icon-genie.git",
   "main": "src/index.js",
   "bin": {
-    "iconfactory": "./bin/cli.js"
+    "icongenie": "./bin/cli.js"
   },
   "scripts": {
     "format": "prettier --write bin/*.js lib/*.js src/*.js test/*.js",
