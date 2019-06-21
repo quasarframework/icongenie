@@ -1,0 +1,41 @@
+.Dd Sep 30, 2006
+.Dt ICNS2IMAGE 1
+.Os Darwin
+.Sh NAME
+.Nm icns2image
+.Nd Create image from a Mac OS X icns file
+.Sh SYNOPSIS
+.Nm
+.Op Fl vh
+.Op Fl r Ar size
+.Op Fl t Ar imageFormat
+.Ar icon
+.Ar output_file
+.Sh DESCRIPTION
+.Nm
+is a command line tool to create an image from a Mac OS X icns file
+.Pp
+The following flags are supported:
+.Bl -tag -width -indent
+.It Fl r, -representation
+Specify which representation size to convert (e.g. 128). Defaults to using the largest representation within the icns file.
+.It Fl t, -type
+Specify output image format (e.g. jpeg, png, bmp, tiff, gif)
+.It Fl v, -version
+Print program version and exit
+.It Fl h, -help
+Print help and exit
+.El
+.Sh EXAMPLES
+icns2image -t jpeg source.icns source.jpg
+.Pp
+icns2image -r 512 icon.icns icon.tiff
+.Pp
+icns2image icon.icns icon.png
+.Sh SEE ALSO
+.Xr geticon 1 ,
+.Xr iconutil 1 ,
+.Xr image2icns 1 ,
+.Xr seticon 1
+.Sh AUTHORS
+.An Sveinbjorn Thordarson <sveinbjornt@gmail.com>
