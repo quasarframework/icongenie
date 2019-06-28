@@ -33,6 +33,13 @@ A final note: You should always pad your icon design with about 1% of empty spac
 $ quasar ext add @quasar/icon-genie
 ```
 
+> **NOTE** If you have previously used @quasar/icon-factory, it is recommended to switch over to @quasar/icon-genie, as it will continue to be maintained, and gain extra features in the future. @quasar/icon-factory _should_ continue to work as it currently does, but isn't maintained. Simply remove @quasar/icon-factory before adding @quasar/icon-genie:
+
+```bash
+$ quasar ext remove @quasar/icon-factory
+$ quasar ext add @quasar/icon-genie
+```
+
 If you are on Windows and seeing an error the likes of `pngquant failed to build, make sure that libpng-dev is installed`, please do the following:
 
 ```
