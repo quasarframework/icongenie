@@ -232,6 +232,13 @@ If you discover a security issue, please contact us via email: `security@quasar-
 ## Known Issues
 We have discovered a rare edge case, where the icns file is malformed on some MacOS systems - but only when using electron-builder. If you run into this, please help us triage by leaving a report at [this issue](https://github.com/quasarframework/app-extension-icon-genie/issues/73)
 
+### `Error spawn ../node_modules/optipng-bin/vendor/optipng ENOENT`
+If you build the Quasar and an icon-genie in the Docker, here is the solution how to workaround an issue [Error: spawn ../node_modules/optipng-bin/vendor/optipng ENOENT](https://github.com/imagemin/optipng-bin/issues/84) on Alpine Linux image in the Docker
+
+1. Create a `.dockerignore` file in the filder where where your `Dockefile` is placed and exclude `node_modules`:
+`./client/node_modules`
+2. Install the following packages in the docker image 
+`RUN apk --no-cache add pkgconfig autoconf automake libtool nasm build-base zlib-dev`
 
 ## Contributing
 You are welcome to join this project. Please file issues and make PRs! Let us know how it goes and join us at our [discord server](https://discord.gg/5TDhbDg) to talk shop.
