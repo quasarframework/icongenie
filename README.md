@@ -275,7 +275,8 @@ You are welcome to join this project. Please file issues and make PRs! Let us kn
 ## Thanks to
 - [image-trace-loader](https://github.com/EmilTholin/image-trace-loader)
 - the [image-min](https://github.com/imagemin) team
-- @TobyMosque, @maxMatteo, @Robin, @Rob, @trendchaser4u, @bloo_df
+- the incredible work and dedication of @mn4367 and the [[`png2icons`](https://github.com/idesis-gmbh/png2icons)
+- @TobyMosque, @maxMatteo, @Robin, @Rob, @trendchaser4u, @bloo_df, @mn4367 
 
 
 ## Naming
