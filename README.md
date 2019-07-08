@@ -24,7 +24,7 @@ A final note: You should always pad your icon design with about 1% of empty spac
 - node / yarn
 - Linux, MacOS or Windows
 - A square image in png format that is at least 1240px x 1240px (much bigger will merely slow down the conversions)
-- @quasar/cli version 1.0.0-rc.2 or later (if building a new project) or @quasar/app v1.0.0-beta.25 or later in order to add this module as an app-extension.
+- @quasar/cli version 1.0.0 or later (if building a new project) or @quasar/app v1.0.0 or later in order to add this module as an app-extension.
 
 
 ### Install as an App Extension (Quasar v1.0+)
@@ -73,7 +73,7 @@ Then choose a minification strategy:
 
 > Note: we recommend using pngquant for dev because it is the fastest minification. Other targets will take more time, but that is highly dependent on both the mode and the underlying hardware.
 
-You will be asked the same question for production. Our recommendation is to choose `optipng`. It has the best time / quality trade-off for a lossless minification - but `zopfli` WILL shave off a bit more bytes.
+You will be asked the same question for production. Our recommendation is to choose `optipng`. It has the best time / quality trade-off for a lossless minification - but `zopfli` WILL shave off a bit more bytes (at the cost of taking much, much longer).
 
 You will also be asked for a background color. This is used in the few cases that a background is required, as with Cordova splashscreens and Cordova iOS icons.
 
@@ -92,7 +92,7 @@ The final option during the install phase is to "always rebuild", which is usefu
 The icon-genie makes an intermediary folder in the `node_modules/@quasar/icon-genie/tmp` folder to host the images when you switch between dev and build. If you haven't changed the source icon, these will merely be copied to the right destination folders. 
 
 ### Changing the Source Image
-If you don't change the source image for the icon or the splashscreen, you will see a default iamge that reminds you to do this. 
+If you don't change the source image for the icon or the splashscreen, you will see a default image that reminds you to do this. 
 Any time you change the source image, its hash won't match what is recorded in the settings - so it will trigger a rebuild.
 
 ### Changing the Settings
@@ -137,6 +137,7 @@ There are five composed "recipes" that will create icons for you and place them 
 
 - **cordova** (all icons, splashscreens, iOS & Android)
 - **electron** (all platforms)
+- **proton** (all platforms)
 - **pwa**, **spa**, **ssr** (incl. chrome special icon name, favicon)
 - **kitchensink** (all icons, all platforms)
 
@@ -173,15 +174,11 @@ This is why it is recommended to use pngquant during development (to have a prox
 These are notoriously difficult to acquire and make. For icns you usually need a mac and ico is really just a sequence of images with a special header - but there are very few tools that will let you do both cross-platform - and this is one case where we needed several tools. 
 
 This module uses the amazing [`png2icons`](https://github.com/idesis-gmbh/png2icons) module, which actually does all of the decoding and encoding on a byte-level with javascript. This of course takes a bit of time, but it also works cross-platform, so please think about going over there and giving those devs a :star:. This is actually one of the slowest parts of the `kitchensink` and the files are huge. By feeding it from the `sharp` buffer it has been sped up a little bit (and the final icns file is actually about 20% smaller!)
-
-To make the favicon.ico, it uses [`to-ico`](https://github.com/kevva/to-ico) and concats a 16x16 and a 32x32 png.
  
 
 ## SVG
 The `safari-pinned-tab.svg` mask is created by adding contrast (via threshold) to the original and then applying even more threshold to the SVG tracing.
  
-If you are indeed of a discerning nature (and have used gradients in your icon design), there is another option available to you:svg-duochrome. It too will be created in the spa folder within the spa task, but it will be up to you to rename it to `safari-pinned-tab.svg`. Be forewarned, that gradients used in a duochrome svg have a very particular character - and you will have a very large file.
-
 To make these SVG's as small as possible, they are compressed with SVGO. There are no scripts or remote resources included in these SVG assets.
 
 ## CLI Usage
@@ -206,7 +203,7 @@ useful for other build pipelines.
 Flags:    
   -p, --preset      Choose a preset output or make your own
                     [minify|splash|svg|favicon]
-                    [spa|pwa|cordova|electron|kitchensink|custom]
+                    [spa|pwa|cordova|proton|electron|kitchensink|custom]
   -s, --source      Your source image as a large square png
   -t, --target      The destination directory for the files created
   -o, --options     path to file that overrides defaults (if custom)
@@ -237,14 +234,15 @@ This library only permits the usage of `.png` files as the source, and there is 
 If you discover a security issue, please contact us via email: `security@quasar-framework.org`
 
 ## Known Issues
-We have discovered a rare edge case, where the icns file is malformed on some MacOS systems - but only when using electron-builder. If you run into this, please help us triage by leaving a report at [this issue](https://github.com/quasarframework/app-extension-icon-genie/issues/73)
 
-### `Error spawn ../node_modules/optipng-bin/vendor/optipng ENOENT`
-If you build the Quasar and an icon-genie in the Docker, here is the solution how to workaround an issue [Error: spawn ../node_modules/optipng-bin/vendor/optipng ENOENT](https://github.com/imagemin/optipng-bin/issues/84) on Alpine Linux image in the Docker
+### Docker 
+`Error spawn ../node_modules/optipng-bin/vendor/optipng ENOENT`
 
-1. Create a `.dockerignore` file in the filder where where your `Dockefile` is placed and exclude `node_modules`:
+If you build the Quasar and an icon-genie in a Docker environment using an Alpine Linux image, here is the solution how to workaround an issue https://github.com/imagemin/optipng-bin/issues/84
+
+1. Create a `.dockerignore` file in the folder where where your `Dockerfile` is placed and exclude `node_modules`:
 `./client/node_modules`
-2. Install the following packages in the docker image 
+2. Install the following packages in the Docker image 
 `RUN apk --no-cache add pkgconfig autoconf automake libtool nasm build-base zlib-dev`
 
 ## Contributing
@@ -286,6 +284,6 @@ We discovered very late that there is another project known as Icon Factory, so 
 
 ## Licenses
 - Code: MIT
-- © 2018: Present Daniel Thompson-Yvetot & Razvan Stoenescu
-- Original Image for icongenie: [Public Domain](https://www.publicdomainpictures.net/pictures/180000/nahled/coffee-grinder-14658946414E8.jpg)
+- © 2018 - present: Present Daniel Thompson-Yvetot & Razvan Stoenescu
+- Original Image for icon-genie: [Public Domain](https://www.publicdomainpictures.net/pictures/180000/nahled/coffee-grinder-14658946414E8.jpg)
 - Modifications: Daniel Thompson-Yvetot. CC-BY 
