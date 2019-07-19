@@ -136,7 +136,10 @@ async function run (api) {
   const buildMode = api.ctx.dev ? 'dev' : 'build'
   const modeName = api.ctx.modeName === 'ssr'
     ? (api.ctx.mode.pwa ? 'pwa' : 'spa')
-    : api.ctx.modeName
+    : api.ctx.modeName.indexOf('-') > -1
+      ? api.ctx.modeName.replace(/(\-\w)/g, m => m[1].toUpperCase())
+      : api.ctx.modeName
+  
   let splashscreenSource, splashscreenHashBasis
   const iconSource = api.resolve.app('app-icon.png')
   if (api.prompts.cordova.splashscreen_type !== 'generate') {
