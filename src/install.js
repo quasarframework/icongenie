@@ -7,7 +7,7 @@ Please consider sponsoring the development of Quasar:
 https://donate.quasar.dev`
 
 module.exports = function (api) {
-  api.compatibleWith('@quasar/app', '^1.0.0-beta.25')
+  api.compatibleWith('@quasar/app', '^1.0.0')
 
   if (!existsSync(api.resolve.app('app-icon.png'))) {
     console.log('Creating demo icon.')
