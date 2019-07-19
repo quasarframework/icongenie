@@ -37,7 +37,7 @@ useful for other build pipelines.
 Flags:    
   -p, --preset      Choose a preset output or make your own
                     [minify|splash|svg|svgduochrome|favicon]
-                    [spa|pwa|cordova|proton|electron|kitchensink|custom]
+                    [spa|pwa|cordova|proton|electron|browser-ext|kitchensink|custom]
   -s, --source      Your source image as a large square png
   -t, --target      The destination directory for the files created
   -o, --options     Path to file that overrides defaults (if custom)
@@ -126,6 +126,9 @@ switch (args.preset) {
     break
   case 'electron':
     icongenie.electron(args.source, args.target, args.minify)
+    break
+  case 'browser-ext':
+    icongenie.browserExt(args.source, args.target, args.minify)
     break
   case 'custom':
     icongenie.custom(args.source, args.target, args.options)

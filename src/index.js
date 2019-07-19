@@ -29,6 +29,9 @@ async function copyFiles (source, modeName, api) {
     case 'cordova':
       await copySync(source, api.resolve.cordova('/res'))
       break
+    case 'browserExt':
+      await copySync(source, api.resolve.browserExt('/icons'))
+      break
   }
 }
 
