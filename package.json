@@ -39,7 +39,7 @@
     "chai-files": "^1.4.0",
     "mocha": "^6.0.2",
     "prettier": "^1.16.4",
-    "snyk": "^1.135.1"
+    "snyk": "^1.221.1"
   },
   "prettier": {
     "printWidth": 100,
