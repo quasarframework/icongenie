@@ -22,10 +22,7 @@ async function copyFiles (source, modeName, api) {
       break
     case 'electron':
       await copySync(source, api.resolve.electron('/icons'))
-      break;
-    case 'proton':
-      await copySync(source, api.resolve.proton('/icons'))
-      break;
+      break
     case 'cordova':
       await copySync(source, api.resolve.cordova('/res'))
       break
@@ -64,7 +61,7 @@ Attempting to install it...
 
     execa.shellSync(`cd ${api.resolve.cordova('.')} && cordova plugin add cordova-plugin-splashscreen`)
 
-    if(!plugins.find(node => node.attrib.name === 'cordova-plugin-splashscreen')) {
+    if (!plugins.find(node => node.attrib.name === 'cordova-plugin-splashscreen')) {
       // add the splashscreen but get the right version installed
       delete require.cache[pkgPath]
       const newCordovaJson = require(pkgPath)
@@ -87,8 +84,7 @@ Attempting to install it...
           splash.set('src', `res/${jobs[job].folder}/${jobs[job].prefix}${jobs[job].suffix}`)
           doc.write({ indent: 4 })
         }
-      }
-      else { // an icon, not a splash
+      } else { // an icon, not a splash
         if (!android.find(`icon[@density="${jobs[job].density}"]`)) {
           let icon = null
           icon = et.SubElement(android, 'icon')
@@ -97,8 +93,7 @@ Attempting to install it...
           doc.write({ indent: 4 })
         }
       }
-    }
-    else if (jobs[job].platform === 'ios') {
+    } else if (jobs[job].platform === 'ios') {
       if (jobs[job].splash === true) {
         if (!ios.find(`splash[@width="${jobs[job].sizes[0][0]}"][@height="${jobs[job].sizes[0][1]}"]`)) {
           let splash = null
@@ -108,8 +103,7 @@ Attempting to install it...
           splash.set('src', `res/${jobs[job].folder}/${jobs[job].prefix}${jobs[job].suffix}`)
           doc.write({ indent: 4 })
         }
-      }
-      else { // an icon, not a splash
+      } else { // an icon, not a splash
         if (!ios.find(`icon[@width="${jobs[job].sizes[0]}"]`)) {
           let icon = null
           icon = et.SubElement(ios, 'icon')
@@ -203,7 +197,7 @@ async function run (api) {
  * Configuring the icon genie extension
  */
 module.exports = function (api) {
-  api.compatibleWith('@quasar/app', '^1.0.0-rc.1')
+  api.compatibleWith('@quasar/app', '^1.0.0')
 
   api.beforeDev(run)
   api.beforeBuild(run)

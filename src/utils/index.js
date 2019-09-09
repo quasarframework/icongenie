@@ -2,7 +2,6 @@ const
   isPng = require('is-png'),
   readChunk = require('read-chunk'),
   { createHmac } = require('crypto'),
-  { options } = require('../../lib/settings'),
   { ReadStream, existsSync } = require('fs-extra')
 
 /**
@@ -33,7 +32,7 @@ const validatePng = async function (fileName) {
  * @returns {Boolean} true if it is a valid 3 or 6 letter RGB HEX
  */
 const validateHexRGB = async function (hex) {
-  return typeof hex === "string" && /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hex)
+  return typeof hex === 'string' && /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hex)
 }
 
 /**
@@ -45,8 +44,9 @@ const validateHexRGB = async function (hex) {
  * @returns {Promise<String>} the hash of the given file
  */
 const computeHash = async function (fileName, algorithm, secret) {
-  if (!Buffer.isBuffer(secret))
+  if (!Buffer.isBuffer(secret)) {
     secret = Buffer.from(secret)
+  }
   let hmac = createHmac(algorithm, secret)
   await validatePng(fileName)
   return new Promise(resolve => {

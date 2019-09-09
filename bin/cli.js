@@ -30,28 +30,28 @@ if (args.help) {
   console.log('Quasar Icon Genie: v.' + info.version)
   console.log('     License: MIT')
   console.log(`
-The Icon Genie is a node utility to create a batch of icons for your app. 
+The Icon Genie is a node utility to create a batch of icons for your app.
 Designed to work seamlessly with the Quasar Framework, but probably
 useful for other build pipelines.
-    
-Flags:    
+
+Flags:
   -p, --preset      Choose a preset output or make your own
                     [minify|splash|svg|svgduochrome|favicon]
-                    [spa|pwa|cordova|proton|electron|bex|kitchensink|custom]
+                    [spa|pwa|cordova|electron|bex|kitchensink|custom]
   -s, --source      Your source image as a large square png
   -t, --target      The destination directory for the files created
   -o, --options     Path to file that overrides defaults (if custom)
-  -m, --minify      Minify strategy to use. 
+  -m, --minify      Minify strategy to use.
                     [pngcrush|pngquant|optipng|zopfli]
   -d, --mode        Minify mode if minify preset [folder|singlefile]
   -v, --version     Display version information
   -h, --help        Display this information
-  -l, --validate    Check the image is valid for processing 
-  
+  -l, --validate    Check the image is valid for processing
+
 Usage:
-    
-$ icongenie -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder -m=pngquant  
-$ icongenie -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlefile  
+
+$ icongenie -p=kitchensink -s=icon-1280x1280.png -t=./outputFolder -m=pngquant
+$ icongenie -p=minify -s=icon-1240x1240.png -t=./output -m=pngquant -d=singlefile
     `)
   process.exit(0)
 }
@@ -120,9 +120,6 @@ switch (args.preset) {
     break
   case 'cordova':
     icongenie.cordova(args.source, args.target, args.minify)
-    break
-  case 'proton':
-    icongenie.proton(args.source, args.target, args.minify)
     break
   case 'electron':
     icongenie.electron(args.source, args.target, args.minify)

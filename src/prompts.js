@@ -1,6 +1,6 @@
 const { validateHexRGB } = require('./utils')
 
-module.exports = function() {
+module.exports = function () {
   console.log(`PROJECT Repo and documentation:
 https://github.com/quasarframework/app-extension-icon-genie
 
