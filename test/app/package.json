@@ -1,0 +1,52 @@
+{
+  "name": "app",
+  "version": "0.0.1",
+  "description": "A Quasar Framework app",
+  "productName": "Quasar App",
+  "cordovaId": "org.cordova.quasar.app",
+  "author": "Daniel Thompson-Yvetot <35242872+nothingismagick@users.noreply.github.com>",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --ext .js,.vue src",
+    "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
+    "test:unit": "jest --updateSnapshot",
+    "test:unit:coverage": "jest --coverage",
+    "test:unit:watch": "jest --watch",
+    "test:unit:watchAll": "jest --watchAll",
+    "serve:test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
+    "concurrently:dev:jest": "concurrently -p \"[{name}]\" -n \"QUASAR,_JEST_\" -c \"quasar dev\" \"jest --watch\""
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.1.2",
+    "elementtree": "^0.1.7",
+    "quasar": "^1.0.0-beta.23"
+  },
+  "devDependencies": {
+    "@quasar/app": "^1.0.0-beta.24",
+    "@quasar/quasar-app-extension-icon-factory": "link:../../.",
+    "@quasar/quasar-app-extension-testing": "^1.0.0-rc.7",
+    "@quasar/quasar-app-extension-testing-security": "^1.0.0-alpha.5",
+    "@quasar/quasar-app-extension-testing-unit-jest": "^1.0.0-beta.23",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "devtron": "1.4.0",
+    "electron": "4.0.7",
+    "electron-debug": "2.1.0",
+    "electron-devtools-installer": "2.2.4",
+    "eslint": "^5.10.0",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-vue": "^5.0.0",
+    "strip-ansi": "=3.0.1"
+  },
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  },
+  "browserslist": [
+    "last 1 version, not dead, ie >= 11"
+  ],
+  "resolutions": {
+    "ajv": "6.8.1"
+  }
+}

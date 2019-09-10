@@ -1,0 +1,11 @@
+test
+output
+research
+node_modules
+.git
+tmp
+.github
+.idea
+.eslintrc.js
+.vscode
+.editorconfig
