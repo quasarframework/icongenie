@@ -4,6 +4,7 @@
   "description": "A Quasar Framework app",
   "productName": "Quasar App",
   "cordovaId": "org.cordova.quasar.app",
+  "capacitorId": "org.capacitor.quasar.app",
   "author": "Daniel Thompson-Yvetot <35242872+nothingismagick@users.noreply.github.com>",
   "private": true,
   "scripts": {

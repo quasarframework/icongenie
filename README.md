@@ -8,7 +8,7 @@
 
 # @quasar/icon-genie
 
-This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens for Cordova and even a minified svg.
+This node module outputs a set of **SQUARE** favicons, webicons, pwa-icons and electron-icons as well as iOS, Windows Store and MacOS icons from an original 1240x1240 square icon that retains transparency and also **minifies** the assets. It will also create splash screens for Cordova/Capacitor and even a minified svg.
 
 It works cross-platform to generate those pesky `.icns` and `.ico` files used by Electron apps and in the case of the latter preferred by some browsers and webscrapers (favicon.ico) - even though modern development guidelines for Apple and Windows recommend using `.png`.
 
@@ -46,13 +46,13 @@ If you are on Windows and seeing an error the likes of `pngquant failed to build
 $ npm install --global --production windows-build-tools
 ```
 
-The most important part (and indeed the only reason to use this extension) is pointing it at your shiny icon (and splashscreen if you are building for Cordova.) So the first thing you are reminded of is that you need to do that!
+The most important part (and indeed the only reason to use this extension) is pointing it at your shiny icon (and splashscreen if you are building for Cordova/Capacitor.) So the first thing you are reminded of is that you need to do that!
 
 ```
 --------------------------- ATTENTION! -----------------------------
 
  You must replace app-icon.png in the root folder of your project.
- If you plan on building for Cordova, you must also replace the
+ If you plan on building for Cordova/Capacitor, you must also replace the
  app-splashscreen.png image in the same place. File details:
 
   -> app-icon.png           1240x1240   (with transparency)
@@ -75,7 +75,7 @@ Then choose a minification strategy:
 
 You will be asked the same question for production. Our recommendation is to choose `optipng`. It has the best time / quality trade-off for a lossless minification - but `zopfli` WILL shave off a bit more bytes (at the cost of taking much, much longer).
 
-You will also be asked for a background color. This is used in the few cases that a background is required, as with Cordova splashscreens and Cordova iOS icons.
+You will also be asked for a background color. This is used in the few cases that a background is required, as with Cordova/Capacitor splashscreens and Cordova/Capacitor iOS icons.
 
 ### Triggering
 The first time you start Quasar, icon-genie will create the images needed for the specific app artifacts. They will not automatically be added to git, so you will need to manage that yourself.

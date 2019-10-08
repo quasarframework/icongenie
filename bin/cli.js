@@ -37,7 +37,7 @@ useful for other build pipelines.
 Flags:
   -p, --preset      Choose a preset output or make your own
                     [minify|splash|svg|svgduochrome|favicon]
-                    [spa|pwa|cordova|electron|bex|kitchensink|custom]
+                    [spa|pwa|cordova|capacitor|electron|bex|kitchensink|custom]
   -s, --source      Your source image as a large square png
   -t, --target      The destination directory for the files created
   -o, --options     Path to file that overrides defaults (if custom)
@@ -61,7 +61,7 @@ if (!args.preset) {
   console.log('You must choose a preset or declare custom.')
   console.log(
     '  -p, --preset      [minify|splash|svg|favicon]\n' +
-      '                    [kitchensink|spa|pwa|cordova|electron|custom]\n'
+      '                    [kitchensink|spa|pwa|cordova|capacitor|electron|custom]\n'
   )
   process.exit(0)
 }
@@ -120,6 +120,9 @@ switch (args.preset) {
     break
   case 'cordova':
     icongenie.cordova(args.source, args.target, args.minify)
+    break
+  case 'capacitor':
+    icongenie.capacitor(args.source, args.target, args.minify)
     break
   case 'electron':
     icongenie.electron(args.source, args.target, args.minify)
