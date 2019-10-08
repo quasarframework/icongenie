@@ -7,7 +7,7 @@ https://github.com/quasarframework/app-extension-icon-genie
 --------------------------- ATTENTION! -----------------------------
 
  You must replace app-icon.png in the root folder of your project.
- If you plan on building for Cordova, you must also replace the
+ If you plan on building for Cordova/Capacitor, you must also replace the
  app-splashscreen.png image in the same place. File details:
 
   -> app-icon.png           1240x1240   (with transparency)
@@ -68,7 +68,7 @@ https://github.com/quasarframework/app-extension-icon-genie
       name: 'cordova.background_color',
       type: 'input',
       required: true,
-      message: `Please type a background color to use for Cordova Icons / Splashscreens (no transparency): `,
+      message: `Please type a background color to use for Cordova/Capacitor Icons / Splashscreens (no transparency): `,
       default: '#000074',
       validate: validateHexRGB
     },
@@ -85,7 +85,7 @@ https://github.com/quasarframework/app-extension-icon-genie
     {
       name: 'cordova.splashscreen_type',
       type: 'list',
-      message: 'Build strategy for Cordova Splashscreen:',
+      message: 'Build strategy for Cordova/Capacitor Splashscreen:',
       choices: [
         {
           name: 'Use app-splashscreen.png as-is',

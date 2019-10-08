@@ -26,6 +26,9 @@ async function copyFiles (source, modeName, api) {
     case 'cordova':
       await copySync(source, api.resolve.cordova('/res'))
       break
+    case 'capacitor':
+      await copySync(source, api.resolve.capacitor('.'))
+      break
     case 'bex':
       await copySync(source, api.resolve.bex('/icons'))
       break
@@ -145,11 +148,14 @@ async function run (api) {
   const currentConfig = {
     iconHash: await computeHash(iconSource, 'md5', 'icon-genie!!!')
   }
-  modeName === 'cordova' && Object.assign(currentConfig, {
-    splashscreenHash: splashscreenHashBasis,
-    splashscreenType: api.prompts.cordova.splashscreen_type,
-    backgroundColor: api.prompts.cordova.background_color
-  })
+
+  if (['cordova', 'capacitor'].includes(modeName)) {
+    Object.assign(currentConfig, {
+      splashscreenHash: splashscreenHashBasis,
+      splashscreenType: api.prompts.cordova.splashscreen_type,
+      backgroundColor: api.prompts.cordova.background_color
+    })
+  }
 
   if (
     api.prompts.build_always === true ||
@@ -165,6 +171,20 @@ async function run (api) {
         await validatePng(splashscreenSource)
       }
       await updateCordovaConfig(api)
+
+      Object.assign(opts, {
+        background_color: validateHexRGB(currentConfig.backgroundColor)
+          ? currentConfig.backgroundColor
+          : '#000000',
+        // theme_color: validateHexRGB(api.prompts.theme_color) ?
+        //  api.prompts.theme_color : '#ffffff'
+        splashscreen_type: currentConfig.splashscreenType
+      })
+    }
+    else if (modeName === 'capacitor') {
+      if (api.prompts.cordova.splashscreen_type !== 'generate') {
+        await validatePng(splashscreenSource)
+      }
 
       Object.assign(opts, {
         background_color: validateHexRGB(currentConfig.backgroundColor)
