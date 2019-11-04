@@ -1,6 +1,6 @@
 const { join } = require('path')
+const { spawnSync } = require('./utils/spawn.js')
 const icongenie = require('../lib/index.js')
-const execa = require('execa')
 const settings = require('../lib/settings')
 const { copySync, existsSync, readFileSync, writeFileSync } = require('fs-extra')
 const { validatePng, computeHash, validateHexRGB } = require('./utils')
@@ -62,7 +62,13 @@ Splashscreens for Cordova requires a Cordova plugin
 Attempting to install it...
 `)
 
-    execa.shellSync(`cd ${api.resolve.cordova('.')} && cordova plugin add cordova-plugin-splashscreen`)
+    spawnSync('cordova', [ 'plugin', 'add', 'cordova-plugin-splashscreen' ], {
+      cwd: api.resolve.cordova('.')
+    }, () => {
+      console.log()
+      console.error('Failed to install cordova-plugin-splashscreen. Please do it manually.')
+      console.log()
+    })
 
     if (!plugins.find(node => node.attrib.name === 'cordova-plugin-splashscreen')) {
       // add the splashscreen but get the right version installed
