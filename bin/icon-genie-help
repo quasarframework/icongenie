@@ -17,5 +17,7 @@ console.log(`
   Commands
     generate, g   Generate App Icons
     info, i       Display info about your Quasar App icons
+    sample, s     Creates sample source files for icons and
+                  splashscreens
     help, h       Displays this message
 `)

@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+
+const parseArgs = require('minimist')
+
+const argv = parseArgs(process.argv.slice(2), {
+  alias: {
+    h: 'help'
+  },
+  boolean: ['h']
+})
+
+if (argv.help) {
+  console.log(`
+  Description
+    Creates sample source files for icons and for splashcreens
+    in the current directory.
+
+  Usage
+    $ icon-genie sample
+
+  Options
+    --help, -h     Displays this message
+  `)
+  process.exit(0)
+}
+
+const { join } = require('path')
+const fse = require('fs-extra')
+
+const { log } = require('../lib/logger')
+
+const source = join(__dirname, '../samples')
+const dest = process.cwd()
+
+const samples = [
+  'app-icon.png',
+  'app-splashscreen.png'
+]
+
+samples.forEach(file => {
+  fse.copy(
+    join(source, file),
+    dest
+  )
+
+  log(`Generated "${file}" in current directory`)
+})
+
+console.log()
