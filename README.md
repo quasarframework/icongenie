@@ -2,15 +2,17 @@
 
 # Quasar Framework Icon Genie
 
-> A Quasar tool for generating all your App's icons
+> A Quasar tool for generating all your Quasar App's icons
+>
+> Note: **Icon Genie v2 is in the works**
 
+<!--
 <img src="https://img.shields.io/npm/v/%40quasar/icon-genie.svg?label=@quasar/icon-genie">
+-->
 
 [![Join the chat at https://chat.quasar.dev](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://chat.quasar.dev)
 <a href="https://forum.quasar.dev" target="_blank"><img src="https://img.shields.io/badge/community-forum-brightgreen.svg"></a>
 [![https://good-labs.github.io/greater-good-affirmation/assets/images/badge.svg](https://good-labs.github.io/greater-good-affirmation/assets/images/badge.svg)](https://good-labs.github.io/greater-good-affirmation)
-
-Please submit a PR to https://github.com/quasarframework/quasar-awesome with your website/app/Quasar tutorial/video etc. Thank you!
 
 ## What is Icon Genie
 
@@ -46,7 +48,7 @@ Ask questions at the official community Discord server: [https://chat.quasar.dev
 Ask questions at the official community forum: [https://forum.quasar.dev](https://forum.quasar.dev)
 
 ## Semver
-Quasar is following [Semantic Versioning 2.0](https://semver.org/).
+Quasar Icon Genie is following [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 
