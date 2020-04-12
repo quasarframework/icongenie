@@ -1,7 +1,0 @@
-https://developer.apple.com/macos/human-interface-guidelines/icons-and-images/app-icon/
-
-512px × 512px (512pt × 512pt @1x)	1024px × 1024px (512pt × 512pt @2x)
-256px × 256px (256pt × 256pt @1x)	512px × 512px (256pt × 256pt @2x)
-128px × 128px (128pt × 128pt @1x)	256px × 256px (128pt × 128pt @2x)
-32px × 32px (32pt × 32pt @1x)	64px × 64px (32pt × 32pt @2x)
-16px × 16px (16pt × 16pt @1x)	32px × 32px (16pt × 16pt @2x)

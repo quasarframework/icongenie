@@ -1,64 +1,41 @@
 {
-  "name": "@quasar/quasar-app-extension-icon-genie",
-  "version": "1.1.3",
-  "description": "A Quasar CLI Extension for Making All Your Icons",
-  "license": "MIT",
-  "author": "Daniel Thompson-Yvetot <35242872+nothingismagick@users.noreply.github.com>",
-  "repository": "git@github.com:quasarframework/app-extension-icon-genie.git",
-  "main": "src/index.js",
+  "name": "@quasar/icon-genie",
+  "version": "2.0.0",
+  "description": "A Quasar tool for generating all your App's icons",
   "bin": {
-    "icongenie": "./bin/cli.js"
+    "icon-genie": "./bin/icon-genie"
   },
-  "scripts": {
-    "lint": "eslint --ext .js,.vue src",
-    "lint-fix": "eslint --ext .js,.vue src --fix",
-    "format": "prettier --write bin/*.js lib/*.js src/*.js test/*.js",
-    "test": "mocha --reporter spec test/__tests__/test.js"
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quasarframework/icon-genie.git"
   },
-  "publishConfig": {
-    "access": "public"
+  "keywords": [
+    "vuejs",
+    "vue",
+    "icons",
+    "quasar",
+    "js",
+    "phone",
+    "tablet",
+    "desktop",
+    "spa",
+    "pwa",
+    "website",
+    "electron",
+    "bex"
+  ],
+  "authors": [
+    "Razvan Stoenescu <razvan.stoenescu@gmail.com>",
+    "Daniel Thompson-Yvetot <35242872+nothingismagick@users.noreply.github.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/quasarframework/icon-genie/issues"
   },
+  "homepage": "https://quasar.dev/options/app-icons",
   "dependencies": {
-    "elementtree": "^0.1.7",
-    "fs-extra": "^8.1.0",
-    "imagemin": "^7.0.1",
-    "imagemin-optipng": "^7.0.0",
-    "imagemin-pngcrush": "^6.0.0",
-    "imagemin-pngquant": "^8.0.0",
-    "imagemin-zopfli": "^6.0.0",
-    "is-png": "^2.0.0",
-    "minimist": "^1.2.0",
-    "png2icons": "^2.0.1",
-    "potrace": "^2.1.2",
-    "read-chunk": "^3.2.0",
-    "sharp": "^0.23.3",
-    "svgo": "^1.3.0"
-  },
-  "devDependencies": {
-    "@vue/eslint-config-standard": "^4.0.0",
-    "babel-eslint": "^10.0.3",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "chai-files": "^1.4.0",
-    "eslint": "^6.3.0",
-    "eslint-loader": "^3.0.0",
-    "eslint-plugin-vue": "^5.2.3",
-    "mocha": "^6.2.0",
-    "prettier": "^1.18.2",
-    "snyk": "^1.226.1"
-  },
-  "prettier": {
-    "printWidth": 100,
-    "semi": false,
-    "singleQuote": true
-  },
-  "funding": {
-    "type": "github",
-    "url": "https://donate.quasar.dev"
-  },
-  "engines": {
-    "node": ">= 8.9.0",
-    "npm": ">= 5.6.0",
-    "yarn": ">= 1.6.0"
+    "chalk": "^4.0.0",
+    "minimist": "^1.2.5"
   }
 }
