@@ -6,6 +6,8 @@ const { log, warn } = require('../lib/logger')
 
 const argv = parseArgs(process.argv.slice(2), {
   alias: {
+    i: 'icon',
+    s: 'splashscreen',
     m: 'mode',
     T: 'target', // cordova/capacitor mode only
     h: 'help'
@@ -25,8 +27,8 @@ if (argv.help) {
 
   Usage
     # generate icons for all installed Quasar modes
-    $ icon-genie generate
-    $ icon-genie g
+    $ icon-genie generate -i /path/to/source-icon.png
+    $ icon-genie g -i /path/to/source-icon.png
 
     # generate for (as example) PWA mode only
     $ icon-genie generate -m pwa
@@ -42,4 +44,8 @@ if (argv.help) {
   process.exit(0)
 }
 
+const appPaths = require('../lib/app-paths')
+
 console.log()
+
+// -i required

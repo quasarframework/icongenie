@@ -21,4 +21,6 @@ if (argv.help) {
   process.exit(0)
 }
 
+const appPaths = require('../lib/app-paths')
+
 console.log()
