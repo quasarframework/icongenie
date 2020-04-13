@@ -75,7 +75,7 @@ if (argv.help) {
   process.exit(0)
 }
 
-const parseArgv = require('../lib/ensure-argv')
+const parseArgv = require('../lib/parse-argv')
 parseArgv(argv, [ 'mode', 'icon', 'splashscreen', 'algorithm', 'type', 'bgcolor' ])
 
 const { join } = require('path')
@@ -84,12 +84,22 @@ const { log, warn } = require('../lib/logger')
 const { appDir } = require('../lib/app-paths')
 const { getAllModes, Mode } = require('../lib/modes')
 
+let files = []
 const modes = argv.mode !== 'all'
   ? [ new Mode(argv.mode, appDir) ]
   : getAllModes(appDir)
 
 modes.forEach(mode => {
   if (mode.isInstalled) {
-    showLog(mode)
+    files = files.concat(mode.files)
   }
 })
+
+const generateFile = require('../lib/generate-file')
+
+console.log(' Working...\n')
+
+files
+  // unique:
+  .filter((value, index, self) => self.indexOf(value) === index)
+  .forEach(file => { generateFile(file, argv) })
