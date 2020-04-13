@@ -10,6 +10,7 @@ const argv = parseArgs(process.argv.slice(2), {
     a: 'algorithm',
     b: 'bgcolor', // Cordova/Capacitor mode only
     t: 'type',    // Cordova/Capacitor mode only
+    c: 'color',   // theme color
     h: 'help'
   },
   boolean: ['h'],
@@ -18,7 +19,8 @@ const argv = parseArgs(process.argv.slice(2), {
     m: 'all',
     a: 'pngcrush',
     b: '#000074',
-    t: 'pure'
+    t: 'pure',
+    c: '#1976D2'
   }
 })
 
@@ -55,6 +57,8 @@ if (argv.help) {
                           optipng   => quality: lossless+  | time: 4x
                           pngcrush  => quality: lossless+  | time: 10x
                           zopfli    => quality: lossless++ | time: 80x
+    --color, -c         Theme color; used to generate the svgs
+                          (default: '#1976D2')
 
     --help, -h          Displays this message
 
@@ -75,14 +79,15 @@ if (argv.help) {
   process.exit(0)
 }
 
-const parseArgv = require('../lib/parse-argv')
-parseArgv(argv, [ 'mode', 'icon', 'splashscreen', 'algorithm', 'type', 'bgcolor' ])
-
-const { join } = require('path')
-const { log, warn } = require('../lib/logger')
-
 const { appDir } = require('../lib/app-paths')
+const parseArgv = require('../lib/parse-argv')
+
+parseArgv(argv, [
+  'mode', 'algorithm', 'type', 'bgcolor', 'icon', 'splashscreen'
+])
+
 const { getAllModes, Mode } = require('../lib/modes')
+const getGenerateOptions = require('../lib/get-generate-options')
 
 let files = []
 const modes = argv.mode !== 'all'
@@ -95,11 +100,12 @@ modes.forEach(mode => {
   }
 })
 
-const generateFile = require('../lib/generate-file')
-
 console.log(' Working...\n')
+
+const generateFile = require('../lib/generate-file')
+const generateOptions = getGenerateOptions(argv)
 
 files
   // unique:
   .filter((value, index, self) => self.indexOf(value) === index)
-  .forEach(file => { generateFile(file, argv) })
+  .forEach(file => { generateFile(file, generateOptions) })
