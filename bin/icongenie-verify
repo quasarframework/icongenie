@@ -7,7 +7,10 @@ const argv = parseArgs(process.argv.slice(2), {
     m: 'mode',
     h: 'help'
   },
-  boolean: ['h']
+  boolean: ['h'],
+  default: {
+    m: 'all'
+  }
 })
 
 if (argv.help) {
@@ -31,11 +34,10 @@ if (argv.help) {
 const fs = require('fs')
 const { green, red, underline } = require('chalk')
 
-const { warn } = require('../lib/logger')
 const { appDir } = require('../lib/app-paths')
-const { modesList, getAllModes, Mode } = require('../lib/modes')
+const { getAllModes, Mode } = require('../lib/modes')
 
-function showMode (mode) {
+function showLog (mode) {
   console.log(` ${green(underline(`Mode ${mode.name.toUpperCase()}`))} \n`)
 
   mode.files.forEach(file => {
@@ -45,17 +47,15 @@ function showMode (mode) {
   console.log()
 }
 
-if (argv.mode && !modesList.includes(argv.mode)) {
-  warn(`Invalid mode specified`)
-  process.exit(1)
-}
+const parseArgv = require('../lib/parse-argv')
+parseArgv(argv, [ 'mode' ])
 
-const modes = argv.mode
+const modes = argv.mode !== 'all'
   ? [ new Mode(argv.mode, appDir) ]
   : getAllModes(appDir)
 
 modes.forEach(mode => {
   if (mode.isInstalled) {
-    showMode(mode)
+    showLog(mode)
   }
 })

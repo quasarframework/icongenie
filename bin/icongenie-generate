@@ -13,7 +13,7 @@ const argv = parseArgs(process.argv.slice(2), {
     h: 'help'
   },
   boolean: ['h'],
-  string: ['m', 'T'],
+  string: ['i', 's', 'm', 'a', 'b', 't'],
   default: {
     m: 'all',
     a: 'pngcrush',
@@ -50,10 +50,6 @@ if (argv.help) {
                           - a .png file
                           - have resolution: 1240x1240px
                           - with transparency
-    --splashscreen, -s  Path to source file for splashscreens; must be:
-                          - a .png file
-                          - have resolution: 2436x2436px
-                          - transparency is optional
     --algorithm, -a     Minify algorithm to use: (default is "pngcrush")
                           pngquant  => quality: lossy      | time: 1x
                           optipng   => quality: lossless+  | time: 4x
@@ -63,27 +59,37 @@ if (argv.help) {
     --help, -h          Displays this message
 
     Only for Cordova/Capacitor mode:
-    --bgcolor, -b       Background color for icons and splashscreen
-                          - no transparency allowed
-                          - default: #000074
+    --splashscreen, -s  Path to source file for splashscreens; must be:
+                          - a .png file
+                          - have resolution: 2436x2436px
+                          - transparency is optional
     --type, -t          Build strategy for splashscreens: (default is "pure")
                           pure    => Use app-splashscreen.png as-is
                           bg      => Generate with background color and icon
                           overlay => Overlay app-icon.png centered on top of
                                      app-splashscreen.png
+    --bgcolor, -b       Background color for icons and splashscreen
+                          - no transparency allowed
+                          - default: #000074
   `)
   process.exit(0)
 }
 
-const { join } = require('path')
+const parseArgv = require('../lib/ensure-argv')
+parseArgv(argv, [ 'mode', 'icon', 'splashscreen', 'algorithm', 'type', 'bgcolor' ])
 
-const { appDir } = require('../lib/app-paths')
+const { join } = require('path')
 const { log, warn } = require('../lib/logger')
 
-if (!argv.icon) {
-  argv.icon = join(__dirname, '../samples/app-icon.png')
-}
+const { appDir } = require('../lib/app-paths')
+const { getAllModes, Mode } = require('../lib/modes')
 
-if (!argv.splashscreen) {
-  argv.splashscreen = join(__dirname, '../samples/app-splashscreen.png')
-}
+const modes = argv.mode !== 'all'
+  ? [ new Mode(argv.mode, appDir) ]
+  : getAllModes(appDir)
+
+modes.forEach(mode => {
+  if (mode.isInstalled) {
+    showLog(mode)
+  }
+})
