@@ -4,6 +4,7 @@ const parseArgs = require('minimist')
 
 const argv = parseArgs(process.argv.slice(2), {
   alias: {
+    m: 'mode',
     h: 'help'
   },
   boolean: ['h']
@@ -18,6 +19,10 @@ if (argv.help) {
     $ icongenie verify
 
   Options
+    --mode, -m     For which Quasar mode to generate icon files
+                   (if no mode is specified, it detects what modes
+                   are installed and verifies all them)
+                      [all|spa|ssr|pwa|cordova|capacitor|electron|bex]
     --help, -h     Displays this message
   `)
   process.exit(0)
@@ -26,8 +31,9 @@ if (argv.help) {
 const fs = require('fs')
 const { green, red, underline } = require('chalk')
 
+const { warn } = require('../lib/logger')
 const { appDir } = require('../lib/app-paths')
-const { getAllModes } = require('../lib/modes')
+const { modesList, getAllModes, Mode } = require('../lib/modes')
 
 function showMode (mode) {
   console.log(` ${green(underline(`Mode ${mode.name.toUpperCase()}`))} \n`)
@@ -39,7 +45,16 @@ function showMode (mode) {
   console.log()
 }
 
-getAllModes(appDir).forEach(mode => {
+if (argv.mode && !modesList.includes(argv.mode)) {
+  warn(`Invalid mode specified`)
+  process.exit(1)
+}
+
+const modes = argv.mode
+  ? [ new Mode(argv.mode, appDir) ]
+  : getAllModes(appDir)
+
+modes.forEach(mode => {
   if (mode.isInstalled) {
     showMode(mode)
   }
