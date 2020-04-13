@@ -23,28 +23,24 @@ if (argv.help) {
   process.exit(0)
 }
 
-const { green, grey } = require('chalk')
+const fs = require('fs')
+const { green, red, underline } = require('chalk')
+
+const { appDir } = require('../lib/app-paths')
 const { getAllModes } = require('../lib/modes')
-const { log } = require('../lib/logger')
 
-function displayModes () {
-  const modes = getAllModes()
-  const info = []
+function showMode (mode) {
+  console.log(` ${green(underline(`Mode ${mode.name.toUpperCase()}`))} \n`)
 
-  modes.forEach(mode => {
-    if (mode.isInstalled) {
-      info.push([
-        `Mode ${mode.name.toUpperCase()}`,
-        mode.isInstalled ? green('yes') : grey('no')
-      ])
-    }
+  mode.files.forEach(file => {
+    console.log(` ${fs.existsSync(file.absoluteName) ? green('OK') : red('missing!')} - ${file.relativeName}`)
   })
 
-  console.log(
-    '\n' +
-    info.map(msg => ' ' + msg[0].padEnd(16, '.') + ' ' + msg[1]).join('\n') +
-    '\n'
-  )
+  console.log()
 }
 
-displayModes()
+getAllModes(appDir).forEach(mode => {
+  if (mode.isInstalled) {
+    showMode(mode)
+  }
+})

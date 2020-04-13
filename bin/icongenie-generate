@@ -8,7 +8,6 @@ const argv = parseArgs(process.argv.slice(2), {
     s: 'splashscreen',
     m: 'mode',
     a: 'algorithm',
-    T: 'target',  // Cordova/Capacitor mode only
     b: 'bgcolor', // Cordova/Capacitor mode only
     t: 'type',    // Cordova/Capacitor mode only
     h: 'help'
@@ -64,10 +63,6 @@ if (argv.help) {
     --help, -h          Displays this message
 
     Only for Cordova/Capacitor mode:
-    --target, -T        (optional!) target platform - if it is not specified,
-                        then it generates for all target platforms that are
-                        installed
-                          [android|ios]
     --bgcolor, -b       Background color for icons and splashscreen
                           - no transparency allowed
                           - default: #000074
