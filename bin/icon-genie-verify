@@ -28,16 +28,16 @@ const { getAllModes } = require('../lib/modes')
 const { log } = require('../lib/logger')
 
 function displayModes () {
-  log(`Detecting installed Quasar modes...`)
-
   const modes = getAllModes()
   const info = []
 
   modes.forEach(mode => {
-    info.push([
-      `Mode ${modeName.toUpperCase()}`,
-      mode.isInstalled ? green('yes') : grey('no')
-    ])
+    if (mode.isInstalled) {
+      info.push([
+        `Mode ${mode.name.toUpperCase()}`,
+        mode.isInstalled ? green('yes') : grey('no')
+      ])
+    }
   })
 
   console.log(

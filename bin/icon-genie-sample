@@ -26,24 +26,30 @@ if (argv.help) {
 
 const { join } = require('path')
 const fse = require('fs-extra')
-
-const { log } = require('../lib/logger')
+const { green } = require('chalk')
 
 const source = join(__dirname, '../samples')
 const dest = process.cwd()
 
 const samples = [
-  'app-icon.png',
-  'app-splashscreen.png'
+  { file: 'app-icon.png', resolution: '1240x1240' },
+  { file: 'app-splashscreen.png', resolution: '2436x2436' }
 ]
 
-samples.forEach(file => {
+const samplesLen = samples.length
+
+console.log(` Generating sample source files:\n`)
+console.log(` * ${dest}`)
+samples.forEach((sample, index) => {
   fse.copy(
-    join(source, file),
-    dest
+    join(source, sample.file),
+    join(dest, sample.file)
   )
 
-  log(`Generated "${file}" in current directory`)
+  const prefix = index + 1< samplesLen
+    ? `├──`
+    : `└──`
+  console.log(` ${prefix} ${green(sample.file.padEnd(22, ' '))} -- ${sample.resolution}px`)
 })
 
 console.log()

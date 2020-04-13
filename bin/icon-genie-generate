@@ -49,11 +49,11 @@ if (argv.help) {
 
     --icon, -i          Path to source file for icons; must be:
                           - a .png file
-                          - have resolution: 1240x1240
+                          - have resolution: 1240x1240px
                           - with transparency
     --splashscreen, -s  Path to source file for splashscreens; must be:
                           - a .png file
-                          - have resolution: 2436x2436
+                          - have resolution: 2436x2436px
                           - transparency is optional
     --algorithm, -a     Minify algorithm to use: (default is "pngcrush")
                           pngquant  => quality: lossy      | time: 1x
