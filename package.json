@@ -1,14 +1,14 @@
 {
-  "name": "@quasar/icon-genie",
+  "name": "@quasar/icongenie",
   "version": "2.0.0",
   "description": "A Quasar tool for generating all your App's icons",
   "bin": {
-    "icon-genie": "./bin/icon-genie"
+    "icongenie": "./bin/icongenie"
   },
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/quasarframework/icon-genie.git"
+    "url": "git+https://github.com/quasarframework/icongenie.git"
   },
   "keywords": [
     "vuejs",
@@ -31,7 +31,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/quasarframework/icon-genie/issues"
+    "url": "https://github.com/quasarframework/icongenie/issues"
   },
   "homepage": "https://quasar.dev/options/app-icons",
   "dependencies": {

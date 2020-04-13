@@ -16,7 +16,7 @@ if (argv.help) {
     in the current directory.
 
   Usage
-    $ icon-genie sample
+    $ icongenie sample
 
   Options
     --help, -h     Displays this message

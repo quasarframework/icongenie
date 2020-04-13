@@ -31,14 +31,14 @@ if (argv.help) {
 
   Usage
     # generate icons for all installed Quasar modes
-    $ icon-genie generate -i /path/to/app-icon.png
-    $ icon-genie g -i /path/to/app-icon.png
+    $ icongenie generate -i /path/to/app-icon.png
+    $ icongenie g -i /path/to/app-icon.png
 
     # generate for (as example) PWA mode only
-    $ icon-genie generate -m pwa -i /path/to/app-icon.png
+    $ icongenie generate -m pwa -i /path/to/app-icon.png
 
     # generate for (as example) Capacitor mode only
-    $ icon-genie generate -m capacitor -T ios
+    $ icongenie generate -m capacitor -T ios
           -i /path/to/app-icon.png -s /path/to/app-splashscreen.png
 
   Options

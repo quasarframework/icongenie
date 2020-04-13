@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
 console.log()
-console.log('  Running @quasar/icon-genie v' + require('../package.json').version)
+console.log('  Running @quasar/icongenie v' + require('../package.json').version)
 
 console.log(`
   Example usage
-    $ icon-genie <command> <options>
+    $ icongenie <command> <options>
 
   Help for a command
-    $ icon-genie <command> --help
-    $ icon-genie <command> -h
+    $ icongenie <command> --help
+    $ icongenie <command> -h
 
   Options
     --version, -v Print Quasar Icon Genie CLI version

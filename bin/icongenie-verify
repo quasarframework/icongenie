@@ -15,7 +15,7 @@ if (argv.help) {
     Verifies your Quasar App's icons for all installed modes.
 
   Usage
-    $ icon-genie verify
+    $ icongenie verify
 
   Options
     --help, -h     Displays this message

@@ -7,7 +7,7 @@
 > Note: **Icon Genie v2 is in the works**
 
 <!--
-<img src="https://img.shields.io/npm/v/%40quasar/icon-genie.svg?label=@quasar/icon-genie">
+<img src="https://img.shields.io/npm/v/%40quasar/icongenie.svg?label=@quasar/icongenie">
 -->
 
 [![Join the chat at https://chat.quasar.dev](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://chat.quasar.dev)
