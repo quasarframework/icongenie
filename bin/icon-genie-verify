@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+
+const parseArgs = require('minimist')
+
+const argv = parseArgs(process.argv.slice(2), {
+  alias: {
+    h: 'help'
+  },
+  boolean: ['h']
+})
+
+if (argv.help) {
+  console.log(`
+  Description
+    Verifies your Quasar App's icons for all installed modes.
+
+  Usage
+    $ icon-genie verify
+
+  Options
+    --help, -h     Displays this message
+  `)
+  process.exit(0)
+}
+
+const { green, grey } = require('chalk')
+const { getAllModes } = require('../lib/modes')
+const { log } = require('../lib/logger')
+
+function displayModes () {
+  log(`Detecting installed Quasar modes...`)
+
+  const modes = getAllModes()
+  const info = []
+
+  modes.forEach(mode => {
+    info.push([
+      `Mode ${modeName.toUpperCase()}`,
+      mode.isInstalled ? green('yes') : grey('no')
+    ])
+  })
+
+  console.log(
+    '\n' +
+    info.map(msg => ' ' + msg[0].padEnd(16, '.') + ' ' + msg[1]).join('\n') +
+    '\n'
+  )
+}
+
+displayModes()

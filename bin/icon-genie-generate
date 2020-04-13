@@ -7,13 +7,19 @@ const argv = parseArgs(process.argv.slice(2), {
     i: 'icon',
     s: 'splashscreen',
     m: 'mode',
-    T: 'target', // cordova/capacitor mode only
+    a: 'algorithm',
+    T: 'target',  // Cordova/Capacitor mode only
+    b: 'bgcolor', // Cordova/Capacitor mode only
+    t: 'type',    // Cordova/Capacitor mode only
     h: 'help'
   },
   boolean: ['h'],
   string: ['m', 'T'],
   default: {
-    m: 'all'
+    m: 'all',
+    a: 'pngcrush',
+    b: '#000074',
+    t: 'pure'
   }
 })
 
@@ -32,7 +38,8 @@ if (argv.help) {
     $ icon-genie generate -m pwa -i /path/to/app-icon.png
 
     # generate for (as example) Capacitor mode only
-    $ icon-genie generate -m capacitor -T ios -i /path/to/app-icon.png -s /path/to/app-splashscreen.png
+    $ icon-genie generate -m capacitor -T ios
+          -i /path/to/app-icon.png -s /path/to/app-splashscreen.png
 
   Options
     --mode, -m          For which Quasar mode to generate icon files
@@ -40,22 +47,42 @@ if (argv.help) {
                         are installed and generates for all them)
                           [all|spa|ssr|pwa|cordova|capacitor|electron|bex]
 
-    --icon, -i          Path to source file for icons
-    --splashscreen, -s  Path to source file for splashscreens
+    --icon, -i          Path to source file for icons; must be:
+                          - a .png file
+                          - have resolution: 1240x1240
+                          - with transparency
+    --splashscreen, -s  Path to source file for splashscreens; must be:
+                          - a .png file
+                          - have resolution: 2436x2436
+                          - transparency is optional
+    --algorithm, -a     Minify algorithm to use: (default is "pngcrush")
+                          pngquant  => quality: lossy      | time: 1x
+                          optipng   => quality: lossless+  | time: 4x
+                          pngcrush  => quality: lossless+  | time: 10x
+                          zopfli    => quality: lossless++ | time: 80x
+
     --help, -h          Displays this message
 
     Only for Cordova/Capacitor mode:
-    --target, -T        (optional) target platform - if it is not specified,
+    --target, -T        (optional!) target platform - if it is not specified,
                         then it generates for all target platforms that are
                         installed
                           [android|ios]
+    --bgcolor, -b       Background color for icons and splashscreen
+                          - no transparency allowed
+                          - default: #000074
+    --type, -t          Build strategy for splashscreens: (default is "pure")
+                          pure    => Use app-splashscreen.png as-is
+                          bg      => Generate with background color and icon
+                          overlay => Overlay app-icon.png centered on top of
+                                     app-splashscreen.png
   `)
   process.exit(0)
 }
 
 const { join } = require('path')
 
-const appPaths = require('../lib/app-paths')
+const { appDir } = require('../lib/app-paths')
 const { log, warn } = require('../lib/logger')
 
 if (!argv.icon) {
