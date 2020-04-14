@@ -96,12 +96,20 @@ modes.forEach(mode => {
   }
 })
 
-console.log(' Generating files...\n')
-
+const { green } = require('chalk')
 const generateFile = require('../lib/generate-file')
 const getGenerateOptions = require('../lib/get-generate-options')
 
 const generateOptions = getGenerateOptions(argv)
+
+console.log(` Generating files with the following options:
+ ===========================================
+ Quasar mode......... ${green(argv.mode)}
+ Compression level... ${green(argv.compression)}
+ SVG theme color..... ${green(argv.color)}
+ Splashscreen bg..... ${green(argv.bgcolor)}
+ ===========================================
+`)
 
 const filePaths = {}
 files.forEach(file => {
