@@ -36,12 +36,33 @@ const { green, red, underline } = require('chalk')
 
 const { appDir } = require('../lib/app-paths')
 const { getAllModes, Mode } = require('../lib/modes')
+const { PNG_STATUS, validatePng } = require('../lib/validate-png')
 
-function showLog (mode) {
+function getFileStatus (file) {
+  if (!fs.existsSync(file.absoluteName)) {
+    return red('ERROR: missing!')
+  }
+
+  if (file.handler === 'png' || file.handler === 'splashscreen') {
+    const status = validatePng(file.absoluteName, file.resolution)
+
+    if (status === PNG_STATUS.FORMAT_ERROR) {
+      return red('ERROR: not a png!')
+    }
+
+    if (status === PNG_STATUS.RESOLUTION_ERROR) {
+      return red('ERROR: incorrect resolution!')
+    }
+  }
+
+  return green('OK')
+}
+
+function printFiles (mode) {
   console.log(` ${green(underline(`Mode ${mode.name.toUpperCase()}`))} \n`)
 
   mode.files.forEach(file => {
-    console.log(` ${fs.existsSync(file.absoluteName) ? green('OK') : red('missing!')} - ${file.relativeName}`)
+    console.log(` ${getFileStatus(file)} - ${file.relativeName}`)
   })
 
   console.log()
@@ -56,6 +77,6 @@ const modes = argv.mode !== 'all'
 
 modes.forEach(mode => {
   if (mode.isInstalled) {
-    showLog(mode)
+    printFiles(mode)
   }
 })
