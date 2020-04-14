@@ -7,17 +7,16 @@ const argv = parseArgs(process.argv.slice(2), {
     i: 'icon',
     s: 'splashscreen',
     m: 'mode',
-    a: 'algorithm',
     b: 'bgcolor', // Cordova/Capacitor mode only
     t: 'type',    // Cordova/Capacitor mode only
     c: 'color',   // theme color
     h: 'help'
   },
   boolean: ['h'],
-  string: ['i', 's', 'm', 'a', 'b', 't'],
+  string: ['i', 's', 'm', 'speed', 'b', 't'],
   default: {
     m: 'all',
-    a: 'pngcrush',
+    compression: 11,
     b: '#000074',
     t: 'pure',
     c: '#1976D2'
@@ -39,8 +38,7 @@ if (argv.help) {
     $ icongenie generate -m pwa -i /path/to/app-icon.png
 
     # generate for (as example) Capacitor mode only
-    $ icongenie generate -m capacitor -T ios
-          -i /path/to/app-icon.png -s /path/to/app-splashscreen.png
+    $ icongenie g -m capacitor -i /path/to/app-icon.png -s /path/to/app-splashscreen.png
 
   Options
     --mode, -m          For which Quasar mode to generate icon files
@@ -52,12 +50,11 @@ if (argv.help) {
                           - a .png file
                           - have resolution: 1240x1240px
                           - with transparency
-    --algorithm, -a     Minify algorithm to use: (default is "pngcrush")
-                          pngquant  => quality: lossy      | time: 1x
-                          optipng   => quality: lossless+  | time: 4x
-                          pngcrush  => quality: lossless+  | time: 10x
-                          zopfli    => quality: lossless++ | time: 80x
-    --color, -c         Theme color; used to generate the svgs
+    --compression       Compression level (0 - 11):
+                          - (default) best compression is 11 (slowest)
+                          - poorest compression is 1 (fastest)
+                          - NO compression is 0 (no overhead)
+    --color, -c         Theme color for the SVGs
                           (default: '#1976D2')
 
     --help, -h          Displays this message
@@ -73,7 +70,7 @@ if (argv.help) {
                           overlay => Overlay app-icon.png centered on top of
                                      app-splashscreen.png
     --bgcolor, -b       Background color for icons and splashscreen
-                          - no transparency allowed
+                          - hex format (not hexa); no transparency allowed
                           - default: #000074
   `)
   process.exit(0)
@@ -83,7 +80,7 @@ const { appDir } = require('../lib/app-paths')
 const parseArgv = require('../lib/parse-argv')
 
 parseArgv(argv, [
-  'mode', 'algorithm', 'type', 'bgcolor', 'icon', 'splashscreen'
+  'mode', 'compression', 'type', 'bgcolor', 'icon', 'splashscreen'
 ])
 
 const { getAllModes, Mode } = require('../lib/modes')
