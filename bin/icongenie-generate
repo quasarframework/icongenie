@@ -7,6 +7,7 @@ const argv = parseArgs(process.argv.slice(2), {
     i: 'icon',
     s: 'splashscreen',
     m: 'mode',
+    q: 'quality',
     b: 'bgcolor', // Cordova/Capacitor mode only
     t: 'type',    // Cordova/Capacitor mode only
     c: 'color',   // theme color
@@ -16,7 +17,7 @@ const argv = parseArgs(process.argv.slice(2), {
   string: ['i', 's', 'm', 'speed', 'b', 't'],
   default: {
     m: 'all',
-    compression: 11,
+    q: 5,
     b: '#000074',
     t: 'pure',
     c: '#1976D2'
@@ -50,10 +51,9 @@ if (argv.help) {
                           - a .png file
                           - have resolution: 1240x1240px
                           - with transparency
-    --compression       Compression level (0 - 11):
-                          - (default) best compression is 11 (slowest)
-                          - poorest compression is 1 (fastest)
-                          - NO compression is 0 (no overhead)
+    --quality           Quality of the files [1 - 10] (default: 5)
+                          - higher quality --> bigger filesize, slower
+                          - lower quality  --> smaller filesize, faster
     --color, -c         Theme color for the SVGs
                           (default: '#1976D2')
 
@@ -80,7 +80,7 @@ const { appDir } = require('../lib/app-paths')
 const parseArgv = require('../lib/parse-argv')
 
 parseArgv(argv, [
-  'mode', 'compression', 'type', 'bgcolor', 'icon', 'splashscreen'
+  'mode', 'quality', 'type', 'bgcolor', 'icon', 'splashscreen'
 ])
 
 const { getAllModes, Mode } = require('../lib/modes')
@@ -104,10 +104,10 @@ const generateOptions = getGenerateOptions(argv)
 
 console.log(` Generating files with the following options:
  ===========================================
- Quasar mode......... ${green(argv.mode)}
- Compression level... ${green(argv.compression)}
- SVG theme color..... ${green(argv.color)}
- Splashscreen bg..... ${green(argv.bgcolor)}
+ Quasar mode........... ${green(argv.mode)}
+ ${green('Quality level')}......... ${green(`${argv.quality}/12`)}
+ SVG theme color....... ${green(argv.color)}
+ Splashscreen bg....... ${green(argv.bgcolor)}
  ===========================================
 `)
 
