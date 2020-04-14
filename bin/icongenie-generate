@@ -87,7 +87,6 @@ parseArgv(argv, [
 ])
 
 const { getAllModes, Mode } = require('../lib/modes')
-const getGenerateOptions = require('../lib/get-generate-options')
 
 let files = []
 const modes = argv.mode !== 'all'
@@ -100,12 +99,18 @@ modes.forEach(mode => {
   }
 })
 
-console.log(' Working...\n')
+console.log(' Generating files...\n')
 
 const generateFile = require('../lib/generate-file')
+const getGenerateOptions = require('../lib/get-generate-options')
+
 const generateOptions = getGenerateOptions(argv)
 
-files
-  // unique:
-  .filter((value, index, self) => self.indexOf(value) === index)
-  .forEach(file => { generateFile(file, generateOptions) })
+const filePaths = {}
+files.forEach(file => {
+  // unique files only (modes share files)
+  if (filePaths[file.absoluteName] === void 0) {
+    filePaths[file.absoluteName] = true
+    generateFile(file, generateOptions)
+  }
+})
