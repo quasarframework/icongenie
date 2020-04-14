@@ -108,6 +108,7 @@ console.log(` Generating files with the following options:
  ${green('Quality level')}......... ${green(`${argv.quality}/12`)}
  SVG theme color....... ${green(argv.color)}
  Splashscreen bg....... ${green(argv.bgcolor)}
+ Splashscreen type..... ${green(argv.type)}
  ===========================================
 `)
 
