@@ -6,6 +6,7 @@ const argv = parseArgs(process.argv.slice(2), {
   alias: {
     m: 'mode',
     p: 'profile',
+    f: 'filter',
     h: 'help'
   },
   boolean: ['h'],
@@ -15,6 +16,9 @@ const argv = parseArgs(process.argv.slice(2), {
 })
 
 if (argv.help) {
+  const modes = Object.keys(require('../lib/modes')).join('|')
+  const generators = Object.keys(require('../lib/generators')).join('|')
+
   console.log(`
   Description
     Verifies your Quasar App's icons for all installed modes.
@@ -23,69 +27,62 @@ if (argv.help) {
     $ icongenie verify
 
   Options
-    --mode, -m  For which Quasar mode to generate icon files
-                (if no mode is specified, it detects what modes
-                are installed and verifies all them)
-                  [all|spa|ssr|pwa|cordova|capacitor|electron|bex]
+    --mode, -m      For which Quasar mode to generate icon files
+                    (if no mode is specified, it detects what modes
+                    are installed and verifies all them)
+                      [all|${modes}]
 
-    --profile   Use a JSON config file to extract the assets list.
-                Structure of the file:
-                  {
-                    assets: [ /* list of assets */ ], // << must contain it!
-                    params: { /* not important, are ignored here */ }
-                  }
+    --filter, -f    Filter the available generators; when used, it verifies
+                    only one type of asset instead of all
+                      [${generators}]
 
-    --help, -h  Displays this message
+    --profile       Use a JSON config file to extract the assets list.
+                    Structure of the file:
+                      {
+                        assets: [ /* list of assets */ ], // << must contain it!
+                        params: { /* not important, are ignored here */ }
+                      }
+
+    --help, -h      Displays this message
   `)
   process.exit(0)
 }
 
-const fs = require('fs')
-const { green, red, underline } = require('chalk')
-
-const { appDir } = require('../lib/app-paths')
-const { getAllModes, Mode } = require('../lib/modes')
-const { PNG_STATUS, validatePng } = require('../lib/validate-png')
-
-function getFileStatus (file) {
-  if (!fs.existsSync(file.absoluteName)) {
-    return red('ERROR: missing!')
-  }
-
-  if (file.handler === 'png' || file.handler === 'splashscreen') {
-    const status = validatePng(file.absoluteName, file.resolution)
-
-    if (status === PNG_STATUS.FORMAT_ERROR) {
-      return red('ERROR: not a png!')
-    }
-
-    if (status === PNG_STATUS.RESOLUTION_ERROR) {
-      return red('ERROR: incorrect resolution!')
-    }
-  }
-
-  return green('OK')
-}
-
-function printFiles (mode) {
-  console.log(` ${green(underline(`Mode ${mode.name.toUpperCase()}`))} \n`)
-
-  mode.files.forEach(file => {
-    console.log(` ${getFileStatus(file)} - ${file.relativeName}`)
-  })
-
-  console.log()
-}
-
 const parseArgv = require('../lib/parse-argv')
-parseArgv(argv, [ 'mode', 'profile' ])
+const mergeObjects = require('../lib/merge-objects')
 
-const modes = argv.mode !== 'all'
-  ? [ new Mode(argv.mode, appDir) ]
-  : getAllModes(appDir)
+const profile = {
+  params: {},
+  assets: []
+}
 
-modes.forEach(mode => {
-  if (mode.isInstalled) {
-    printFiles(mode)
+if (argv.profile) {
+  // verify "profile" param
+  parseArgv(argv, [ 'profile' ])
+
+  const getProfile = require('../lib/get-profile')
+  const userProfile = getProfile(argv.profile)
+
+  if (userProfile.params) {
+    profile.params = mergeObjects(userProfile.params, argv)
   }
-})
+  if (userProfile.assets) {
+    profile.assets = userProfile.assets
+  }
+}
+else {
+  profile.params = { ...argv }
+}
+
+// apply defaults
+const defaults = { mode: 'all' }
+profile.params = mergeObjects(defaults, profile.params)
+
+// ensure all params are valid
+parseArgv(profile.params, [
+  'mode', 'filter'
+])
+
+const verify = require('../lib/cmd/verify')
+
+verify(profile)

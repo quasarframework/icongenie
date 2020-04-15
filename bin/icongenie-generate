@@ -105,6 +105,7 @@ const profile = {
 }
 
 if (argv.profile) {
+  // verify "profile" param
   parseArgv(argv, [ 'profile' ])
 
   const getProfile = require('../lib/get-profile')
