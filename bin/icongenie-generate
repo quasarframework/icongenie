@@ -25,7 +25,12 @@ const argv = parseArgs(process.argv.slice(2), {
   }
 })
 
+const { green } = require('chalk')
+
 if (argv.help) {
+  const { modesList } = require('../lib/modes')
+  const generators = Object.keys(require('../lib/generators')).join('|')
+
   console.log(`
   Description
     Starts the app in development mode (hot-code reloading, error
@@ -43,34 +48,45 @@ if (argv.help) {
     $ icongenie g -m capacitor -i /path/to/app-icon.png -s /path/to/app-splashscreen.png
 
   Options
-    --mode, -m          For which Quasar mode to generate icon files
-                        (if no mode is specified, it detects what modes
-                        are installed and generates for all them)
-                          [all|spa|ssr|pwa|cordova|capacitor|electron|bex]
-
-    --icon, -i          Path to source file for icons; must be:
+    --icon, -i          ${green('Required')};
+                        Path to source file for icons; must be:
                           - a .png file
                           - have resolution: 1240x1240px
                           - with transparency
-    --quality           Quality of the files [1 - 10] (default: 5)
+
+    --splashscreen, -s  Only ${green('required for Cordova/Capacitor mode')};
+                        Path to source file for splashscreens; must be:
+                          - a .png file
+                          - have resolution: 2436x2436px
+                          - transparency is optional
+
+    --mode, -m          For which Quasar mode to generate icon files
+                        (if no mode is specified, it detects what modes
+                        are installed and generates for all them)
+                          [all|${modesList.join('|')}]
+
+    --filter, -f        Filter the available generators; when used, it can
+                        generate only one type of asset instead of all
+                          [${generators}]
+
+    --quality           Quality of the files [1 - 12] (default: 5)
                           - higher quality --> bigger filesize, slower
                           - lower quality  --> smaller filesize, faster
-    --color, -c         Theme color for the SVGs
+
+    --color, -c         Theme color used for the SVGs
                           (default: '#1976D2')
 
     --help, -h          Displays this message
 
     Only for Cordova/Capacitor mode:
-    --splashscreen, -s  Path to source file for splashscreens; must be:
-                          - a .png file
-                          - have resolution: 2436x2436px
-                          - transparency is optional
-    --type, -t          Build strategy for splashscreens: (default is "pure")
-                          pure    => Use app-splashscreen.png as-is
+
+    --type, -t          Splashscreens build strategy: (default is "pure")
+                          pure    => Doesn't adds bg color or overlaps the icon
                           bg      => Generate with background color and icon
-                          overlay => Overlay app-icon.png centered on top of
-                                     app-splashscreen.png
-    --bgcolor, -b       Background color for icons and splashscreen
+                          overlay => Overlay the icon source file centered on top of
+                                     the splashscreen source file
+
+    --bgcolor, -b       Background color for icons and splashscreens
                           - hex format (not hexa); no transparency allowed
                           - default: #000074
   `)
@@ -97,7 +113,6 @@ modes.forEach(mode => {
   }
 })
 
-const { green } = require('chalk')
 const generateFile = require('../lib/generate-file')
 const getGenerateOptions = require('../lib/get-generate-options')
 
