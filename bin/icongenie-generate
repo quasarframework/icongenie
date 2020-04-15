@@ -7,15 +7,15 @@ const argv = parseArgs(process.argv.slice(2), {
     i: 'icon',
     s: 'splashscreen',
     m: 'mode',
-    q: 'quality',
     f: 'filter',
-    b: 'bgcolor', // Cordova/Capacitor mode only
+    q: 'quality',
+    c: 'color',   // theme color for SVGs
     t: 'type',    // Cordova/Capacitor mode only
-    c: 'color',   // theme color
+    b: 'bgcolor', // Cordova/Capacitor mode only
     h: 'help'
   },
-  boolean: ['h'],
-  string: ['i', 's', 'm', 'speed', 'b', 't'],
+  boolean: [ 'h' ],
+  string: [ 'i', 's', 'm', 'f', 'q', 'c', 't', 'b' ],
   default: {
     m: 'all',
     q: 5,
