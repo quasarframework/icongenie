@@ -8,6 +8,7 @@ const argv = parseArgs(process.argv.slice(2), {
     s: 'splashscreen',
     m: 'mode',
     q: 'quality',
+    f: 'filter',
     b: 'bgcolor', // Cordova/Capacitor mode only
     t: 'type',    // Cordova/Capacitor mode only
     c: 'color',   // theme color
@@ -80,7 +81,7 @@ const { appDir } = require('../lib/app-paths')
 const parseArgv = require('../lib/parse-argv')
 
 parseArgv(argv, [
-  'mode', 'quality', 'type', 'bgcolor', 'icon', 'splashscreen'
+  'mode', 'quality', 'filter', 'type', 'bgcolor', 'icon', 'splashscreen'
 ])
 
 const { getAllModes, Mode } = require('../lib/modes')
@@ -105,6 +106,7 @@ const generateOptions = getGenerateOptions(argv)
 console.log(` Generating files with the following options:
  ===========================================
  Quasar mode........... ${green(argv.mode)}
+ Generator filter...... ${!argv.filter ? 'none' : green(argv.filter)}
  ${green('Quality level')}......... ${green(`${argv.quality}/12`)}
  SVG theme color....... ${green(argv.color)}
  Splashscreen bg....... ${green(argv.bgcolor)}
@@ -114,8 +116,12 @@ console.log(` Generating files with the following options:
 
 const filePaths = {}
 files.forEach(file => {
-  // unique files only (modes share files)
-  if (filePaths[file.absoluteName] === void 0) {
+  if (
+    // unique files only (modes share files):
+    filePaths[file.absoluteName] === void 0 &&
+    // we have no filter or the resource's handler matches the filter:
+    (!argv.filter || file.handler === argv.filter)
+  ) {
     filePaths[file.absoluteName] = true
     generateFile(file, generateOptions)
   }
