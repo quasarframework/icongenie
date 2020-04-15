@@ -1,0 +1,48 @@
+{
+  "params": {
+    "quality": 7
+  },
+
+  "assets": [
+    {
+      "handler": "png",
+      "name": "icon-{size}x{size}.png",
+      "folder": "src-bex/icons",
+      "sizes": [ 16, 48, 128 ]
+    },
+
+    {
+      "handler": "svg",
+      "name": "safari-pinned-tab.svg",
+      "folder": "src/statics/icons"
+    },
+
+    {
+      "handler": "icns",
+      "name": "icon.icns",
+      "folder": "src-electron/icons"
+    },
+
+    {
+      "handler": "ico",
+      "name": "icon.ico",
+      "folder": "src-electron/icons"
+    },
+
+    {
+      "handler": "splashscreen",
+      "name": "Default-Landscape-2436h.png",
+      "folder": "src-cordova/res/screen/ios",
+      "sizes": [
+        [ 2436, 1125 ]
+      ]
+    },
+
+    {
+      "handler": "png",
+      "name": "icon-{size}-mdpi.png",
+      "folder": "src-cordova/res/android",
+      "sizes": [ 48 ]
+    }
+  ]
+}

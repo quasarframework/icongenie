@@ -5,6 +5,7 @@ const parseArgs = require('minimist')
 const argv = parseArgs(process.argv.slice(2), {
   alias: {
     m: 'mode',
+    p: 'profile',
     h: 'help'
   },
   boolean: ['h'],
@@ -22,11 +23,19 @@ if (argv.help) {
     $ icongenie verify
 
   Options
-    --mode, -m     For which Quasar mode to generate icon files
-                   (if no mode is specified, it detects what modes
-                   are installed and verifies all them)
-                      [all|spa|ssr|pwa|cordova|capacitor|electron|bex]
-    --help, -h     Displays this message
+    --mode, -m  For which Quasar mode to generate icon files
+                (if no mode is specified, it detects what modes
+                are installed and verifies all them)
+                  [all|spa|ssr|pwa|cordova|capacitor|electron|bex]
+
+    --profile   Use a JSON config file to extract the assets list.
+                Structure of the file:
+                  {
+                    assets: [ /* list of assets */ ], // << must contain it!
+                    params: { /* not important, are ignored here */ }
+                  }
+
+    --help, -h  Displays this message
   `)
   process.exit(0)
 }
@@ -69,7 +78,7 @@ function printFiles (mode) {
 }
 
 const parseArgv = require('../lib/parse-argv')
-parseArgv(argv, [ 'mode' ])
+parseArgv(argv, [ 'mode', 'profile' ])
 
 const modes = argv.mode !== 'all'
   ? [ new Mode(argv.mode, appDir) ]

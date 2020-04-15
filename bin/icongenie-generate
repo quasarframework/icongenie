@@ -4,6 +4,7 @@ const parseArgs = require('minimist')
 
 const argv = parseArgs(process.argv.slice(2), {
   alias: {
+    p: 'profile', // config file
     i: 'icon',
     s: 'splashscreen',
     m: 'mode',
@@ -15,20 +16,13 @@ const argv = parseArgs(process.argv.slice(2), {
     h: 'help'
   },
   boolean: [ 'h' ],
-  string: [ 'i', 's', 'm', 'f', 'q', 'c', 't', 'b' ],
-  default: {
-    m: 'all',
-    q: 5,
-    b: '#000074',
-    t: 'pure',
-    c: '#1976D2'
-  }
+  string: [ 'i', 's', 'm', 'f', 'q', 'c', 't', 'b', 'p' ]
 })
 
 const { green } = require('chalk')
 
 if (argv.help) {
-  const { modesList } = require('../lib/modes')
+  const modes = Object.keys(require('../lib/modes')).join('|')
   const generators = Object.keys(require('../lib/generators')).join('|')
 
   console.log(`
@@ -63,7 +57,7 @@ if (argv.help) {
     --mode, -m          For which Quasar mode to generate icon files
                         (if no mode is specified, it detects what modes
                         are installed and generates for all them)
-                          [all|${modesList.join('|')}]
+                          [all|${modes}]
 
     --filter, -f        Filter the available generators; when used, it can
                         generate only one type of asset instead of all
@@ -75,6 +69,15 @@ if (argv.help) {
 
     --color, -c         Theme color used for the SVGs
                           (default: '#1976D2')
+
+    --profile           Use a JSON config file with predefined parameters and
+                        assets list. Any parameters specified along this one
+                        in the terminal will override the config file's settings.
+                        Structure of the file:
+                          {
+                            params: { /* parameter_name: parameter_value */ },
+                            assets: [ /* list of assets */ ]
+                          }
 
     --help, -h          Displays this message
 
@@ -93,51 +96,47 @@ if (argv.help) {
   process.exit(0)
 }
 
-const { appDir } = require('../lib/app-paths')
 const parseArgv = require('../lib/parse-argv')
+const mergeObjects = require('../lib/merge-objects')
 
-parseArgv(argv, [
+const profile = {
+  params: {},
+  assets: []
+}
+
+if (argv.profile) {
+  parseArgv(argv, [ 'profile' ])
+
+  const getProfile = require('../lib/get-profile')
+  const userProfile = getProfile(argv.profile)
+
+  if (userProfile.params) {
+    profile.params = mergeObjects(userProfile.params, argv)
+  }
+  if (userProfile.assets) {
+    profile.assets = userProfile.assets
+  }
+}
+else {
+  profile.params = { ...argv }
+}
+
+// apply defaults
+const defaults = {
+  mode: 'all',
+  quality: 5,
+  bgcolor: '#000074',
+  type: 'pure',
+  color: '#1976D2'
+}
+
+profile.params = mergeObjects(defaults, profile.params)
+
+// ensure all params are valid
+parseArgv(profile.params, [
   'mode', 'quality', 'filter', 'type', 'bgcolor', 'icon', 'splashscreen'
 ])
 
-const { getAllModes, Mode } = require('../lib/modes')
+const generate = require('../lib/cmd/generate')
 
-let files = []
-const modes = argv.mode !== 'all'
-  ? [ new Mode(argv.mode, appDir) ]
-  : getAllModes(appDir)
-
-modes.forEach(mode => {
-  if (mode.isInstalled) {
-    files = files.concat(mode.files)
-  }
-})
-
-const generateFile = require('../lib/generate-file')
-const getGenerateOptions = require('../lib/get-generate-options')
-
-const generateOptions = getGenerateOptions(argv)
-
-console.log(` Generating files with the following options:
- ===========================================
- Quasar mode........... ${green(argv.mode)}
- Generator filter...... ${!argv.filter ? 'none' : green(argv.filter)}
- ${green('Quality level')}......... ${green(`${argv.quality}/12`)}
- SVG theme color....... ${green(argv.color)}
- Splashscreen bg....... ${green(argv.bgcolor)}
- Splashscreen type..... ${green(argv.type)}
- ===========================================
-`)
-
-const filePaths = {}
-files.forEach(file => {
-  if (
-    // unique files only (modes share files):
-    filePaths[file.absoluteName] === void 0 &&
-    // we have no filter or the resource's handler matches the filter:
-    (!argv.filter || file.handler === argv.filter)
-  ) {
-    filePaths[file.absoluteName] = true
-    generateFile(file, generateOptions)
-  }
-})
+generate(profile)
