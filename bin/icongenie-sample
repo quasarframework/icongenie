@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
 const parseArgs = require('minimist')
+const { samplesDefinition } = require('../lib/sample-list')
+
+const types = Object.keys(samplesDefinition)
 
 const argv = parseArgs(process.argv.slice(2), {
   alias: {
@@ -10,13 +13,25 @@ const argv = parseArgs(process.argv.slice(2), {
 })
 
 if (argv.help) {
+  function getTypeExamples () {
+    return types
+      .map(type => `    $ icongenie sample ${type}`)
+      .join('\n')
+  }
+
   console.log(`
   Description
     Creates sample source files for icons and for splashcreens
     in the current directory.
 
   Usage
+    $ icongenie sample [type]
+
+    # generate a sample for all:
     $ icongenie sample
+
+    # generate specific input samples:
+${getTypeExamples()}
 
   Options
     --help, -h     Displays this message
@@ -24,8 +39,17 @@ if (argv.help) {
   process.exit(0)
 }
 
+const { warn } = require('../lib/logger')
 const sample = require('../lib/cmd/sample')
 
-sample()
+if (argv._.length > 1) {
+  warn(`Wrong number of parameters. Type "icongenie sample -h" for help`)
+}
+
+if (argv._.length === 1 && !types.includes(argv._[0])) {
+  warn(`Wrong type specified (${argv._[0]}). Type "icongenie sample -h" for help`)
+}
+
+sample(argv._[0])
 
 console.log()
