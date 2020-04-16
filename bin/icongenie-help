@@ -14,10 +14,9 @@ console.log(`
     --version, -v Print Quasar Icon Genie CLI version
 
   Commands
-    generate, g   Generate App Icons
-    verify, v     Verifies your Quasar App's icons for
-                  all installed modes
-    sample, s     Creates sample source files for icons and
+    generate, g   Generate App icons & splashscreens
+    verify, v     Verifies your Quasar App's icons &
                   splashscreens
+    sample, s     Creates sample source files
     help, h       Displays this message
 `)

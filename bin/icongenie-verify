@@ -28,8 +28,7 @@ if (argv.help) {
 
   Options
     --mode, -m      For which Quasar mode to generate icon files
-                    (if no mode is specified, it detects what modes
-                    are installed and verifies all them)
+                    (default: all)
                       [all|${modes}]
 
     --filter, -f    Filter the available generators; when used, it verifies
