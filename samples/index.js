@@ -18,7 +18,7 @@ const samplesDefinition = {
 }
 
 function getSamplePath (filename) {
-  return join(__dirname, '../samples/', filename)
+  return join(__dirname, './', filename)
 }
 
 module.exports.samplesDefinition = samplesDefinition

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const parseArgs = require('minimist')
-const { samplesDefinition } = require('../lib/sample-list')
+const { samplesDefinition } = require('../samples')
 
 const types = Object.keys(samplesDefinition)
 
@@ -39,7 +39,7 @@ ${getTypeExamples()}
   process.exit(0)
 }
 
-const { warn } = require('../lib/logger')
+const { warn } = require('../lib/utils/logger')
 const sample = require('../lib/cmd/sample')
 
 if (argv._.length > 1) {

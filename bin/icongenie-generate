@@ -96,8 +96,8 @@ if (argv.help) {
   process.exit(0)
 }
 
-const parseArgv = require('../lib/parse-argv')
-const mergeObjects = require('../lib/merge-objects')
+const parseArgv = require('../lib/utils/parse-argv')
+const mergeObjects = require('../lib/utils/merge-objects')
 
 const profile = {
   params: {},
@@ -108,7 +108,7 @@ if (argv.profile) {
   // verify "profile" param
   parseArgv(argv, [ 'profile' ])
 
-  const getProfile = require('../lib/get-profile')
+  const getProfile = require('../lib/utils/get-profile')
   const userProfile = getProfile(argv.profile)
 
   if (userProfile.params) {
