@@ -2,7 +2,7 @@
 
 # Quasar Framework Icon Genie
 
-> A Quasar tool for generating all your Quasar App's icons
+> A Quasar tool for generating all your Quasar App's icons and splashscreens
 >
 > Note: **Icon Genie v2 is in the works**
 
