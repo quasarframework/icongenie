@@ -49,20 +49,20 @@ if (argv.help) {
     --icon, -i          ${green('Required')};
                         Path to source file for icons; must be:
                           - a .png file
-                          - have resolution: 1240x1240px
+                          - min resolution: 64x64px (the higher the better!!)
                           - with transparency
 
     --landscape         Only ${green('required for Cordova/Capacitor mode')};
                         Path to landscape source file for splashscreens; must be:
                           - a .png file
-                          - have resolution as high as possible
+                          - min resolution: 128x128px (the higher the better!!)
                           - width should be HIGHER than height
                           - transparency is optional
 
     --portrait          Only ${green('required for Cordova/Capacitor mode')};
                         Path to portrait source file for splashscreens; must be:
                           - a .png file
-                          - have resolution as high as possible
+                          - min resolution: 128x128px (the higher the better!!)
                           - width should be LOWER than height
                           - transparency is optional
 
