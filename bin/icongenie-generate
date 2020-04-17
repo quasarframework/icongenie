@@ -6,17 +6,19 @@ const argv = parseArgs(process.argv.slice(2), {
   alias: {
     p: 'profile', // config file
     i: 'icon',
-    s: 'splashscreen',
     m: 'mode',
     f: 'filter',
     q: 'quality',
-    c: 'color',   // theme color for SVGs
-    t: 'type',    // Cordova/Capacitor mode only
-    b: 'bgcolor', // Cordova/Capacitor mode only
+    c: 'color', // theme color
     h: 'help'
   },
   boolean: [ 'h' ],
-  string: [ 'i', 's', 'm', 'f', 'q', 'c', 't', 'b', 'p' ]
+  string: [
+    'p', 'i', 'm', 'f', 'q', 'c', 't',
+    'landscape', // file; Cordova/Capacitor only
+    'portrait', // file; Cordova/Capacitor only
+    'splashscreen' // type; Cordova/Capacitor only
+  ]
 })
 
 const { green } = require('chalk')
@@ -36,10 +38,12 @@ if (argv.help) {
     $ icongenie g -i /path/to/icon.png
 
     # generate for (as example) PWA mode only
-    $ icongenie generate -m pwa -i /path/to/icon.png
+    $ icongenie generate -m pwa --icon /path/to/icon.png
 
     # generate for (as example) Capacitor mode only
-    $ icongenie g -m capacitor -i /path/to/icon.png -s /path/to/splashscreen.png
+    $ icongenie g -m capacitor -i
+         /path/to/icon.png --landscape /path/to/landscape.png
+         --portrait /path/to/portrait.png
 
   Options
     --icon, -i          ${green('Required')};
@@ -48,10 +52,18 @@ if (argv.help) {
                           - have resolution: 1240x1240px
                           - with transparency
 
-    --splashscreen, -s  Only ${green('required for Cordova/Capacitor mode')};
-                        Path to source file for splashscreens; must be:
+    --landscape         Only ${green('required for Cordova/Capacitor mode')};
+                        Path to landscape source file for splashscreens; must be:
                           - a .png file
-                          - have resolution: 2436x2436px
+                          - have resolution as high as possible
+                          - width should be HIGHER than height
+                          - transparency is optional
+
+    --portrait          Only ${green('required for Cordova/Capacitor mode')};
+                        Path to portrait source file for splashscreens; must be:
+                          - a .png file
+                          - have resolution as high as possible
+                          - width should be LOWER than height
                           - transparency is optional
 
     --mode, -m          For which Quasar mode to generate icon files
@@ -67,8 +79,11 @@ if (argv.help) {
                           - higher quality --> bigger filesize, slower
                           - lower quality  --> smaller filesize, faster
 
-    --color, -c         Theme color used for the SVGs
-                          (default: '#1976D2')
+    --color, -c         Theme color (default: #1976D2) to use for the
+                        monochrome SVGs, for some of the iOS icons and for
+                        mobile splashscreens background.
+                        The color must be in hex format (not hexa) and
+                        so no transparency is allowed.
 
     --profile           Use a JSON config file with predefined parameters and
                         assets list. Any parameters specified along this one
@@ -83,15 +98,11 @@ if (argv.help) {
 
     Only for Cordova/Capacitor mode:
 
-    --type, -t          Splashscreens build strategy: (default is "pure")
+    --splashscreen      Splashscreens build strategy: (default is "pure")
                           pure    => Doesn't adds bg color or overlaps the icon
                           bg      => Generate with background color and icon
                           overlay => Overlay the icon source file centered on top of
                                      the splashscreen source file
-
-    --bgcolor, -b       Background color for icons and splashscreens
-                          - hex format (not hexa); no transparency allowed
-                          - default: #000074
   `)
   process.exit(0)
 }
@@ -126,16 +137,15 @@ else {
 const defaults = {
   mode: 'all',
   quality: 5,
-  bgcolor: '#000074',
-  type: 'pure',
-  color: '#1976D2'
+  color: '#1976D2',
+  splashscreen: 'pure'
 }
 
 profile.params = mergeObjects(defaults, profile.params)
 
 // ensure all params are valid
 parseArgv(profile.params, [
-  'mode', 'quality', 'filter', 'type', 'bgcolor', 'icon', 'splashscreen'
+  'mode', 'quality', 'filter', 'color', 'landscape', 'portrait', 'splashscreen', 'icon'
 ])
 
 const generate = require('../lib/cmd/generate')

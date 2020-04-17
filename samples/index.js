@@ -6,9 +6,14 @@ const samplesDefinition = {
     details: 'icon source (1240x1240px)'
   },
 
-  splashscreen: {
-    file: 'icongenie-splashscreen.png',
-    details: 'splashscreen source (2436x2436px)'
+  landscape: {
+    file: 'icongenie-landscape.png',
+    details: 'landscape splashscreen source (2436x2436px)'
+  },
+
+  portrait: {
+    file: 'icongenie-portrait.png',
+    details: 'portrait splashscreen source (2436x2436px)'
   },
 
   profile: {
