@@ -40,9 +40,50 @@
 
     {
       "handler": "png",
-      "name": "icon-{size}-mdpi.png",
+      "name": "icon-29@2x.png",
+      "folder": "src-cordova/res/ios",
+      "sizes": [ 58 ],
+      "platform": "cordova-ios",
+      "background": true
+    },
+
+    {
+      "handler": "png",
+      "name": "icon-29@2x.png",
+      "folder": "src-cordova/res/ios",
+      "sizes": [ 58 ],
+      "platform": "cordova-ios",
+      "background": true
+    },
+
+    {
+      "handler": "png",
+      "name": "xxxhdpi.png",
       "folder": "src-cordova/res/android",
-      "sizes": [ 48 ]
+      "sizes": [ ],
+      "platform": "cordova-android",
+      "density": "xxxhdpi"
+    },
+
+    {
+      "handler": "splashscreen",
+      "name": "Default@2x~ipad~comany.png",
+      "folder": "src-cordova/res/screen/ios",
+      "sizes": [
+        [ 1278, 2732 ]
+      ],
+      "platform": "cordova-ios"
+    },
+
+    {
+      "handler": "splashscreen",
+      "name": "splash-land-xxxhdpi.png",
+      "folder": "src-cordova/res/screen/android",
+      "sizes": [
+        [ 1920, 1280 ]
+      ],
+      "platform": "cordova-android",
+      "density": "land-xxxhdpi"
     }
   ]
 }
