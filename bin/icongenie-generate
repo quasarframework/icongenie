@@ -14,7 +14,7 @@ const argv = parseArgs(process.argv.slice(2), {
   },
   boolean: [ 'h' ],
   string: [
-    'p', 'i', 'm', 'f', 'q', 'c', 't',
+    'p', 'i', 'm', 'f', 'q', 'c',
     'landscape', // file; Cordova/Capacitor only
     'portrait', // file; Cordova/Capacitor only
     'splashscreen' // type; Cordova/Capacitor only
@@ -66,10 +66,11 @@ if (argv.help) {
                           - width should be LOWER than height
                           - transparency is optional
 
-    --mode, -m          For which Quasar mode to generate icon files
-                        (if no mode is specified, it detects what modes
-                        are installed and generates for all them)
+    --mode, -m          For which Quasar mode(s) to generate the assets;
+                        Default: all
                           [all|${modes}]
+                        Multiple can be specified, separated by ",":
+                          spa,cordova
 
     --filter, -f        Filter the available generators; when used, it can
                         generate only one type of asset instead of all
@@ -109,6 +110,6 @@ if (argv.help) {
 
 const generate = require('../lib/cmd/generate')
 
-generate(argv).then(() => {
-  console.log(`\n Done!\n`)
+generate(argv).then(numberOfFiles => {
+  console.log(`\n Done - generated ${numberOfFiles} file(s)!\n`)
 })

@@ -9,10 +9,7 @@ const argv = parseArgs(process.argv.slice(2), {
     f: 'filter',
     h: 'help'
   },
-  boolean: ['h'],
-  default: {
-    m: 'all'
-  }
+  boolean: ['h']
 })
 
 if (argv.help) {
@@ -27,9 +24,11 @@ if (argv.help) {
     $ icongenie verify
 
   Options
-    --mode, -m      For which Quasar mode to generate icon files
-                    (default: all)
+    --mode, -m      For which Quasar mode(s) to generate the assets;
+                    Default: all
                       [all|${modes}]
+                    Multiple can be specified, separated by ",":
+                      spa,cordova,capacitor
 
     --filter, -f    Filter the available generators; when used, it verifies
                     only one type of asset instead of all
@@ -56,7 +55,6 @@ const profile = {
 }
 
 if (argv.profile) {
-  // verify "profile" param
   parseArgv(argv, [ 'profile' ])
 
   const getProfile = require('../lib/utils/get-profile')
@@ -64,23 +62,23 @@ if (argv.profile) {
 
   if (userProfile.params) {
     profile.params = mergeObjects(userProfile.params, argv)
+    parseArgv(profile.params, [ 'include' ])
   }
   if (userProfile.assets) {
     profile.assets = userProfile.assets
   }
 }
 else {
-  profile.params = { ...argv }
+  parseArgv(argv, [ 'mode' ])
+
+  const { mode, m, ...params } = argv
+
+  profile.params = params
+  profile.params.include = mode
 }
 
-// apply defaults
-const defaults = { mode: 'all' }
-profile.params = mergeObjects(defaults, profile.params)
-
 // ensure all params are valid
-parseArgv(profile.params, [
-  'mode', 'filter'
-])
+parseArgv(profile.params, [ 'filter' ])
 
 const verify = require('../lib/cmd/verify')
 

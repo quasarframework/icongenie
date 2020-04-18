@@ -1,5 +1,6 @@
 {
   "params": {
+    "include": [ "spa" ],
     "quality": 7
   },
 
