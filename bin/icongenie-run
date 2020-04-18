@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+const parseArgs = require('minimist')
+
+const argv = parseArgs(process.argv.slice(2), {
+  alias: {
+    f: 'folder', // folder containing profile files
+    p: 'prefix', // profile files prefix in their names
+    h: 'help'
+  },
+  boolean: [ 'h' ],
+  string: [ 'f', 'p' ],
+  default: {
+    f: '.', // current folder
+    p: 'icongenie-'
+  }
+})
+
+if (argv.help) {
+  console.log(`
+  Description
+    Runs Icon Genie JSON profile files from a folder in batch.
+    The profile files need to contain all parameters normally sent to
+    the "generate" command.
+
+  Usage
+    # detect "icongenie-*.json" files from current folder and run them
+    $ icongenie run
+
+    # detect "icongenie-*.json" files from a specific folder and run them
+    $ icongenie run -f ./profiles
+    $ icongenie run -f /absolute/path/to/profiles
+
+    # looks for app-*.json profile files in ./profiles and runs them
+    $ icongenie run -p app- -f ./profiles
+
+  Options
+    --folder, -f        Path to folder (relative or absolute) to look up
+                        profile files; Default is current folder.
+
+    --prefix, -p        Prefix of the name of the JSON profile files to look up;
+                        Default is: "icongenie-".
+
+    --help, -h          Displays this message
+  `)
+  process.exit(0)
+}
+
+const parseArgv = require('../lib/utils/parse-argv')
+
+parseArgv(argv, [ 'folder' ])
+
+const run = require('../lib/cmd/run')
+
+run(argv)

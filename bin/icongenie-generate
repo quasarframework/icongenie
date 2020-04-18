@@ -107,47 +107,6 @@ if (argv.help) {
   process.exit(0)
 }
 
-const parseArgv = require('../lib/utils/parse-argv')
-const mergeObjects = require('../lib/utils/merge-objects')
-
-const profile = {
-  params: {},
-  assets: []
-}
-
-if (argv.profile) {
-  // verify "profile" param
-  parseArgv(argv, [ 'profile' ])
-
-  const getProfile = require('../lib/utils/get-profile')
-  const userProfile = getProfile(argv.profile)
-
-  if (userProfile.params) {
-    profile.params = mergeObjects(userProfile.params, argv)
-  }
-  if (userProfile.assets) {
-    profile.assets = userProfile.assets
-  }
-}
-else {
-  profile.params = { ...argv }
-}
-
-// apply defaults
-const defaults = {
-  mode: 'all',
-  quality: 5,
-  color: '#1976D2',
-  splashscreen: 'pure'
-}
-
-profile.params = mergeObjects(defaults, profile.params)
-
-// ensure all params are valid
-parseArgv(profile.params, [
-  'mode', 'quality', 'filter', 'color', 'landscape', 'portrait', 'splashscreen', 'icon'
-])
-
 const generate = require('../lib/cmd/generate')
 
-generate(profile)
+generate(argv)
