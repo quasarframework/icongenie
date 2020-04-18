@@ -11,7 +11,7 @@ const argv = parseArgs(process.argv.slice(2), {
   boolean: [ 'h' ],
   string: [ 'f', 'p' ],
   default: {
-    f: '.', // current folder
+    f: process.cwd(), // current folder
     p: 'icongenie-'
   }
 })
