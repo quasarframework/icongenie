@@ -45,6 +45,12 @@ if (argv.help) {
          /path/to/icon.png --landscape /path/to/landscape.png
          --portrait /path/to/portrait.png
 
+    # generate by using a profile file
+    $ icongenie generate -p ./icongenie-profile.json
+
+    # generate by using batch of profile files
+    $ icongenie generate -p ./folder-containing-profile-files
+
   Options
     --icon, -i          ${green('Required')};
                         Path to source file for icons; must be:

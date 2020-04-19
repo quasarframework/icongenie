@@ -21,7 +21,20 @@ if (argv.help) {
     Verifies your Quasar App's icons for all installed modes.
 
   Usage
+    # verify all Quasar modes
     $ icongenie verify
+
+    # verify specific mode
+    $ icongenie verify -m spa
+
+    # verify with specific filter
+    $ icongenie verify -f ico
+
+    # verify by using a profile file
+    $ icongenie verify -p ./icongenie-profile.json
+
+    # verify by using batch of profile files
+    $ icongenie verify -p ./folder-containing-profile-files
 
   Options
     --mode, -m      For which Quasar mode(s) to verify the assets;
