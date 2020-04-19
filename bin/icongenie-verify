@@ -24,7 +24,7 @@ if (argv.help) {
     $ icongenie verify
 
   Options
-    --mode, -m      For which Quasar mode(s) to generate the assets;
+    --mode, -m      For which Quasar mode(s) to verify the assets;
                     Default: all
                       [all|${modes}]
                     Multiple can be specified, separated by ",":
@@ -34,11 +34,18 @@ if (argv.help) {
                     only one type of asset instead of all
                       [${generators}]
 
-    --profile       Use a JSON config file to extract the assets list.
-                    Structure of the file:
+    --profile       Use JSON profile file(s) to extract the asset list to verify:
+                      - path to folder (absolute or relative to current folder)
+                        that contains JSON profile files (icongenie-*.json)
+                      - path to a single *.json profile file (absolute or relative
+                        to current folder)
+                    Structure of a JSON profile file:
                       {
-                        assets: [ /* list of assets */ ], // << must contain it!
-                        params: { /* not important, are ignored here */ }
+                        "params": {
+                          "include": [ ... ], /* optional */
+                          ...
+                        },
+                        "assets": [ /* list of custom assets */ ]
                       }
 
     --help, -h      Displays this message
@@ -47,39 +54,28 @@ if (argv.help) {
 }
 
 const parseArgv = require('../lib/utils/parse-argv')
-const mergeObjects = require('../lib/utils/merge-objects')
+const verify = require('../lib/cmd/verify')
+const getProfileFiles = require('../lib/utils/get-profile-files')
+const { log } = require('../lib/utils/logger')
 
-const profile = {
-  params: {},
-  assets: []
+async function runProfiles (profileFiles) {
+  for (let i = 0; i < profileFiles.length; i++) {
+    const profile = profileFiles[i]
+
+    console.log(`\n`)
+    log(`--------------------`)
+    log(`Verifying by profile: ${profile}`)
+    log(`--------------------`)
+    console.log(`\n`)
+
+    await verify({ ...argv, profile })
+  }
 }
 
 if (argv.profile) {
   parseArgv(argv, [ 'profile' ])
-
-  const getProfile = require('../lib/utils/get-profile')
-  const userProfile = getProfile(argv.profile)
-
-  if (userProfile.params) {
-    profile.params = mergeObjects(userProfile.params, argv)
-    parseArgv(profile.params, [ 'include' ])
-  }
-  if (userProfile.assets) {
-    profile.assets = userProfile.assets
-  }
+  runProfiles(getProfileFiles(argv.profile))
 }
 else {
-  parseArgv(argv, [ 'mode' ])
-
-  const { mode, m, ...params } = argv
-
-  profile.params = params
-  profile.params.include = mode
+  verify(argv)
 }
-
-// ensure all params are valid
-parseArgv(profile.params, [ 'filter' ])
-
-const verify = require('../lib/cmd/verify')
-
-verify(profile)

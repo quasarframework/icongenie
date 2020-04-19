@@ -49,22 +49,31 @@ if (argv.help) {
     --icon, -i          ${green('Required')};
                         Path to source file for icons; must be:
                           - a .png file
-                          - min resolution: 64x64px (the higher the better!!)
+                          - min resolution: 64x64 px (the higher the better!!)
                           - with transparency
+                        Path can be absolute, or relative to the root of the
+                          Quasar project folder
+                        Recommended min size: 1240x1240 px
 
     --landscape         Only ${green('required for Cordova/Capacitor mode')};
                         Path to landscape source file for splashscreens; must be:
                           - a .png file
-                          - min resolution: 128x128px (the higher the better!!)
+                          - min resolution: 128x128 px (the higher the better!!)
                           - width should be HIGHER than height
                           - transparency is optional
+                        Path can be absolute, or relative to the root of the
+                          Quasar project folder
+                        Recommended min size: 2048x1024 px
 
     --portrait          Only ${green('required for Cordova/Capacitor mode')};
                         Path to portrait source file for splashscreens; must be:
                           - a .png file
-                          - min resolution: 128x128px (the higher the better!!)
+                          - min resolution: 128x128 px (the higher the better!!)
                           - width should be LOWER than height
                           - transparency is optional
+                        Path can be absolute, or relative to the root of the
+                          Quasar project folder
+                        Recommended min size: 1024x2048 px
 
     --mode, -m          For which Quasar mode(s) to generate the assets;
                         Default: all
@@ -86,13 +95,18 @@ if (argv.help) {
                         The color must be in hex format (not hexa) and
                         so no transparency is allowed.
 
-    --profile           Use a JSON config file with predefined parameters and
-                        assets list. Any parameters specified along this one
-                        in the terminal will override the config file's settings.
-                        Structure of the file:
+    --profile, -p       Use JSON profile file(s):
+                          - path to folder (absolute or relative to current folder)
+                            that contains JSON profile files (icongenie-*.json)
+                          - path to a single *.json profile file (absolute or relative
+                            to current folder)
+                        Structure of a JSON profile file:
                           {
-                            params: { /* parameter_name: parameter_value */ },
-                            assets: [ /* list of assets */ ]
+                            "params": {
+                              "include": [ ... ], /* optional */
+                              ...
+                            },
+                            "assets": [ /* list of custom assets */ ]
                           }
 
     --help, -h          Displays this message
@@ -108,8 +122,29 @@ if (argv.help) {
   process.exit(0)
 }
 
+const parseArgv = require('../lib/utils/parse-argv')
 const generate = require('../lib/cmd/generate')
+const getProfileFiles = require('../lib/utils/get-profile-files')
+const { log } = require('../lib/utils/logger')
 
-generate(argv).then(numberOfFiles => {
-  console.log(`\n Done - generated ${numberOfFiles} file(s)!\n`)
-})
+async function runProfiles (profileFiles) {
+  for (let i = 0; i < profileFiles.length; i++) {
+    const profile = profileFiles[i]
+
+    console.log(`\n`)
+    log(`---------------------`)
+    log(`Generating by profile: ${profile}`)
+    log(`---------------------`)
+    console.log(`\n`)
+
+    await generate({ ...argv, profile })
+  }
+}
+
+if (argv.profile) {
+  parseArgv(argv, [ 'profile' ])
+  runProfiles(getProfileFiles(argv.profile))
+}
+else {
+  generate(argv)
+}
