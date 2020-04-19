@@ -56,9 +56,10 @@ if (argv.help) {
 const parseArgv = require('../lib/utils/parse-argv')
 const verify = require('../lib/cmd/verify')
 const getProfileFiles = require('../lib/utils/get-profile-files')
+const filterArgvParams = require('../lib/utils/filter-argv-params')
 const { log } = require('../lib/utils/logger')
 
-async function runProfiles (profileFiles) {
+async function runProfiles (params, profileFiles) {
   for (let i = 0; i < profileFiles.length; i++) {
     const profile = profileFiles[i]
 
@@ -68,14 +69,16 @@ async function runProfiles (profileFiles) {
     log(`--------------------`)
     console.log(`\n`)
 
-    await verify({ ...argv, profile })
+    await verify({ ...params, profile })
   }
 }
 
-if (argv.profile) {
-  parseArgv(argv, [ 'profile' ])
-  runProfiles(getProfileFiles(argv.profile))
+const params = filterArgvParams(argv)
+
+if (params.profile) {
+  parseArgv(params, [ 'profile' ])
+  runProfiles(params, getProfileFiles(params.profile))
 }
 else {
-  verify(argv)
+  verify(params)
 }

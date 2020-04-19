@@ -1,5 +1,6 @@
 {
   "params": {
+    "icon": "icongenie-icon.png",
     "include": [ "spa" ],
     "quality": 7
   },
@@ -61,7 +62,7 @@
       "handler": "png",
       "name": "xxxhdpi.png",
       "folder": "src-cordova/res/android",
-      "sizes": [ ],
+      "sizes": [ 192 ],
       "platform": "cordova-android",
       "density": "xxxhdpi"
     },
