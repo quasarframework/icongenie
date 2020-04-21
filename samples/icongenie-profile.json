@@ -20,6 +20,16 @@
     },
 
     {
+      "handler": "splashscreen",
+      "name": "apple-launch-{size}.png",
+      "folder": "src/statics/icons",
+      "sizes": [
+        [ 1668, 2388 ]
+      ],
+      "tag": "<link rel=\"apple-touch-startup-image\" media=\"(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)\" href=\"statics/icons/{name}\">"
+    },
+
+    {
       "handler": "icns",
       "name": "icon.icns",
       "folder": "src-electron/icons"
