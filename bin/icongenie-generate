@@ -9,15 +9,18 @@ const argv = parseArgs(process.argv.slice(2), {
     m: 'mode',
     f: 'filter',
     q: 'quality',
-    c: 'color', // theme color
     h: 'help'
   },
   boolean: [ 'h' ],
   string: [
-    'p', 'i', 'm', 'f', 'q', 'c',
-    'landscape', // file; Cordova/Capacitor only
-    'portrait', // file; Cordova/Capacitor only
-    'splashscreen' // type; Cordova/Capacitor only
+    'p', 'i', 'm', 'f', 'q',
+    'landscape',
+    'portrait',
+    'theme-color',
+    'png-color',
+    'splashscreen-type',
+    'splashscreen-color',
+    'svg-color'
   ]
 })
 
@@ -26,6 +29,7 @@ const { green } = require('chalk')
 if (argv.help) {
   const modes = Object.keys(require('../lib/modes')).join('|')
   const generators = Object.keys(require('../lib/generators')).join('|')
+  const defaultParams = require('../lib/utils/default-params')
 
   console.log(`
   Description
@@ -52,78 +56,98 @@ if (argv.help) {
     $ icongenie generate -p ./folder-containing-profile-files
 
   Options
-    --icon, -i          ${green('Required')};
-                        Path to source file for icons; must be:
-                          - a .png file
-                          - min resolution: 64x64 px (the higher the better!!)
-                          - with transparency
-                        Path can be absolute, or relative to the root of the
-                          Quasar project folder
-                        Recommended min size: 1240x1240 px
+    --icon, -i            ${green('Required')};
+                          Path to source file for icons; must be:
+                            - a .png file
+                            - min resolution: 64x64 px (the higher the better!!)
+                            - with transparency
+                          Path can be absolute, or relative to the root of the
+                            Quasar project folder
+                          Recommended min size: 1240x1240 px
 
-    --landscape         Only ${green('required for Cordova/Capacitor mode')};
-                        Path to landscape source file for splashscreens; must be:
-                          - a .png file
-                          - min resolution: 128x128 px (the higher the better!!)
-                          - width should be HIGHER than height
-                          - transparency is optional
-                        Path can be absolute, or relative to the root of the
-                          Quasar project folder
-                        Recommended min size: 2048x1024 px
+    --landscape           ${green('Required for splashscreens')};
+                          Path to landscape source file for splashscreens; must be:
+                            - a .png file
+                            - min resolution: 128x128 px (the higher the better!!)
+                            - width should be HIGHER than height
+                            - transparency is optional
+                          Path can be absolute, or relative to the root of the
+                            Quasar project folder
+                          Recommended min size: 2048x1024 px
 
-    --portrait          Only ${green('required for Cordova/Capacitor mode')};
-                        Path to portrait source file for splashscreens; must be:
-                          - a .png file
-                          - min resolution: 128x128 px (the higher the better!!)
-                          - width should be LOWER than height
-                          - transparency is optional
-                        Path can be absolute, or relative to the root of the
-                          Quasar project folder
-                        Recommended min size: 1024x2048 px
+    --portrait            ${green('Required for splashscreens')};
+                          Path to portrait source file for splashscreens; must be:
+                            - a .png file
+                            - min resolution: 128x128 px (the higher the better!!)
+                            - width should be LOWER than height
+                            - transparency is optional
+                          Path can be absolute, or relative to the root of the
+                            Quasar project folder
+                          Recommended min size: 1024x2048 px
 
-    --mode, -m          For which Quasar mode(s) to generate the assets;
-                        Default: all
-                          [all|${modes}]
-                        Multiple can be specified, separated by ",":
-                          spa,cordova
+    --mode, -m            For which Quasar mode(s) to generate the assets;
+                          Default: all
+                            [all|${modes}]
+                          Multiple can be specified, separated by ",":
+                            spa,cordova
 
-    --filter, -f        Filter the available generators; when used, it can
-                        generate only one type of asset instead of all
-                          [${generators}]
+    --filter, -f          Filter the available generators; when used, it can
+                          generate only one type of asset instead of all
+                            [${generators}]
 
-    --quality           Quality of the files [1 - 12] (default: 5)
-                          - higher quality --> bigger filesize, slower
-                          - lower quality  --> smaller filesize, faster
+    --quality             Quality of the files [1 - 12] (default: ${defaultParams.quality})
+                            - higher quality --> bigger filesize, slower
+                            - lower quality  --> smaller filesize, faster
 
-    --color, -c         Theme color (default: #1976D2) to use for the
-                        monochrome SVGs, for some of the iOS icons and for
-                        mobile splashscreens background.
-                        The color must be in hex format (not hexa) and
-                        so no transparency is allowed.
+    --theme-color         Theme color to use for all generators requiring a color;
+                          It gets overriden if any generator color is also specified;
+                          The color must be in hex format (NOT hexa) without the leading
+                          '#' character. Transparency not allowed.
+                          Examples: 1976D2, eee
 
-    --profile, -p       Use JSON profile file(s):
-                          - path to folder (absolute or relative to current folder)
-                            that contains JSON profile files (icongenie-*.json)
-                          - path to a single *.json profile file (absolute or relative
-                            to current folder)
-                        Structure of a JSON profile file:
-                          {
-                            "params": {
-                              "include": [ ... ], /* optional */
-                              ...
-                            },
-                            "assets": [ /* list of custom assets */ ]
-                          }
+    --svg-color           Color to use for the generated monochrome svgs
+                          Default (if no theme-color is specified): ${defaultParams.svgColor.slice(1)}
+                          The color must be in hex format (NOT hexa) without the leading
+                          '#' character. Transparency not allowed.
+                          Examples: 1976D2, eee
 
-    --help, -h          Displays this message
+    --png-color           Background color to use for the png generator, when
+                          "background: true" in the asset definition (like for
+                          the cordova/capacitor iOS icons);
+                          Default (if no theme-color is specified): ${defaultParams.pngColor.slice(1)}
+                          The color must be in hex format (NOT hexa) without the leading
+                          '#' character. Transparency not allowed.
+                          Examples: 1976D2, eee
 
-    Only for Cordova/Capacitor mode:
+    --splashscreen-color  Background color to use for the splashscreen generator;
+                          Default (if no theme-color is specified): ${defaultParams.splashscreenColor.slice(1)}
+                          The color must be in hex format (NOT hexa) without the leading
+                          '#' character. Transparency not allowed.
+                          Examples: 1976D2, eee
 
-    --splashscreen      Splashscreens build strategy: (default is "pure")
-                          pure    => Doesn't adds bg color or overlaps the icon
-                          bg      => Generate with background color and icon
-                          overlay => Overlay the icon source file centered on top of
-                                     the splashscreen source file
+    --profile, -p         Use JSON profile file(s):
+                            - path to folder (absolute or relative to current folder)
+                              that contains JSON profile files (icongenie-*.json)
+                            - path to a single *.json profile file (absolute or relative
+                              to current folder)
+                          Structure of a JSON profile file:
+                            {
+                              "params": {
+                                "include": [ ... ], /* optional */
+                                ...
+                              },
+                              "assets": [ /* list of custom assets */ ]
+                            }
+
+    --help, -h            Displays this message
+
+    Only for Cordova/Capacitor splashscreens:
+
+    --splashscreen-type   Splashscreens build strategy: (default is "${defaultParams.splashscreenType}")
+                            pure    => Don't tamper with it like the other types
+                            bg      => Generate with background color and icon
+                            overlay => Overlay the icon source file centered on top of
+                                      the splashscreen source file
   `)
   process.exit(0)
 }
