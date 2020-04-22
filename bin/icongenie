@@ -2,6 +2,11 @@
 
 require('../lib/utils/node-version-check')
 
+const updateNotifier = require('update-notifier')
+const pkg = require('../package.json')
+
+updateNotifier({ pkg }).notify()
+
 const commands = [
   'generate',
   'verify',
