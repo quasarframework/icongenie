@@ -62,7 +62,8 @@ if (argv.help) {
                             Quasar project folder
                           Recommended min size: 1024x1024 px
 
-    --background, -b      Path to background source file (for splashscreens); must be:
+    --background, -b      Path to optional background source file (for splashscreens);
+                          must be:
                             - a .png file
                             - min resolution: 128x128 px (the higher the better!!)
                             - transparency is optional
