@@ -8,42 +8,42 @@
   "assets": [
     {
       "generator": "png",
-      "name": "icon-{size}x{size}.png",
+      "name": "icon-{size}x{size}",
       "folder": "src-bex/icons",
       "sizes": [ 16, 48, 128 ]
     },
 
     {
       "generator": "svg",
-      "name": "safari-pinned-tab.svg",
+      "name": "safari-pinned-tab",
       "folder": "src/statics/icons"
     },
 
     {
       "generator": "splashscreen",
-      "name": "apple-launch-{size}.png",
+      "name": "apple-launch-{size}",
       "folder": "src/statics/icons",
       "sizes": [
         [ 1668, 2388 ]
       ],
-      "tag": "<link rel=\"apple-touch-startup-image\" media=\"(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)\" href=\"statics/icons/{name}\">"
+      "tag": "<link rel=\"apple-touch-startup-image\" media=\"(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)\" href=\"statics/icons/{name}.png\">"
     },
 
     {
       "generator": "icns",
-      "name": "icon.icns",
+      "name": "icon",
       "folder": "src-electron/icons"
     },
 
     {
       "generator": "ico",
-      "name": "icon.ico",
+      "name": "icon",
       "folder": "src-electron/icons"
     },
 
     {
       "generator": "splashscreen",
-      "name": "Default-Landscape-2436h.png",
+      "name": "Default-Landscape-2436h",
       "folder": "src-cordova/res/screen/ios",
       "sizes": [
         [ 2436, 1125 ]
@@ -52,7 +52,7 @@
 
     {
       "generator": "png",
-      "name": "icon-29@2x.png",
+      "name": "icon-29@2x",
       "folder": "src-cordova/res/ios",
       "sizes": [ 58 ],
       "platform": "cordova-ios",
@@ -61,7 +61,7 @@
 
     {
       "generator": "png",
-      "name": "icon-29@2x.png",
+      "name": "icon-29@2x",
       "folder": "src-cordova/res/ios",
       "sizes": [ 58 ],
       "platform": "cordova-ios",
@@ -70,7 +70,7 @@
 
     {
       "generator": "png",
-      "name": "xxxhdpi.png",
+      "name": "xxxhdpi",
       "folder": "src-cordova/res/android",
       "sizes": [ 192 ],
       "platform": "cordova-android",
@@ -79,7 +79,7 @@
 
     {
       "generator": "splashscreen",
-      "name": "Default@2x~ipad~comany.png",
+      "name": "Default@2x~ipad~comany",
       "folder": "src-cordova/res/screen/ios",
       "sizes": [
         [ 1278, 2732 ]
@@ -89,7 +89,7 @@
 
     {
       "generator": "splashscreen",
-      "name": "splash-land-xxxhdpi.png",
+      "name": "splash-land-xxxhdpi",
       "folder": "src-cordova/res/screen/android",
       "sizes": [
         [ 1920, 1280 ]
