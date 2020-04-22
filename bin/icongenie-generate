@@ -63,7 +63,7 @@ if (argv.help) {
                             - with transparency
                           Path can be absolute, or relative to the root of the
                             Quasar project folder
-                          Recommended min size: 1240x1240 px
+                          Recommended min size: 1024x1024 px
 
     --landscape           ${green('Required for splashscreens')};
                           Path to landscape source file for splashscreens; must be:
