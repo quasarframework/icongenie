@@ -144,10 +144,9 @@ if (argv.help) {
     Only for Cordova/Capacitor splashscreens:
 
     --splashscreen-type   Splashscreens build strategy: (default is "${defaultParams.splashscreenType}")
-                            pure    => Don't tamper with it like the other types
-                            bg      => Generate with background color and icon
-                            overlay => Overlay the icon source file centered on top of
-                                      the splashscreen source file
+                            pure    => Use the landscape/portrait images only
+                            overlay => Overlay the icon image on top of the
+                                       landscape/portrait image
   `)
   process.exit(0)
 }
