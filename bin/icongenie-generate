@@ -6,6 +6,7 @@ const argv = parseArgs(process.argv.slice(2), {
   alias: {
     p: 'profile', // config file
     i: 'icon',
+    b: 'background',
     m: 'mode',
     f: 'filter',
     q: 'quality',
@@ -13,12 +14,9 @@ const argv = parseArgs(process.argv.slice(2), {
   },
   boolean: [ 'h' ],
   string: [
-    'p', 'i', 'm', 'f', 'q',
-    'landscape',
-    'portrait',
+    'p', 'i', 'b', 'm', 'f', 'q',
     'theme-color',
     'png-color',
-    'splashscreen-type',
     'splashscreen-color',
     'svg-color'
   ]
@@ -46,8 +44,7 @@ if (argv.help) {
 
     # generate for (as example) Capacitor mode only
     $ icongenie g -m capacitor -i
-         /path/to/icon.png --landscape /path/to/landscape.png
-         --portrait /path/to/portrait.png
+         /path/to/icon.png -b /path/to/background.png
 
     # generate by using a profile file
     $ icongenie generate -p ./icongenie-profile.json
@@ -65,25 +62,13 @@ if (argv.help) {
                             Quasar project folder
                           Recommended min size: 1024x1024 px
 
-    --landscape           ${green('Required for splashscreens')};
-                          Path to landscape source file for splashscreens; must be:
+    --background, -b      Path to background source file (for splashscreens); must be:
                             - a .png file
                             - min resolution: 128x128 px (the higher the better!!)
-                            - width should be HIGHER than height
                             - transparency is optional
                           Path can be absolute, or relative to the root of the
                             Quasar project folder
-                          Recommended min size: 2048x1024 px
-
-    --portrait            ${green('Required for splashscreens')};
-                          Path to portrait source file for splashscreens; must be:
-                            - a .png file
-                            - min resolution: 128x128 px (the higher the better!!)
-                            - width should be LOWER than height
-                            - transparency is optional
-                          Path can be absolute, or relative to the root of the
-                            Quasar project folder
-                          Recommended min size: 1024x2048 px
+                          Recommended min size: 1024x1024 px
 
     --mode, -m            For which Quasar mode(s) to generate the assets;
                           Default: all
@@ -140,13 +125,6 @@ if (argv.help) {
                             }
 
     --help, -h            Displays this message
-
-    Only for Cordova/Capacitor splashscreens:
-
-    --splashscreen-type   Splashscreens build strategy: (default is "${defaultParams.splashscreenType}")
-                            pure    => Use the landscape/portrait images only
-                            overlay => Overlay the icon image on top of the
-                                       landscape/portrait image
   `)
   process.exit(0)
 }

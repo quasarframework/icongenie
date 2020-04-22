@@ -3,17 +3,7 @@ const { join } = require('path')
 const samplesDefinition = {
   icon: {
     file: 'icongenie-icon.png',
-    details: 'icon source (1240x1240px)'
-  },
-
-  landscape: {
-    file: 'icongenie-landscape.png',
-    details: 'landscape splashscreen source (2436x2436px)'
-  },
-
-  portrait: {
-    file: 'icongenie-portrait.png',
-    details: 'portrait splashscreen source (2436x2436px)'
+    details: 'icon source (1024x1024px)'
   },
 
   profile: {
