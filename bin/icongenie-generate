@@ -18,7 +18,8 @@ const argv = parseArgs(process.argv.slice(2), {
     'theme-color',
     'png-color',
     'splashscreen-color',
-    'svg-color'
+    'svg-color',
+    'splashscreen-icon-ratio'
   ]
 })
 
@@ -110,6 +111,11 @@ if (argv.help) {
                           The color must be in hex format (NOT hexa) without the leading
                           '#' character. Transparency not allowed.
                           Examples: 1976D2, eee
+
+    --splashscreen-icon-ratio  Ratio of icon size in respect to the width or height
+                               (whichever is smaller) of the resulting splashscreen;
+                               Represents percentages; Valid values: 0 - 100
+                               Default: 40
 
     --profile, -p         Use JSON profile file(s):
                             - path to folder (absolute or relative to current folder)
