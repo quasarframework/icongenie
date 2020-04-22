@@ -42,8 +42,8 @@ if (argv.help) {
     # generate for (as example) PWA mode only
     $ icongenie generate -m pwa --icon /path/to/icon.png
 
-    # generate for (as example) Capacitor mode only
-    $ icongenie g -m capacitor -i
+    # generate for (as example) Cordova & Capacitor mode only
+    $ icongenie g -m cordova,capacitor -i
          /path/to/icon.png -b /path/to/background.png
 
     # generate by using a profile file
