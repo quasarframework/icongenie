@@ -18,7 +18,8 @@ if (argv.help) {
 
   console.log(`
   Description
-    Verifies your Quasar App's icons for all installed modes.
+    Verifies your Quasar App's icons and splashscreens
+    for all installed modes.
 
   Usage
     $ icongenie verify [options]
