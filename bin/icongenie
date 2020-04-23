@@ -20,7 +20,7 @@ if (cmd && cmd.length === 1) {
   const mapToCmd = {
     g: 'generate',
     v: 'verify',
-    s: 'profile',
+    p: 'profile',
     h: 'help'
   }
   cmd = mapToCmd[cmd]

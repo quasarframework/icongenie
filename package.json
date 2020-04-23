@@ -1,7 +1,7 @@
 {
   "name": "@quasar/icongenie",
   "version": "2.0.0",
-  "description": "A Quasar tool for generating all your App's icons",
+  "description": "A Quasar tool for generating all your App's icons and splashscreens",
   "bin": {
     "icongenie": "./bin/icongenie"
   },
@@ -25,7 +25,8 @@
     "electron",
     "bex"
   ],
-  "authors": [
+  "author": "Razvan Stoenescu <razvan.stoenescu@gmail.com>",
+  "contributors": [
     "Razvan Stoenescu <razvan.stoenescu@gmail.com>",
     "Daniel Thompson-Yvetot <35242872+nothingismagick@users.noreply.github.com>"
   ],
