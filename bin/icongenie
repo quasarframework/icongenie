@@ -10,7 +10,7 @@ updateNotifier({ pkg }).notify()
 const commands = [
   'generate',
   'verify',
-  'sample',
+  'profile',
   'help'
 ]
 
@@ -20,7 +20,7 @@ if (cmd && cmd.length === 1) {
   const mapToCmd = {
     g: 'generate',
     v: 'verify',
-    s: 'sample',
+    s: 'profile',
     h: 'help'
   }
   cmd = mapToCmd[cmd]
