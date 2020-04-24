@@ -1,10 +1,12 @@
+# Attention!
+**Moved over to Quasar's core repo: https://github.com/quasarframewrok/quasar/icongenie**
+
+
 ![Icon Genie logo](https://cdn.quasar.dev/img/iconfactory.png)
 
 # Quasar Framework Icon Genie
 
 > A Quasar tool for generating all your Quasar App's icons and splashscreens
->
-> Note: **Icon Genie v2 is in the works**
 
 <!--
 <img src="https://img.shields.io/npm/v/%40quasar/icongenie.svg?label=@quasar/icongenie">
