@@ -1,5 +1,5 @@
 # Attention!
-**Moved over to Quasar's core repo: https://github.com/quasarframewrok/quasar/icongenie**
+**Moved over to Quasar's core repo: https://github.com/quasarframework/quasar/tree/dev/icongenie**
 
 
 ![Icon Genie logo](https://cdn.quasar.dev/img/iconfactory.png)
